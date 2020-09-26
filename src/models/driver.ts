@@ -1,3 +1,5 @@
+import { stat } from "fs";
+
 export class Driver {
   id: string;
   name: string;
@@ -11,6 +13,7 @@ export class Driver {
   subcity: string;
   kebele: string;
   housenumber: string;
+  status: string;
 
   constructor(
     id: string,
@@ -24,7 +27,8 @@ export class Driver {
     region: string,
     subcity: string,
     kebele: string,
-    housenumber: string
+    housenumber: string,
+    status: string
   ) {
     this.id = id;
     this.name = name;
@@ -38,5 +42,6 @@ export class Driver {
     this.kebele = kebele;
     this.subcity = subcity;
     this.phonenumber = phonenumber;
+    this.status = status;
   }
 }

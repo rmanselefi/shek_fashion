@@ -9,15 +9,19 @@ import { User } from "../../models/user";
 
 export const signIn = (credentials: User) => {
   return async (dispatch: any, getState: any): Promise<User | null> => {
-    // const fb = getFirebase();
-    var resp = await firebase
-      .auth()
-      .signInWithEmailAndPassword(credentials.email, credentials.password);
-    if (resp.user != null) {
-      return credentials;
-    } else {
+    try {
+      var resp = await firebase
+        .auth()
+        .signInWithEmailAndPassword(credentials.email, credentials.password);
+      if (resp.user != null) {
+        return credentials;
+      } else {
+        return null;
+      }
+    } catch (error) {
       return null;
     }
+    // const fb = getFirebase();
   };
 };
 
@@ -41,28 +45,30 @@ export const signout = () => {
 // Signup
 export const signup = (user: User) => {
   return async (dispatch: any, getState: any): Promise<User | null> => {
-    console.log("useruseruseruseruser", user);
-    // const fb = getFirebase();
-    const resp = await firebase
-      .auth()
-      .createUserWithEmailAndPassword(user.email, user.password);
-    if (resp.user != null) {
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(resp.user!.uid)
-        .set({
-          role: "admin",
-        })
-        .then((resp) => {
-          dispatch({ type: "SIGNUP_SUCCESS" });
-        })
-        .catch((err) => {
-          dispatch({ type: "SIGUP_ERROR" });
-        });
-      return user;
-    } else {
-      dispatch({ type: "SIGUP_ERROR" });
+    try {
+      const resp = await firebase
+        .auth()
+        .createUserWithEmailAndPassword(user.email, user.password);
+      if (resp.user != null) {
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(resp.user!.uid)
+          .set({
+            role: "admin",
+          })
+          .then((resp) => {
+            dispatch({ type: "SIGNUP_SUCCESS" });
+          })
+          .catch((err) => {
+            dispatch({ type: "SIGUP_ERROR" });
+          });
+        return user;
+      } else {
+        dispatch({ type: "SIGUP_ERROR" });
+        return null;
+      }
+    } catch (error) {
       return null;
     }
   };

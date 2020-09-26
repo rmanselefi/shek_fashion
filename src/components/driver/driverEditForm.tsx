@@ -85,6 +85,7 @@ const DriverEditForm: React.FC<driverProps> = ({ updateDriver, location }) => {
     phonenumber: "",
     region: "",
     subcity: "",
+    status: "",
   });
   const driverr = location.state.driver;
   useEffect(() => {
@@ -101,6 +102,7 @@ const DriverEditForm: React.FC<driverProps> = ({ updateDriver, location }) => {
       subcity: driverr.subcity,
       kebele: driverr.kebele,
       housenumber: driverr.housenumber,
+      status: driverr.status,
     });
   }, [
     driverr.id,
@@ -115,6 +117,7 @@ const DriverEditForm: React.FC<driverProps> = ({ updateDriver, location }) => {
     driverr.subcity,
     driverr.kebele,
     driverr.housenumber,
+    driverr.status,
   ]);
   const [open, setOpen] = React.useState(false);
 
@@ -203,9 +206,6 @@ const DriverEditForm: React.FC<driverProps> = ({ updateDriver, location }) => {
                     onChange={handleSelectChange}
                     name='gender'
                     label='Gender'>
-                    <MenuItem value=''>
-                      <em>None</em>
-                    </MenuItem>
                     <MenuItem value='Male'>Male</MenuItem>
                     <MenuItem value='Female'>Female</MenuItem>
                   </Select>

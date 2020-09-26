@@ -14,6 +14,12 @@ import { signIn } from "../../store/actions/authActions";
 import { connect } from "react-redux";
 import { User } from "../../models/user";
 import { isLoaded, isEmpty } from "react-redux-firebase";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+
+function Alert(props: AlertProps) {
+  return <MuiAlert elevation={6} variant='filled' {...props} />;
+}
 
 function Copyright() {
   return (
@@ -54,19 +60,26 @@ interface signinProps extends RouteComponentProps {
 
 const SignIn: React.FC<signinProps> = ({ signIn, history, auth }) => {
   const [user, setUser] = useState<User>({ email: "", password: "" });
-  const [authError, setError] = useState(false);
-
+  const [open, setOpen] = React.useState(false);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUser({ ...user, [event.currentTarget!.id]: event.currentTarget!.value });
+  };
+  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     var res = await signIn(user);
+
     if (res != null) {
       history.push("/dashboard");
     } else {
-      setError(true);
+      setOpen(true);
     }
   };
   const classes = useStyles();
@@ -108,9 +121,6 @@ const SignIn: React.FC<signinProps> = ({ signIn, history, auth }) => {
             autoComplete='current-password'
             onChange={handleChange}
           />
-          {authError ? (
-            <span style={{ color: "red" }}>Invalid Username or password</span>
-          ) : null}
           <Button
             type='submit'
             fullWidth
@@ -125,6 +135,11 @@ const SignIn: React.FC<signinProps> = ({ signIn, history, auth }) => {
             </Grid>
           </Grid>
         </form>
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity='error'>
+            Invalid email or password
+          </Alert>
+        </Snackbar>
       </div>
       <Box mt={8}>
         <Copyright />

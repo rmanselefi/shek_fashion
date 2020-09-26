@@ -4,7 +4,18 @@ import { Driver } from "../../models/driver";
 
 export const registerDriver = (driver: Driver) => {
   return async (dispatch: any, getState: any): Promise<Driver | null> => {
-    // const fb = getFirebase();
+    let statusRef = await firebase
+      .firestore()
+      .collection("status")
+      .doc(driver.status)
+      .get();
+    var statusname = statusRef.data()!.status_name;
+
+    var status = {
+      id: driver.status,
+      name: statusname,
+    };
+
     var resp = await firebase.firestore().collection("driver").add({
       name: driver.name,
       licensenumber: driver.licensenumber,
@@ -17,6 +28,7 @@ export const registerDriver = (driver: Driver) => {
       subcity: driver.subcity,
       kebele: driver.kebele,
       housenumber: driver.housenumber,
+      status,
     });
     if (resp != null) {
       return driver;

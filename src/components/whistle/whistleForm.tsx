@@ -197,14 +197,16 @@ const WhistleForm: React.FC<whistleProps> = ({ registerWhistle }) => {
                 />
               </Grid>
             </Grid>
-            <Button
-              type='submit'
-              fullWidth
-              variant='contained'
-              color='primary'
-              className={classes.submit}>
-              Register
-            </Button>
+            <Grid item xs={4}>
+              <Button
+                type='submit'
+                fullWidth
+                variant='contained'
+                color='primary'
+                className={classes.submit}>
+                Register
+              </Button>
+            </Grid>
           </form>
         </Paper>
       </div>

@@ -23,6 +23,8 @@ import {
 } from "@material-ui/core";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+import { compose } from "redux";
+import { firestoreConnect } from "react-redux-firebase";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant='filled' {...props} />;
@@ -69,8 +71,9 @@ interface driverProps extends RouteComponentProps {
   auth: any;
   authError?: any;
   history: any;
+  status: any;
 }
-const DriverForm: React.FC<driverProps> = ({ registerDriver }) => {
+const DriverForm: React.FC<driverProps> = ({ registerDriver, status }) => {
   const [driver, setUser] = useState<Driver>({
     id: "",
     name: "",
@@ -84,6 +87,7 @@ const DriverForm: React.FC<driverProps> = ({ registerDriver }) => {
     phonenumber: "",
     region: "",
     subcity: "",
+    status: "",
   });
   const [open, setOpen] = React.useState(false);
 
@@ -170,14 +174,36 @@ const DriverForm: React.FC<driverProps> = ({ registerDriver }) => {
                     onChange={handleSelectChange}
                     name='gender'
                     label='Gender'>
-                    <MenuItem value=''>
-                      <em>None</em>
-                    </MenuItem>
                     <MenuItem value='Male'>Male</MenuItem>
                     <MenuItem value='Female'>Female</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
+              <Grid item xs={4}>
+                <FormControl variant='outlined' className={classes.formControl}>
+                  <InputLabel id='demo-simple-select-outlined-label'>
+                    Status
+                  </InputLabel>
+                  <Select
+                    labelId='demo-simple-select-outlined-label'
+                    id='demo-simple-select-outlined'
+                    value={driver.status}
+                    onChange={handleSelectChange}
+                    name='status'
+                    label='Status'>
+                    {status != null
+                      ? status.map((stat: any, key: any) => {
+                          return (
+                            <MenuItem value={stat.id} key={key}>
+                              {stat.status_name}
+                            </MenuItem>
+                          );
+                        })
+                      : null}
+                  </Select>
+                </FormControl>
+              </Grid>
+
               <Grid item xs={4}>
                 <TextField
                   variant='outlined'
@@ -275,14 +301,16 @@ const DriverForm: React.FC<driverProps> = ({ registerDriver }) => {
                 />
               </Grid>
             </Grid>
-            <Button
-              type='submit'
-              fullWidth
-              variant='contained'
-              color='primary'
-              className={classes.submit}>
-              Register
-            </Button>
+            <Grid item xs={4}>
+              <Button
+                type='submit'
+                fullWidth
+                variant='contained'
+                color='primary'
+                className={classes.submit}>
+                Register
+              </Button>
+            </Grid>
           </form>
         </Paper>
       </div>
@@ -297,6 +325,14 @@ const DriverForm: React.FC<driverProps> = ({ registerDriver }) => {
 
 const mapStateToProps = (state: any) => ({
   auth: state.firebase.auth,
+  status: state.firestore.ordered.status,
 });
 
-export default connect(mapStateToProps, { registerDriver })(DriverForm);
+export default compose(
+  connect(mapStateToProps, { registerDriver }),
+  firestoreConnect([
+    {
+      collection: "status",
+    },
+  ])
+)(DriverForm);

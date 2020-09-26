@@ -226,14 +226,16 @@ const WhistleEditForm: React.FC<whistleProps> = ({
                 />
               </Grid>
             </Grid>
-            <Button
-              type='submit'
-              fullWidth
-              variant='contained'
-              color='primary'
-              className={classes.submit}>
-              Update
-            </Button>
+            <Grid item xs={4}>
+              <Button
+                type='submit'
+                fullWidth
+                variant='contained'
+                color='primary'
+                className={classes.submit}>
+                Update
+              </Button>
+            </Grid>
           </form>
         </Paper>
       </div>

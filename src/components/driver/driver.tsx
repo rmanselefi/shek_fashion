@@ -108,6 +108,7 @@ const Driver: React.FC<driverProp> = ({
                     <TableCell>Gender</TableCell>
                     <TableCell>Issued Date</TableCell>
                     <TableCell>Expiry Date</TableCell>
+                    <TableCell>Driver Status</TableCell>
                     <TableCell>Actions</TableCell>
                   </TableRow>
                 </TableHead>
@@ -120,6 +121,7 @@ const Driver: React.FC<driverProp> = ({
                           <TableCell>{row.gender}</TableCell>
                           <TableCell>{row.issued_date}</TableCell>
                           <TableCell>{row.expiry_date}</TableCell>
+                          <TableCell>{row.status!.name}</TableCell>
                           <TableCell>
                             <Button
                               variant='outlined'

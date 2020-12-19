@@ -27,58 +27,11 @@ export const mainListItems = (
         style={{
           textDecoration: "none",
         }}
-        to='/drivers'>
-        Drivers
+        to='/products'>
+        Products
       </Link>
     </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <BarChartIcon />
-      </ListItemIcon>
-      <Link
-        style={{
-          textDecoration: "none",
-        }}
-        to='/traffics'>
-        Traffics
-      </Link>
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <ShoppingCartIcon />
-      </ListItemIcon>
-      <Link
-        style={{
-          textDecoration: "none",
-        }}
-        to='/penalties'>
-        Penalties
-      </Link>
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <PeopleIcon />
-      </ListItemIcon>
-      <Link
-        style={{
-          textDecoration: "none",
-        }}
-        to='/warnings'>
-        Warnings
-      </Link>
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <BarChartIcon />
-      </ListItemIcon>
-      <Link
-        style={{
-          textDecoration: "none",
-        }}
-        to='/whistles'>
-        Whistle Violations
-      </Link>
-    </ListItem>
+    
     <ListItem button>
       <ListItemIcon>
         <LayersIcon />

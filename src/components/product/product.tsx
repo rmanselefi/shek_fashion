@@ -17,7 +17,7 @@ import { Title } from "../layout/title";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
-import { deleteWhistle } from "../../store/actions/whistleActions";
+import { deleteProduct } from "../../store/actions/productActions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,17 +50,17 @@ const useStyles = makeStyles((theme) => ({
   appBarSpacer: theme.mixins.toolbar,
 }));
 
-interface whistleProp extends RouteComponentProps {
-  whistle: any;
-  deleteWhistle: (whistleId: string) => void;
+interface productProp extends RouteComponentProps {
+  product: any;
+  deletePenalty: (penaltyId: string) => void;
 }
 
-const Whistle: React.FC<whistleProp> = ({
+const Product: React.FC<productProp> = ({
   history,
   location,
   match,
-  whistle,
-  deleteWhistle,
+  product,
+  deletePenalty,
 }) => {
   const classes = useStyles();
   const handelDelete = async (
@@ -68,7 +68,7 @@ const Whistle: React.FC<whistleProp> = ({
     id: string
   ) => {
     if (window.confirm("are you sure you want to delete this?")) {
-      await deleteWhistle(id);
+      await deleteProduct(id);
     }
   };
   return (
@@ -93,36 +93,35 @@ const Whistle: React.FC<whistleProp> = ({
                     style={{
                       textDecoration: "none",
                     }}
-                    to='/whistles/add'>
+                    to='/products/add'>
                     Register
                   </Link>
                 </Button>
               </Grid>
 
-              <Title>Whistle Violations</Title>
+              <Title>Penalties</Title>
               <Table size='small'>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Vehicle Type</TableCell>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Hour</TableCell>
-                    <TableCell>Erken</TableCell>
-                    <TableCell>Penalty Code</TableCell>
-
+                    <TableCell>Product Name</TableCell>
+                    <TableCell>Product Type</TableCell>
+                    <TableCell>Brand</TableCell>                    
+                    <TableCell>Code</TableCell>
+                    <TableCell>Size</TableCell>
+                    <TableCell>Color</TableCell>
                     <TableCell>Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {whistle != null
-                    ? whistle.map((row: any) => (
+                  {product != null
+                    ? product.map((row: any) => (
                         <TableRow key={row.id}>
-                          <TableCell>{row.vehicletype}</TableCell>
-                          <TableCell>{row.licensenumber}</TableCell>
-                          <TableCell>{row.date}</TableCell>
-                          <TableCell>{row.hour}</TableCell>
-                          <TableCell>{row.erken}</TableCell>
-                          <TableCell>{row.penaltycode}</TableCell>
+                          <TableCell>{row.name}</TableCell>
+                          <TableCell>{row.type}</TableCell>
+                          <TableCell>{row.brand}</TableCell>
+                          <TableCell>{row.size}</TableCell>
+                        <TableCell>{row.color}</TableCell>
+                        <TableCell>{row.code}</TableCell>
                           <TableCell>
                             <Button
                               variant='outlined'
@@ -134,8 +133,8 @@ const Whistle: React.FC<whistleProp> = ({
                                   textDecoration: "none",
                                 }}
                                 to={{
-                                  pathname: `/whistles/edit`,
-                                  state: { whistle: row },
+                                  pathname: `/products/edit`,
+                                  state: { product: row },
                                 }}>
                                 Edit
                               </Link>
@@ -166,14 +165,14 @@ const Whistle: React.FC<whistleProp> = ({
 const mapStateToProps = (state: any) => {
   console.log(state);
   return {
-    whistle: state.firestore.ordered.whistle,
+    product: state.firestore.ordered.product,
   };
 };
 export default compose(
-  connect(mapStateToProps, { deleteWhistle }),
+  connect(mapStateToProps, { deleteProduct }),
   firestoreConnect([
     {
-      collection: "whistle",
+      collection: "product",
     },
   ])
-)(Whistle);
+)(Product);

@@ -10,23 +10,12 @@ import { CircularProgress } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 import Navbar from "./components/layout/navbar";
-import Driver from "./components/driver/driver";
-import DriverForm from "./components/driver/driver_form";
-import DriverEditForm from "./components/driver/driverEditForm";
-import Penalty from "./components/penalty/penalty";
-import penaltyEditForm from "./components/penalty/penaltyEditForm";
-import penaltyForm from "./components/penalty/penaltyForm";
 
-import Warning from "./components/warning/warning";
-import warningForm from "./components/warning/warningForm";
-import warningEditForm from "./components/warning/warningEditForm";
-import whistleForm from "./components/whistle/whistleForm";
-import whistleEditForm from "./components/whistle/whistleEditForm";
-import Whistle from "./components/whistle/whistle";
+import Product from "./components/product/product";
+import ProductEditForm from "./components/product/productEditForm";
+import ProductForm from "./components/product/productForm";
 
-import Traffic from "./components/traffics/traffic";
-import trafficEditForm from "./components/traffics/trafficEditForm";
-import trafficForm from "./components/traffics/trafficForm";
+
 
 interface isAuthProps {
   children: any;
@@ -69,23 +58,11 @@ const Main = withRouter(({ location }) => {
       <Route exact path='/login' component={SignIn} />
       <Route exact path='/signup' component={SignUp} />
       <PrivateRoute exact path='/dashboard' component={Dashboard} />
-      <PrivateRoute exact path='/drivers' component={Driver} />
-      <PrivateRoute exact path='/drivers/add' component={DriverForm} />
-      <PrivateRoute exact path='/drivers/edit' component={DriverEditForm} />
-      <PrivateRoute exact path='/penalties' component={Penalty} />
-      <PrivateRoute exact path='/penalties/add' component={penaltyForm} />
-      <PrivateRoute exact path='/penalties/edit' component={penaltyEditForm} />
-      <PrivateRoute exact path='/warnings' component={Warning} />
-      <PrivateRoute exact path='/warnings/add' component={warningForm} />
-      <PrivateRoute exact path='/warnings/edit' component={warningEditForm} />
-
-      <PrivateRoute exact path='/whistles' component={Whistle} />
-      <PrivateRoute exact path='/whistles/add' component={whistleForm} />
-      <PrivateRoute exact path='/whistles/edit' component={whistleEditForm} />
-
-      <PrivateRoute exact path='/traffics' component={Traffic} />
-      <PrivateRoute exact path='/traffics/add' component={trafficForm} />
-      <PrivateRoute exact path='/traffics/edit' component={trafficEditForm} />
+      
+      <PrivateRoute exact path='/products' component={Product} />
+      <PrivateRoute exact path='/products/add' component={ProductForm} />
+      <PrivateRoute exact path='/products/edit' component={ProductEditForm} />
+      
     </div>
   );
 });

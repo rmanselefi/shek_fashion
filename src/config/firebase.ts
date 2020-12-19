@@ -4,14 +4,12 @@ import "firebase/auth";
 import "firebase/storage";
 
 export const firebaseConfig = {
-  apiKey: "AIzaSyC_yYn2Lneqo5IaZTU-NLzpHdlCeEQ27uA",
-  authDomain: "trafficpenalty-79dcb.firebaseapp.com",
-  databaseURL: "https://trafficpenalty-79dcb.firebaseio.com",
-  projectId: "trafficpenalty-79dcb",
-  storageBucket: "trafficpenalty-79dcb.appspot.com",
-  messagingSenderId: "965442786475",
-  appId: "1:965442786475:web:934ec62239585e63ee53ee",
-  measurementId: "G-HR493BBCF1",
+   apiKey: "AIzaSyCy8kRd_9eb5YVzI61z9k74JBoilgUvTMw",
+  authDomain: "shikfashion-7c89e.firebaseapp.com",
+  projectId: "shikfashion-7c89e",
+  storageBucket: "shikfashion-7c89e.appspot.com",
+  messagingSenderId: "58912336944",
+  appId: "1:58912336944:web:ea52e38bec61ff951591f5"
 };
 
 firebase.initializeApp(firebaseConfig);

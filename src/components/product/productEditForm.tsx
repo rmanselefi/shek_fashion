@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -10,11 +10,11 @@ import Container from "@material-ui/core/Container";
 
 import { connect } from "react-redux";
 
-import { registerWhistle } from "../../store/actions/whistleActions";
+import { updateProduct } from "../../store/actions/productActions";
 import { Theme, Paper, makeStyles } from "@material-ui/core";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import { Whistle } from "../../models/whistle";
+import { Product } from "../../models/product";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant='filled' {...props} />;
@@ -56,22 +56,53 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface whistleProps extends RouteComponentProps {
-  registerWhistle: (whistle: Whistle) => void;
+interface productProps extends RouteComponentProps {
+  updateProduct: (product: Product) => void;
   auth: any;
   authError?: any;
   history: any;
+  location: any;
 }
-const WhistleForm: React.FC<whistleProps> = ({ registerWhistle }) => {
-  const [whistle, setUser] = useState<Whistle>({
+const ProductEditForm: React.FC<productProps> = ({
+  updateProduct,
+  location,
+}) => {
+  const [product, setUser] = useState<Product>({
     id: "",
-    date: "",
-    erken: "",
-    licensenumber: "",
-    penaltycode: "",
-    vehicletype: "",
-    hour: "",
+    name: "",
+    brand: "",
+    code: "",
+    color: "",
+    size: "",
+    type: "",
+    baseprice: 0.0,
+    stock:""
   });
+  const produc = location.state.product;
+  useEffect(() => {
+    setUser({
+      id: produc.id,
+      name: produc.name,
+      brand: produc.brand,
+      color: produc.color,
+      type: produc.type,
+      size: produc.size,
+      code: produc.code,
+      baseprice: produc.baseprice,
+      stock:produc.stock
+      
+    });
+  }, [
+    produc.id,
+    produc.name,
+    produc.brand,
+    produc.color,
+    produc.type,
+      produc.size,
+      produc.code,
+    produc.baseprice,
+      produc.stock
+  ]);
   const [open, setOpen] = React.useState(false);
 
   const handleChange = (
@@ -80,14 +111,14 @@ const WhistleForm: React.FC<whistleProps> = ({ registerWhistle }) => {
     >
   ) => {
     setUser({
-      ...whistle,
+      ...product,
       [event.currentTarget!.id]: event.currentTarget!.value,
     });
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    var res = await registerWhistle(whistle);
+    var res = await updateProduct(product);
     if (res != null) {
       setOpen(true);
     }
@@ -110,7 +141,7 @@ const WhistleForm: React.FC<whistleProps> = ({ registerWhistle }) => {
             marginTop: "20",
           }}>
           <Typography component='h1' variant='h5'>
-            Register Whistle Violations
+            Update Product
           </Typography>
           <form onSubmit={handleSubmit} noValidate>
             <Grid container spacing={3}>
@@ -119,11 +150,11 @@ const WhistleForm: React.FC<whistleProps> = ({ registerWhistle }) => {
                   variant='outlined'
                   required
                   fullWidth
-                  id='vehicletype'
-                  label='Vehicle Type'
-                  name='vehicletype'
+                  id='name'
+                  label='Product Name'
+                  name='name'
                   onChange={handleChange}
-                  value={whistle.vehicletype}
+                  value={product.name}
                 />
               </Grid>
               <Grid item xs={4}>
@@ -131,11 +162,11 @@ const WhistleForm: React.FC<whistleProps> = ({ registerWhistle }) => {
                   variant='outlined'
                   required
                   fullWidth
-                  name='licensenumber'
-                  label='License Number'
-                  id='licensenumber'
+                  name='brand'
+                  label='Brand'
+                  id='brand'
                   onChange={handleChange}
-                  value={whistle.licensenumber}
+                  value={product.brand}
                 />
               </Grid>
 
@@ -144,30 +175,39 @@ const WhistleForm: React.FC<whistleProps> = ({ registerWhistle }) => {
                   variant='outlined'
                   required
                   fullWidth
-                  name='date'
-                  label='Date'
-                  type='date'
-                  id='date'
+                  id='stock'
+                  label='Stock'
+                  name='stock'
                   onChange={handleChange}
-                  value={whistle.date}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
+                  value={product.stock}
                 />
               </Grid>
               <Grid item xs={4}>
                 <TextField
-                  id='hour'
-                  label='Hour'
-                  name='hour'
-                  type='time'
-                  defaultValue='07:30'
-                  value={whistle.date}
+                  variant='outlined'
+                  required
+                  fullWidth
+                  name='baseprice'
+                  label='Base Price'
+                  id='baseprice'
+                  onChange={handleChange}
+                  value={product.baseprice}
+                />
+              </Grid>
+
+              <Grid item xs={4}>
+                <TextField
+                  variant='outlined'
+                  required
+                  fullWidth
+                  name='type'
+                  label='Type'
+                  type='text'
+                  id='type'
+                  onChange={handleChange}
+                  value={product.type}
                   InputLabelProps={{
                     shrink: true,
-                  }}
-                  inputProps={{
-                    step: 300, // 5 min
                   }}
                 />
               </Grid>
@@ -177,11 +217,11 @@ const WhistleForm: React.FC<whistleProps> = ({ registerWhistle }) => {
                   variant='outlined'
                   required
                   fullWidth
-                  name='erken'
-                  label='Erken'
-                  id='erken'
+                  name='size'
+                  label='Size'
+                  id='size'
                   onChange={handleChange}
-                  value={whistle.erken}
+                  value={product.size}
                 />
               </Grid>
               <Grid item xs={4}>
@@ -189,11 +229,23 @@ const WhistleForm: React.FC<whistleProps> = ({ registerWhistle }) => {
                   variant='outlined'
                   required
                   fullWidth
-                  name='penaltycode'
-                  label='Penalty Code'
-                  id='penaltycode'
+                  name='code'
+                  label='Code'
+                  id='code'
                   onChange={handleChange}
-                  value={whistle.penaltycode}
+                  value={product.code}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  variant='outlined'
+                  required
+                  fullWidth
+                  name='color'
+                  label='Color'
+                  id='color'
+                  onChange={handleChange}
+                  value={product.color}
                 />
               </Grid>
             </Grid>
@@ -204,7 +256,7 @@ const WhistleForm: React.FC<whistleProps> = ({ registerWhistle }) => {
                 variant='contained'
                 color='primary'
                 className={classes.submit}>
-                Register
+                Update
               </Button>
             </Grid>
           </form>
@@ -223,4 +275,4 @@ const mapStateToProps = (state: any) => ({
   auth: state.firebase.auth,
 });
 
-export default connect(mapStateToProps, { registerWhistle })(WhistleForm);
+export default connect(mapStateToProps, { updateProduct })(ProductEditForm);

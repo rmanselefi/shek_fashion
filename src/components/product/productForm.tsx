@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -10,11 +10,11 @@ import Container from "@material-ui/core/Container";
 
 import { connect } from "react-redux";
 
-import { registerPenalty } from "../../store/actions/penaltyActions";
+import { registerProduct } from "../../store/actions/productActions";
 import { Theme, Paper, makeStyles } from "@material-ui/core";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import { Penalty } from "../../models/penalty";
+import { Product } from "../../models/product";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant='filled' {...props} />;
@@ -57,42 +57,23 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface penaltyProps extends RouteComponentProps {
-  registerPenalty: (penalty: Penalty) => void;
+  registerProduct: (penalty: Product) => void;
   auth: any;
   authError?: any;
   history: any;
-  location: any;
 }
-const PenaltyEditForm: React.FC<penaltyProps> = ({
-  registerPenalty,
-  location,
-}) => {
-  const [penalty, setUser] = useState<Penalty>({
+const ProductForm: React.FC<penaltyProps> = ({ registerProduct }) => {
+  const [product, setUser] = useState<Product>({
     id: "",
-    date: "",
-    erken: "",
-    licensenumber: "",
-    penaltycode: "",
-    vehicletype: "",
+    name: "",
+    brand: "",
+    code: "",
+    color: "",
+    size: "",
+    type: "",
+    baseprice: 0.0,
+     stock:""
   });
-  const penalt = location.state.penalty;
-  useEffect(() => {
-    setUser({
-      id: penalt.id,
-      vehicletype: penalt.vehicletype,
-      licensenumber: penalt.licensenumber,
-      penaltycode: penalt.penaltycode,
-      date: penalt.date,
-      erken: penalt.erken,
-    });
-  }, [
-    penalt.id,
-    penalt.vehicletype,
-    penalt.licensenumber,
-    penalt.penaltycode,
-    penalt.date,
-    penalt.erken,
-  ]);
   const [open, setOpen] = React.useState(false);
 
   const handleChange = (
@@ -101,14 +82,14 @@ const PenaltyEditForm: React.FC<penaltyProps> = ({
     >
   ) => {
     setUser({
-      ...penalty,
+      ...product,
       [event.currentTarget!.id]: event.currentTarget!.value,
     });
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    var res = await registerPenalty(penalty);
+    var res = await registerProduct(product);
     if (res != null) {
       setOpen(true);
     }
@@ -131,7 +112,7 @@ const PenaltyEditForm: React.FC<penaltyProps> = ({
             marginTop: "20",
           }}>
           <Typography component='h1' variant='h5'>
-            Update Penalty
+            Register Penalty
           </Typography>
           <form onSubmit={handleSubmit} noValidate>
             <Grid container spacing={3}>
@@ -140,11 +121,11 @@ const PenaltyEditForm: React.FC<penaltyProps> = ({
                   variant='outlined'
                   required
                   fullWidth
-                  id='vehicletype'
-                  label='Vehicle Type'
-                  name='vehicletype'
+                  id='name'
+                  label='Product Name'
+                  name='name'
                   onChange={handleChange}
-                  value={penalty.vehicletype}
+                  value={product.name}
                 />
               </Grid>
               <Grid item xs={4}>
@@ -152,11 +133,11 @@ const PenaltyEditForm: React.FC<penaltyProps> = ({
                   variant='outlined'
                   required
                   fullWidth
-                  name='licensenumber'
-                  label='License Number'
-                  id='licensenumber'
+                  name='brand'
+                  label='Brand'
+                  id='brand'
                   onChange={handleChange}
-                  value={penalty.licensenumber}
+                  value={product.brand}
                 />
               </Grid>
 
@@ -165,12 +146,37 @@ const PenaltyEditForm: React.FC<penaltyProps> = ({
                   variant='outlined'
                   required
                   fullWidth
-                  name='date'
-                  label='Date'
-                  type='date'
-                  id='date'
+                  id='stock'
+                  label='Stock'
+                  name='stock'
                   onChange={handleChange}
-                  value={penalty.date}
+                  value={product.stock}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  variant='outlined'
+                  required
+                  fullWidth
+                  name='baseprice'
+                  label='Base Price'
+                  id='baseprice'
+                  onChange={handleChange}
+                  value={product.baseprice}
+                />
+              </Grid>
+
+              <Grid item xs={4}>
+                <TextField
+                  variant='outlined'
+                  required
+                  fullWidth
+                  name='type'
+                  label='Type'
+                  type='text'
+                  id='type'
+                  onChange={handleChange}
+                  value={product.type}
                   InputLabelProps={{
                     shrink: true,
                   }}
@@ -182,11 +188,11 @@ const PenaltyEditForm: React.FC<penaltyProps> = ({
                   variant='outlined'
                   required
                   fullWidth
-                  name='erken'
-                  label='Erken'
-                  id='erken'
+                  name='size'
+                  label='Size'
+                  id='size'
                   onChange={handleChange}
-                  value={penalty.erken}
+                  value={product.size}
                 />
               </Grid>
               <Grid item xs={4}>
@@ -194,11 +200,23 @@ const PenaltyEditForm: React.FC<penaltyProps> = ({
                   variant='outlined'
                   required
                   fullWidth
-                  name='penaltycode'
-                  label='Penalty Code'
-                  id='penaltycode'
+                  name='code'
+                  label='Code'
+                  id='code'
                   onChange={handleChange}
-                  value={penalty.penaltycode}
+                  value={product.code}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  variant='outlined'
+                  required
+                  fullWidth
+                  name='color'
+                  label='Color'
+                  id='color'
+                  onChange={handleChange}
+                  value={product.color}
                 />
               </Grid>
             </Grid>
@@ -228,4 +246,4 @@ const mapStateToProps = (state: any) => ({
   auth: state.firebase.auth,
 });
 
-export default connect(mapStateToProps, { registerPenalty })(PenaltyEditForm);
+export default connect(mapStateToProps, { registerProduct })(ProductForm);

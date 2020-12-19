@@ -59,7 +59,7 @@ interface signinProps extends RouteComponentProps {
 }
 
 const SignIn: React.FC<signinProps> = ({ signIn, history, auth }) => {
-  const [user, setUser] = useState<User>({ email: "", password: "" });
+  const [user, setUser] = useState<User>({ email: "", password: "" ,role:""});
   const [open, setOpen] = React.useState(false);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUser({ ...user, [event.currentTarget!.id]: event.currentTarget!.value });

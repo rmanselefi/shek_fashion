@@ -3,6 +3,11 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
+import InputLabel from '@material-ui/core/InputLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import NativeSelect from '@material-ui/core/NativeSelect';
 // import Link from "@material-ui/core/Link";
 import { Link, RouteComponentProps, Redirect } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
@@ -47,6 +52,13 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  formControl: {
+      // margin: theme.spacing(1),
+      minWidth: 400,
+    },
+    selectEmpty: {
+      marginTop: theme.spacing(2),
+    },
 }));
 
 interface signupProps extends RouteComponentProps {
@@ -56,7 +68,7 @@ interface signupProps extends RouteComponentProps {
 }
 
 const SignUp: React.FC<signupProps> = ({ signup, auth, history }) => {
-  const [user, setUser] = useState<User>({ email: "", password: "" });
+  const [user, setUser] = useState<User>({ email: "", password: "",role:"" });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUser({
@@ -65,6 +77,12 @@ const SignUp: React.FC<signupProps> = ({ signup, auth, history }) => {
     });
   };
 
+  const handleSelectChange = (
+    event: React.ChangeEvent<{ name?: string; value: unknown }>
+  ) => {
+    const name = event.target.name as string;
+    setUser({ ...user, [name]: event.target.value });
+  };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     var res = await signup(user);
@@ -116,6 +134,28 @@ const SignUp: React.FC<signupProps> = ({ signup, auth, history }) => {
                 value={user.password}
               />
             </Grid>
+            <Grid item xs={12}>
+            <FormControl variant="outlined" className={classes.formControl}>
+        <InputLabel htmlFor="outlined-age-native-simple">Role</InputLabel>
+        <Select
+          native
+          id='role'
+          onChange={handleSelectChange}
+                  label="Role"
+                  name="role"
+                  value={user.role}
+          inputProps={{
+            name: 'role',
+            id: 'outlined-age-native-simple',
+          }}
+        >
+          <option aria-label="None" value="" />
+          <option value='branch-1'>branch-1</option>
+          <option value='branch-2'>branch-2</option>
+          <option value='branch-3'>branch-3</option>
+        </Select>
+              </FormControl>
+              </Grid>
           </Grid>
           <Button
             type='submit'

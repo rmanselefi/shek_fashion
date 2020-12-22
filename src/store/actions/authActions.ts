@@ -55,7 +55,9 @@ export const signup = (user: User) => {
           .collection("users")
           .doc(resp.user!.uid)
           .set({
-            role: "admin",
+            name:user.name,
+            email:user.email,
+            role: user.role,
           })
           .then((resp) => {
             dispatch({ type: "SIGNUP_SUCCESS" });

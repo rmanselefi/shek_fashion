@@ -14,9 +14,13 @@ import Badge from "@material-ui/core/Badge";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import NotificationsIcon from "@material-ui/icons/NotificationImportantOutlined";
-import { mainListItems } from "../layout/sideNav";
+import  {mainListItems}  from "../layout/sideNav";
 import { signOut } from "../../store/actions/authActions";
 import { connect } from "react-redux";
+import { ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
+import DashboardIcon from "@material-ui/icons/Dashboard";
+import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+import {Link} from 'react-router-dom'
 
 const drawerWidth = 240;
 
@@ -101,9 +105,10 @@ const useStyles = makeStyles((theme) => ({
 
 interface navbarProps {
   signOut: () => void;
+  role:string;
 }
 
-const Navbar: React.FC<navbarProps> = ({ signOut }) => {
+const Navbar: React.FC<navbarProps> = ({ signOut ,role}) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
@@ -164,9 +169,69 @@ const Navbar: React.FC<navbarProps> = ({ signOut }) => {
           </IconButton>
         </div>
         <Divider />
-        <List>{mainListItems}</List>
+        <List>
+        <div>
+    <ListItem button>
+      <ListItemIcon>
+        <DashboardIcon />
+      </ListItemIcon>
+      <ListItemText primary='Dashboard' />
+    </ListItem>
+    {
+      role=='admin'?(
+<ListItem button>
+      <ListItemIcon>
+        <ShoppingCartIcon />
+      </ListItemIcon>
+      <Link
+        style={{
+          textDecoration: "none",
+        }}
+        to='/products'>
+        Products
+      </Link>
+    </ListItem>
+      ):null
+    }
+    
+    
+    <ListItem button>
+      <ListItemIcon>
+        <ShoppingCartIcon />
+      </ListItemIcon>
+      <Link
+        style={{
+          textDecoration: "none",
+        }}
+        to='/sales'>
+        Sales
+      </Link>
+    </ListItem>
+    {
+      role=='admin'?(
+<ListItem button>
+      <ListItemIcon>
+        <ShoppingCartIcon />
+      </ListItemIcon>
+      <Link
+        style={{
+          textDecoration: "none",
+        }}
+        to='/users'>
+        Users
+      </Link>
+    </ListItem>
+      ):null
+    }
+    
+  </div>
+        </List>
       </Drawer>
     </>
   );
 };
-export default connect(null, { signOut })(Navbar);
+const mapStateToProps = (state: any) => ({
+  auth: state.firebase.auth,
+  role:state.firebase.profile.role
+});
+export default connect(mapStateToProps, { signOut })(Navbar);

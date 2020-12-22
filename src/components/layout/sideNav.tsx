@@ -34,9 +34,27 @@ export const mainListItems = (
     
     <ListItem button>
       <ListItemIcon>
-        <LayersIcon />
+        <ShoppingCartIcon />
       </ListItemIcon>
-      <ListItemText primary='Status' />
+      <Link
+        style={{
+          textDecoration: "none",
+        }}
+        to='/sales'>
+        Sales
+      </Link>
+    </ListItem>
+    <ListItem button>
+      <ListItemIcon>
+        <ShoppingCartIcon />
+      </ListItemIcon>
+      <Link
+        style={{
+          textDecoration: "none",
+        }}
+        to='/users'>
+        Users
+      </Link>
     </ListItem>
   </div>
 );

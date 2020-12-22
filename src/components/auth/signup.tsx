@@ -68,7 +68,7 @@ interface signupProps extends RouteComponentProps {
 }
 
 const SignUp: React.FC<signupProps> = ({ signup, auth, history }) => {
-  const [user, setUser] = useState<User>({ email: "", password: "",role:"" });
+  const [user, setUser] = useState<User>({ name:"", email: "", password: "",role:"" });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUser({
@@ -92,21 +92,32 @@ const SignUp: React.FC<signupProps> = ({ signup, auth, history }) => {
   };
 
   const classes = useStyles();
-  if (isLoaded(auth) && !isEmpty(auth)) {
-    return <Redirect to='/dashboard' />;
-  }
+  
   return (
     <Container component='main' maxWidth='xs'>
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
+        {/* <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
-        </Avatar>
+        </Avatar> */}
         <Typography component='h1' variant='h5'>
-          Sign up
+          Create User
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit} noValidate>
           <Grid container spacing={2}>
+          <Grid item xs={12}>
+              <TextField
+                variant='outlined'
+                required
+                fullWidth
+                id='name'
+                label='Full Name'
+                name='name'
+                autoComplete='name'
+                onChange={handleChange}
+                value={user.name}
+              />
+            </Grid>
             <Grid item xs={12}>
               <TextField
                 variant='outlined'
@@ -150,6 +161,7 @@ const SignUp: React.FC<signupProps> = ({ signup, auth, history }) => {
           }}
         >
           <option aria-label="None" value="" />
+          <option value='admin'>admin</option>
           <option value='branch-1'>branch-1</option>
           <option value='branch-2'>branch-2</option>
           <option value='branch-3'>branch-3</option>
@@ -163,18 +175,18 @@ const SignUp: React.FC<signupProps> = ({ signup, auth, history }) => {
             variant='contained'
             color='primary'
             className={classes.submit}>
-            Sign Up
+            Create
           </Button>
-          <Grid container justify='flex-end'>
+          {/* <Grid container justify='flex-end'>
             <Grid item>
               <Link to='/login'>Already have an account? Sign in</Link>
             </Grid>
-          </Grid>
+          </Grid> */}
         </form>
       </div>
-      <Box mt={5}>
+      {/* <Box mt={5}>
         <Copyright />
-      </Box>
+      </Box> */}
     </Container>
   );
 };

@@ -3,13 +3,12 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { Link, RouteComponentProps, Redirect } from "react-router-dom";
+import { RouteComponentProps, Redirect } from "react-router-dom";
 import { signIn } from "../../store/actions/authActions";
 import { connect } from "react-redux";
 import { User } from "../../models/user";
@@ -59,7 +58,7 @@ interface signinProps extends RouteComponentProps {
 }
 
 const SignIn: React.FC<signinProps> = ({ signIn, history, auth }) => {
-  const [user, setUser] = useState<User>({ email: "", password: "" ,role:""});
+  const [user, setUser] = useState<User>({ name:"",email: "", password: "" ,role:""});
   const [open, setOpen] = React.useState(false);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUser({ ...user, [event.currentTarget!.id]: event.currentTarget!.value });
@@ -129,11 +128,11 @@ const SignIn: React.FC<signinProps> = ({ signIn, history, auth }) => {
             className={classes.submit}>
             Sign In
           </Button>
-          <Grid container>
+          {/* <Grid container>
             <Grid item>
               <Link to='/signup'>{"Don't have an account? Sign Up"}</Link>
             </Grid>
-          </Grid>
+          </Grid> */}
         </form>
         <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
           <Alert onClose={handleClose} severity='error'>

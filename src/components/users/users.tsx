@@ -17,7 +17,7 @@ import { Title } from "../layout/title";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
-import { deleteProduct } from "../../store/actions/productActions";
+import { deleteSales } from "../../store/actions/salesAction";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,17 +50,17 @@ const useStyles = makeStyles((theme) => ({
   appBarSpacer: theme.mixins.toolbar,
 }));
 
-interface productProp extends RouteComponentProps {
-  product: any;
-  deletePenalty: (penaltyId: string) => void;
+interface salesProp extends RouteComponentProps {
+  users: any;
+  deleteSales: (salesId: string) => void;
 }
 
-const Product: React.FC<productProp> = ({
+const Users: React.FC<salesProp> = ({
   history,
   location,
   match,
-  product,
-  deletePenalty,
+  users,
+  deleteSales,
 }) => {
   const classes = useStyles();
   const handelDelete = async (
@@ -68,7 +68,7 @@ const Product: React.FC<productProp> = ({
     id: string
   ) => {
     if (window.confirm("are you sure you want to delete this?")) {
-      await deleteProduct(id);
+      await deleteSales(id);
     }
   };
   return (
@@ -93,35 +93,31 @@ const Product: React.FC<productProp> = ({
                     style={{
                       textDecoration: "none",
                     }}
-                    to='/products/add'>
+                    to='/signup'>
                     Register
                   </Link>
                 </Button>
               </Grid>
 
-              <Title>Products</Title>
+              <Title>Users</Title>
               <Table size='small'>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Product Name</TableCell>
-                    <TableCell>Product Type</TableCell>
-                    <TableCell>Brand</TableCell>                    
-                    <TableCell>Code</TableCell>
-                    <TableCell>Size</TableCell>
-                    <TableCell>Color</TableCell>
+                    <TableCell>ID</TableCell>
+                    <TableCell>Name</TableCell>
+                    <TableCell>Email</TableCell>
+                    <TableCell>Role</TableCell>   
                     <TableCell>Actions</TableCell>
-                  </TableRow>
+                    </TableRow>
                 </TableHead>
                 <TableBody>
-                  {product != null
-                    ? product.map((row: any) => (
+                  {users != null
+                    ? users.map((row: any,index:any) => (
                         <TableRow key={row.id}>
+                            <TableCell>{index+1}</TableCell>
                           <TableCell>{row.name}</TableCell>
-                          <TableCell>{row.type}</TableCell>
-                          <TableCell>{row.brand}</TableCell>
-                          <TableCell>{row.size}</TableCell>
-                        <TableCell>{row.color}</TableCell>
-                        <TableCell>{row.code}</TableCell>
+                          <TableCell>{row.email}</TableCell>
+                          <TableCell>{row.role}</TableCell>                         
                           <TableCell>
                             <Button
                               variant='outlined'
@@ -133,8 +129,8 @@ const Product: React.FC<productProp> = ({
                                   textDecoration: "none",
                                 }}
                                 to={{
-                                  pathname: `/products/edit`,
-                                  state: { product: row },
+                                  pathname: `/users/edit`,
+                                  state: { user: row },
                                 }}>
                                 Edit
                               </Link>
@@ -165,14 +161,14 @@ const Product: React.FC<productProp> = ({
 const mapStateToProps = (state: any) => {
   console.log(state);
   return {
-    product: state.firestore.ordered.product,
+    users: state.firestore.ordered.users,
   };
 };
 export default compose(
-  connect(mapStateToProps, { deleteProduct }),
+  connect(mapStateToProps, { deleteSales }),
   firestoreConnect([
     {
-      collection: "product",
+      collection: "users",
     },
   ])
-)(Product);
+)(Users);

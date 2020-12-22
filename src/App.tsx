@@ -15,6 +15,11 @@ import Product from "./components/product/product";
 import ProductEditForm from "./components/product/productEditForm";
 import ProductForm from "./components/product/productForm";
 
+import Sales from "./components/sales/sales";
+import SalesEditForm from "./components/sales/salesEditForm";
+import SalesForm from "./components/sales/salesForm";
+import Users from './components/users/users'
+
 
 
 interface isAuthProps {
@@ -52,16 +57,22 @@ const Main = withRouter(({ location }) => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      {location.pathname !== "/login" && location.pathname !== "/signup" && (
+      {location.pathname !== "/login" &&  (
         <Navbar />
       )}
       <Route exact path='/login' component={SignIn} />
-      <Route exact path='/signup' component={SignUp} />
+      <PrivateRoute exact path='/signup' component={SignUp} />
       <PrivateRoute exact path='/dashboard' component={Dashboard} />
       
       <PrivateRoute exact path='/products' component={Product} />
       <PrivateRoute exact path='/products/add' component={ProductForm} />
       <PrivateRoute exact path='/products/edit' component={ProductEditForm} />
+
+      <PrivateRoute exact path='/sales' component={Sales} />
+      <PrivateRoute exact path='/sales/add' component={SalesForm} />
+      <PrivateRoute exact path='/sales/edit' component={SalesEditForm} />
+
+      <PrivateRoute exact path='/users' component={Users} />
       
     </div>
   );

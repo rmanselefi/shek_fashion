@@ -9,6 +9,7 @@ export const registerSales = (sales: Sales) => {
       product: sales.productid,
       price: sales.price,
       quantity: sales.quantity,
+      createdAt: new Date(),
     });
     if (resp != null) {
       var res = await firebase
@@ -43,6 +44,7 @@ export const updateSales = (sales: Sales) => {
         product: sales.productid,
         price: sales.price,
         quantity: sales.quantity,
+        updatedAt: new Date(),
       });
     if (resp != null) {
       return sales;

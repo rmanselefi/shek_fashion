@@ -11,7 +11,7 @@ import Container from "@material-ui/core/Container";
 import { connect } from "react-redux";
 
 import { updateProduct } from "../../store/actions/productActions";
-import { Theme, Paper, makeStyles } from "@material-ui/core";
+import { Theme, Paper, makeStyles, FormControl } from "@material-ui/core";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { Product } from "../../models/product";
@@ -76,7 +76,7 @@ const ProductEditForm: React.FC<productProps> = ({
     size: "",
     type: "",
     baseprice: 0.0,
-    stock:""
+    stock: "",
   });
   const produc = location.state.product;
   useEffect(() => {
@@ -88,9 +88,8 @@ const ProductEditForm: React.FC<productProps> = ({
       type: produc.type,
       size: produc.size,
       code: produc.code,
-      baseprice: produc.baseprice,
-      stock:produc.stock
-      
+      baseprice: produc.price,
+      stock: produc.stock,
     });
   }, [
     produc.id,
@@ -98,10 +97,10 @@ const ProductEditForm: React.FC<productProps> = ({
     produc.brand,
     produc.color,
     produc.type,
-      produc.size,
-      produc.code,
-    produc.baseprice,
-      produc.stock
+    produc.size,
+    produc.code,
+    produc.price,
+    produc.stock,
   ]);
   const [open, setOpen] = React.useState(false);
 
@@ -120,6 +119,8 @@ const ProductEditForm: React.FC<productProps> = ({
     event.preventDefault();
     var res = await updateProduct(product);
     if (res != null) {
+      console.log("nhhjgcvchgfchgcghfcgvcgfchgfcgcghfcgcgchfc");
+
       setOpen(true);
     }
   };
@@ -136,117 +137,145 @@ const ProductEditForm: React.FC<productProps> = ({
     <Container>
       <CssBaseline />
       <div className={classes.paper}>
+        <br />
+        <br />
         <Paper
           style={{
             marginTop: "20",
           }}>
-          <Typography component='h1' variant='h5'>
+          <br />
+          <Typography component='h5' variant='h5'>
             Update Product
           </Typography>
+          <br />
           <form onSubmit={handleSubmit} noValidate>
             <Grid container spacing={3}>
               <Grid item xs={4}>
-                <TextField
-                  variant='outlined'
-                  required
-                  fullWidth
-                  id='name'
-                  label='Product Name'
-                  name='name'
-                  onChange={handleChange}
-                  value={product.name}
-                />
+                <FormControl variant='outlined' className={classes.formControl}>
+                  {" "}
+                  <TextField
+                    variant='outlined'
+                    required
+                    fullWidth
+                    id='name'
+                    label='Product Name'
+                    name='name'
+                    onChange={handleChange}
+                    value={product.name}
+                  />
+                </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <TextField
-                  variant='outlined'
-                  required
-                  fullWidth
-                  name='brand'
-                  label='Brand'
-                  id='brand'
-                  onChange={handleChange}
-                  value={product.brand}
-                />
-              </Grid>
-
-              <Grid item xs={4}>
-                <TextField
-                  variant='outlined'
-                  required
-                  fullWidth
-                  id='stock'
-                  label='Stock'
-                  name='stock'
-                  onChange={handleChange}
-                  value={product.stock}
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  variant='outlined'
-                  required
-                  fullWidth
-                  name='baseprice'
-                  label='Base Price'
-                  id='baseprice'
-                  onChange={handleChange}
-                  value={product.baseprice}
-                />
+                <FormControl variant='outlined' className={classes.formControl}>
+                  {" "}
+                  <TextField
+                    variant='outlined'
+                    required
+                    fullWidth
+                    name='brand'
+                    label='Brand'
+                    id='brand'
+                    onChange={handleChange}
+                    value={product.brand}
+                  />
+                </FormControl>
               </Grid>
 
               <Grid item xs={4}>
-                <TextField
-                  variant='outlined'
-                  required
-                  fullWidth
-                  name='type'
-                  label='Type'
-                  type='text'
-                  id='type'
-                  onChange={handleChange}
-                  value={product.type}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
+                <FormControl variant='outlined' className={classes.formControl}>
+                  {" "}
+                  <TextField
+                    variant='outlined'
+                    required
+                    fullWidth
+                    id='stock'
+                    label='Stock'
+                    name='stock'
+                    onChange={handleChange}
+                    value={product.stock}
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <FormControl variant='outlined' className={classes.formControl}>
+                  {" "}
+                  <TextField
+                    variant='outlined'
+                    required
+                    fullWidth
+                    name='baseprice'
+                    label='Base Price'
+                    id='baseprice'
+                    onChange={handleChange}
+                    value={product.baseprice}
+                  />
+                </FormControl>
               </Grid>
 
               <Grid item xs={4}>
-                <TextField
-                  variant='outlined'
-                  required
-                  fullWidth
-                  name='size'
-                  label='Size'
-                  id='size'
-                  onChange={handleChange}
-                  value={product.size}
-                />
+                <FormControl variant='outlined' className={classes.formControl}>
+                  {" "}
+                  <TextField
+                    variant='outlined'
+                    required
+                    fullWidth
+                    name='type'
+                    label='Type'
+                    type='text'
+                    id='type'
+                    onChange={handleChange}
+                    value={product.type}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={4}>
+                <FormControl variant='outlined' className={classes.formControl}>
+                  {" "}
+                  <TextField
+                    variant='outlined'
+                    required
+                    fullWidth
+                    name='size'
+                    label='Size'
+                    id='size'
+                    onChange={handleChange}
+                    value={product.size}
+                  />
+                </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <TextField
-                  variant='outlined'
-                  required
-                  fullWidth
-                  name='code'
-                  label='Code'
-                  id='code'
-                  onChange={handleChange}
-                  value={product.code}
-                />
+                <FormControl variant='outlined' className={classes.formControl}>
+                  {" "}
+                  <TextField
+                    variant='outlined'
+                    required
+                    fullWidth
+                    name='code'
+                    label='Code'
+                    id='code'
+                    onChange={handleChange}
+                    value={product.code}
+                  />
+                </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <TextField
-                  variant='outlined'
-                  required
-                  fullWidth
-                  name='color'
-                  label='Color'
-                  id='color'
-                  onChange={handleChange}
-                  value={product.color}
-                />
+                <FormControl variant='outlined' className={classes.formControl}>
+                  {" "}
+                  <TextField
+                    variant='outlined'
+                    required
+                    fullWidth
+                    name='color'
+                    label='Color'
+                    id='color'
+                    onChange={handleChange}
+                    value={product.color}
+                  />
+                </FormControl>
               </Grid>
             </Grid>
             <Grid item xs={4}>

@@ -164,6 +164,8 @@ const SalesEditForm: React.FC<salesProps> = ({ updateSales,product,location }) =
               </FormControl>
               </Grid>
               <Grid item xs={4}>
+                <FormControl variant='outlined' className={classes.formControl}>
+                  {" "}
                 <TextField
                   variant='outlined'
                   required
@@ -173,9 +175,12 @@ const SalesEditForm: React.FC<salesProps> = ({ updateSales,product,location }) =
                   name='quantity'
                   onChange={handleChange}
                   value={sale.quantity}
-                />
+                  />
+                  </FormControl>
               </Grid>
               <Grid item xs={4}>
+                <FormControl variant='outlined' className={classes.formControl}>
+                  {" "}
                 <TextField
                   variant='outlined'
                   required
@@ -185,7 +190,8 @@ const SalesEditForm: React.FC<salesProps> = ({ updateSales,product,location }) =
                   id='price'
                   onChange={handleChange}
                   value={sale.price}
-                />
+                  />
+                  </FormControl>
               </Grid>
               </Grid>
             <Grid item xs={4}>

@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
   formControl: {
-      // margin: theme.spacing(1),
+      margin: theme.spacing(1),
       minWidth: 400,
     },
     selectEmpty: {
@@ -105,7 +105,9 @@ const SignUp: React.FC<signupProps> = ({ signup, auth, history }) => {
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit} noValidate>
           <Grid container spacing={2}>
-          <Grid item xs={12}>
+            <Grid item xs={12}>
+              <FormControl variant='outlined' className={classes.formControl}>
+                  {" "}
               <TextField
                 variant='outlined'
                 required
@@ -116,9 +118,12 @@ const SignUp: React.FC<signupProps> = ({ signup, auth, history }) => {
                 autoComplete='name'
                 onChange={handleChange}
                 value={user.name}
-              />
+                />
+                </FormControl>
             </Grid>
             <Grid item xs={12}>
+              <FormControl variant='outlined' className={classes.formControl}>
+                  {" "}
               <TextField
                 variant='outlined'
                 required
@@ -129,9 +134,12 @@ const SignUp: React.FC<signupProps> = ({ signup, auth, history }) => {
                 autoComplete='email'
                 onChange={handleChange}
                 value={user.email}
-              />
+                />
+                </FormControl>
             </Grid>
             <Grid item xs={12}>
+              <FormControl variant='outlined' className={classes.formControl}>
+                  {" "}
               <TextField
                 variant='outlined'
                 required
@@ -143,7 +151,8 @@ const SignUp: React.FC<signupProps> = ({ signup, auth, history }) => {
                 autoComplete='current-password'
                 onChange={handleChange}
                 value={user.password}
-              />
+                />
+                </FormControl>
             </Grid>
             <Grid item xs={12}>
             <FormControl variant="outlined" className={classes.formControl}>

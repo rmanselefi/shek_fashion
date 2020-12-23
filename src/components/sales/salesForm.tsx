@@ -26,7 +26,7 @@ import { compose } from "redux";
 import { firestoreConnect } from "react-redux-firebase";
 
 function Alert(props: AlertProps) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
+  return <MuiAlert elevation={6} variant='filled' {...props} />;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -118,35 +118,41 @@ const SalesForm: React.FC<salesProps> = ({ registerSales, product }) => {
   return (
     <Container>
       <CssBaseline />
-      <div style={{
-            marginTop: "100",
-          }}>
-        <Paper
-          
-        >
-          <Typography component="h1" variant="h5">
+      <div
+        style={{
+          marginTop: "100",
+        }}>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+
+        <Paper>
+          <br />
+          <Typography component='h1' variant='h5'>
             Register Sales
           </Typography>
+          <br />
           <form onSubmit={handleSubmit} noValidate>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel htmlFor="outlined-age-native-simple">
+                <FormControl variant='outlined' className={classes.formControl}>
+                  <InputLabel htmlFor='outlined-age-native-simple'>
                     Product
                   </InputLabel>
                   <Select
                     native
-                    id="productid"
+                    id='productid'
                     onChange={handleSelectChange}
-                    label="Product"
-                    name="productid"
+                    label='Product'
+                    name='productid'
                     value={sale.productid}
                     inputProps={{
                       name: "productid",
                       id: "outlined-age-native-simple",
-                    }}
-                  >
-                    <option aria-label="None" value="" />
+                    }}>
+                    <option aria-label='None' value='' />
                     {product != null
                       ? product.map((row: any) => (
                           <option value={row.id}>{row.name}</option>
@@ -156,38 +162,43 @@ const SalesForm: React.FC<salesProps> = ({ registerSales, product }) => {
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="quantity"
-                  label="Quantity"
-                  name="quantity"
-                  onChange={handleChange}
-                  value={sale.quantity}
-                />
+                <FormControl variant='outlined' className={classes.formControl}>
+                  {" "}
+                  <TextField
+                    variant='outlined'
+                    required
+                    fullWidth
+                    id='quantity'
+                    label='Quantity'
+                    name='quantity'
+                    onChange={handleChange}
+                    value={sale.quantity}
+                  />
+                </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  name="price"
-                  label="Price"
-                  id="price"
-                  onChange={handleChange}
-                  value={sale.price}
-                />
+                <FormControl variant='outlined' className={classes.formControl}>
+                  {" "}
+                  <TextField
+                    variant='outlined'
+                    required
+                    fullWidth
+                    name='price'
+                    label='Price'
+                    id='price'
+                    onChange={handleChange}
+                    value={sale.price}
+                  />
+                </FormControl>
               </Grid>
             </Grid>
             <Grid item xs={4}>
               <Button
-                type="submit"
+                type='submit'
                 fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-              >
+                variant='contained'
+                color='primary'
+                className={classes.submit}>
                 Register Sale
               </Button>
             </Grid>
@@ -195,7 +206,7 @@ const SalesForm: React.FC<salesProps> = ({ registerSales, product }) => {
         </Paper>
       </div>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="success">
+        <Alert onClose={handleClose} severity='success'>
           This is a success message!
         </Alert>
       </Snackbar>

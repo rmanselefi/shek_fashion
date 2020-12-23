@@ -11,7 +11,10 @@ export const registerProduct = (product: Product) => {
       size: product.size,
       color: product.color,
       code: product.code,
-      type:product.type
+      type: product.type,
+      stock: product.stock,
+      price: product.baseprice,
+      createdAt: new Date(),
     });
     if (resp != null) {
       return product;
@@ -29,12 +32,15 @@ export const updateProduct = (product: Product) => {
       .collection("product")
       .doc(product.id)
       .update({
-         name: product.name,
-      brand: product.brand,
-      size: product.size,
-      color: product.color,
-      code: product.code,
-      type:product.type
+        name: product.name,
+        brand: product.brand,
+        size: product.size,
+        color: product.color,
+        code: product.code,
+        type: product.type,
+        stock: product.stock,
+        price: product.baseprice,
+        updatedAt: new Date(),
       });
     if (resp != null) {
       return product;

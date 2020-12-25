@@ -21,10 +21,14 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import NotificationsIcon from "@material-ui/icons/NotificationImportantOutlined";
 import { signOut } from "../../store/actions/authActions";
 import { connect } from "react-redux";
-import { ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
+import { Button, ListItem, ListItemIcon, ListItemText, withStyles } from "@material-ui/core";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { Link } from "react-router-dom";
+import Menu, { MenuProps } from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import SendIcon from '@material-ui/icons/Send';
 
 const drawerWidth = 240;
 
@@ -109,6 +113,36 @@ const useStyles = makeStyles((theme) => ({
     height: 240,
   },
 }));
+const StyledMenu = withStyles({
+  paper: {
+    border: '1px solid #d3d4d5',
+  },
+})((props: MenuProps) => (
+  <Menu
+    elevation={0}
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: 'bottom',
+      horizontal: 'center',
+    }}
+    transformOrigin={{
+      vertical: 'top',
+      horizontal: 'center',
+    }}
+    {...props}
+  />
+));
+
+const StyledMenuItem = withStyles((theme) => ({
+  root: {
+    '&:focus': {
+      backgroundColor: theme.palette.primary.main,
+      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+        color: theme.palette.common.white,
+      },
+    },
+  },
+}))(MenuItem);
 
 interface navbarProps {
   signOut: () => void;
@@ -127,13 +161,32 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
 
   const [openl, setOpenl] = React.useState(true);
 
+   const [opens, setOpens] = React.useState(true);
+
   const handleClick = () => {
     setOpenl(!openl);
+  };
+
+  const handleClicks = () => {
+    setOpens(!opens);
   };
 
   const handleSignout = () => {
     signOut();
   };
+
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClickm = (event:any) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  
 
   return (
     <>
@@ -161,9 +214,34 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
             className={classes.title}>
             Dashboard
           </Typography>
+          <div>
+      <Button
+        aria-controls="customized-menu"
+        aria-haspopup="true"
+        variant="contained"
+        color="primary"
+        onClick={handleClickm}
+      >
+        {role}
+      </Button>
+      <StyledMenu
+        id="customized-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <StyledMenuItem onClick={handleSignout}>
+          <ListItemIcon>
+          <NotificationsIcon  fontSize='small' />
+          </ListItemIcon>
+          <ListItemText primary="Signout" />
+        </StyledMenuItem>        
+      </StyledMenu>
+    </div>
           <IconButton color='inherit'>
             <Badge color='secondary'>
-              <NotificationsIcon onClick={handleSignout} />
+              <AccountCircleIcon />
             </Badge>
           </IconButton>
         </Toolbar>
@@ -186,7 +264,13 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
               <ListItemIcon>
                 <DashboardIcon />
               </ListItemIcon>
-              <ListItemText primary='Dashboard' />
+              <Link
+                      style={{
+                        textDecoration: "none",
+                      }}
+                      to='/dashboard'>
+                      Dashboard
+                    </Link>
             </ListItem>
 
             <ListItem button onClick={handleClick}>
@@ -269,7 +353,92 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
               </List>
             </Collapse>
 
-            <ListItem button>
+
+            <ListItem button onClick={handleClicks}>
+              <ListItemIcon>
+                <ShoppingCartIcon />
+              </ListItemIcon>
+              <ListItemText primary='Sales' />
+              {opens ? <ExpandLess /> : <ExpandMore />}
+            </ListItem>
+
+            {/* <ListItem button onClick={handleClick}>
+              <ListItemIcon>
+                <InboxIcon />
+              </ListItemIcon>
+              <ListItemText primary='Inbox' />
+              {openl ? <ExpandLess /> : <ExpandMore />}
+            </ListItem> */}
+            <Collapse in={opens} timeout='auto' unmountOnExit>
+              <List component='div' disablePadding>
+                {role !== "admin" ? (
+                  <ListItem button className={classes.nested}>
+                    <ListItemIcon>
+                      <Add />
+                    </ListItemIcon>
+                    <Link
+                      style={{
+                        textDecoration: "none",
+                      }}
+                      to={{
+                        pathname: `/sales/add`,
+                        state: { branch: role },
+                      }}
+                      >
+                      Add your sales
+                    </Link>
+                  </ListItem>
+                ) : null}
+
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <StarBorder />
+                  </ListItemIcon>
+                  <Link
+                    style={{
+                      textDecoration: "none",
+                    }}
+                    to={{
+                      pathname: `/sales`,
+                      state: { branch: "branch-1" },
+                    }}>
+                    Branch-1
+                  </Link>
+                </ListItem>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <StarBorder />
+                  </ListItemIcon>
+                  <Link
+                    style={{
+                      textDecoration: "none",
+                    }}
+                    to={{
+                      pathname: `/sales`,
+                      state: { branch: "branch-2" },
+                    }}>
+                    Branch-2
+                  </Link>
+                </ListItem>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <StarBorder />
+                  </ListItemIcon>
+                  <Link
+                    style={{
+                      textDecoration: "none",
+                    }}
+                    to={{
+                      pathname: `/sales`,
+                      state: { branch: "branch-3" },
+                    }}>
+                    Branch-3
+                  </Link>
+                </ListItem>
+              </List>
+            </Collapse>
+
+            {/* <ListItem button>
               <ListItemIcon>
                 <ShoppingCartIcon />
               </ListItemIcon>
@@ -280,9 +449,10 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
                 to='/sales'>
                 Sales
               </Link>
-            </ListItem>
-
-            <ListItem button>
+            </ListItem> */}
+            {
+              role=='admin'?(
+<ListItem button>
               <ListItemIcon>
                 <ShoppingCartIcon />
               </ListItemIcon>
@@ -294,6 +464,9 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
                 Users
               </Link>
             </ListItem>
+              ):null
+            }
+            
           </div>
         </List>
       </Drawer>

@@ -99,6 +99,7 @@ interface productProp extends RouteComponentProps {
   deleteProduct: (productId: string) => void;
   history: any;
   location: any;
+  role:any;
   match: any;
 }
 
@@ -107,6 +108,7 @@ const Product: React.FC<productProp> = ({
   location,
   match,
   product,
+  role,
   deleteProduct,
 }) => {
   const classes = useStyles();
@@ -199,7 +201,10 @@ const Product: React.FC<productProp> = ({
                           <TableCell>{row.stock}</TableCell>
                           <TableCell>{row.color}</TableCell>
                           <TableCell>
-                            <Button
+                            {
+                              role=='admin'?(
+                                <>
+<Button
                               variant='outlined'
                               size='small'
                               color='primary'
@@ -224,6 +229,10 @@ const Product: React.FC<productProp> = ({
                               onClick={(e) => handelDelete(e, row.id)}>
                               <DeleteIcon />
                             </Button>
+                            </>
+                              ):null
+                            }
+                            
                           </TableCell>
                         </TableRow>
                       ))
@@ -242,6 +251,7 @@ const mapStateToProps = (state: any) => {
   console.log(state);
   return {
     product: state.firestore.ordered.product,
+    role: state.firebase.profile.role,
   };
 };
 export default compose(

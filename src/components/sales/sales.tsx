@@ -53,6 +53,10 @@ const useStyles = makeStyles((theme) => ({
 interface salesProp extends RouteComponentProps {
   sales: any;
   deleteSales: (salesId: string) => void;
+  role:any;
+  history: any;
+  location: any;
+  match: any;
 }
 
 const Sales: React.FC<salesProp> = ({
@@ -61,8 +65,10 @@ const Sales: React.FC<salesProp> = ({
   match,
   sales,
   deleteSales,
+  role
 }) => {
   const classes = useStyles();
+  const branch = location.state.branch;
   const handelDelete = async (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     id: string
@@ -71,6 +77,13 @@ const Sales: React.FC<salesProp> = ({
       await deleteSales(id);
     }
   };
+
+  var filteredElements = null;
+  if (sales != null) {
+    filteredElements = sales.filter((object: any) => {
+      return object.branch.toLowerCase().indexOf(branch.toLowerCase()) !== -1;
+    });
+  }
   return (
     <React.Fragment>
       <main className={classes.content}>
@@ -82,7 +95,7 @@ const Sales: React.FC<salesProp> = ({
                 width: "100%",
                 paddingLeft: "10",
               }}>
-              <Grid item xs={4} md={4} lg={4}>
+              {/* <Grid item xs={4} md={4} lg={4}>
                 <br />
                 <Button
                   variant='outlined'
@@ -97,7 +110,7 @@ const Sales: React.FC<salesProp> = ({
                     Register
                   </Link>
                 </Button>
-              </Grid>
+              </Grid> */}
 
               <Title>Sales</Title>
               <Table size='small'>
@@ -110,14 +123,17 @@ const Sales: React.FC<salesProp> = ({
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                  {sales != null
-                    ? sales.map((row: any,index:any) => (
+                  {filteredElements != null
+                    ? filteredElements.map((row: any,index:any) => (
                         <TableRow key={row.id}>
                           <TableCell>{index+1}</TableCell>
                           <TableCell>{row.price}</TableCell>
                           <TableCell>{row.quantity}</TableCell>                         
                           <TableCell>
-                            <Button
+                            {
+                              branch==role?(
+                                <>
+                                <Button
                               variant='outlined'
                               size='small'
                               color='primary'
@@ -133,15 +149,20 @@ const Sales: React.FC<salesProp> = ({
                                 Edit
                               </Link>
                             </Button>
-                            /
-                            <Button
-                              variant='outlined'
-                              size='small'
-                              color='secondary'
-                              className={classes.button}
-                              onClick={(e) => handelDelete(e, row.id)}>
-                              Delete
-                            </Button>
+                             /
+                             <Button
+                               variant='outlined'
+                               size='small'
+                               color='secondary'
+                               className={classes.button}
+                               onClick={(e) => handelDelete(e, row.id)}>
+                               Delete
+                             </Button>
+                             </>
+                              ):null
+                            }
+                            
+                           
                           </TableCell>
                         </TableRow>
                       ))
@@ -160,6 +181,7 @@ const mapStateToProps = (state: any) => {
   console.log(state);
   return {
     sales: state.firestore.ordered.sales,
+    role: state.firebase.profile.role,
   };
 };
 export default compose(

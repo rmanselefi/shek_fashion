@@ -8,8 +8,11 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Link from "@material-ui/core/Link";
-import Orders from "../layout/orders";
-
+import Orders from '../layout/orders'
+import { connect } from "react-redux";
+import { firestoreConnect } from "react-redux-firebase";
+import { compose } from "redux";
+import { RouteComponentProps } from "react-router-dom";
 function Copyright() {
   return (
     <Typography variant='body2' color='textSecondary' align='center'>
@@ -104,7 +107,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Dashboard() {
+interface orderProps extends RouteComponentProps {
+  sales:any;
+}
+
+const Dashboard:React.FC<orderProps>=({sales})=> {
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
@@ -125,7 +132,7 @@ export default function Dashboard() {
             {/* Recent Orders */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                <Orders />
+                <Orders sales={sales} />
               </Paper>
             </Grid>
           </Grid>
@@ -137,3 +144,17 @@ export default function Dashboard() {
     </div>
   );
 }
+
+const mapStateToProps = (state: any) => ({
+  auth: state.firebase.auth,
+  sales: state.firestore.ordered.sales,
+});
+
+export default compose(
+  connect(mapStateToProps, null),
+  firestoreConnect([
+    {
+      collection: "sales",
+      limit:10
+    },
+  ]))(Dashboard)

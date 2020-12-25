@@ -73,31 +73,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Orders() {
+export default function Orders(props:any) {
   const classes = useStyles();
+  var sales=props.sales;
   return (
     <React.Fragment>
-      <Title>Recent Orders</Title>
+      <Title>Recent Sold Items</Title>
       <Table size='small'>
         <TableHead>
           <TableRow>
+            <TableCell>Product</TableCell>
+            <TableCell>Price</TableCell>
+            <TableCell>Branch</TableCell>
             <TableCell>Date</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Ship To</TableCell>
-            <TableCell>Payment Method</TableCell>
-            <TableCell align='right'>Sale Amount</TableCell>
+            <TableCell align='right'>Sale Quantity</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {sales!=null?
+          sales.map((row:any) => (
             <TableRow key={row.id}>
-              <TableCell>{row.date}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.shipTo}</TableCell>
-              <TableCell>{row.paymentMethod}</TableCell>
-              <TableCell align='right'>{row.amount}</TableCell>
+              <TableCell>{row.product.name},{row.product.brand}</TableCell>
+              <TableCell>{row.price}</TableCell>
+              <TableCell>{row.branch}</TableCell>
+              <TableCell>{row.createdAt.toDate().toDateString()}</TableCell>
+              <TableCell align='right'>{row.quantity}</TableCell>
             </TableRow>
-          ))}
+          )):null}
         </TableBody>
       </Table>
       <div className={classes.seeMore}>

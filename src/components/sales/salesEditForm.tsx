@@ -71,7 +71,8 @@ const SalesEditForm: React.FC<salesProps> = ({ updateSales,product,location }) =
     id: "",
     price:0,
     productid:"",
-    quantity:0
+    quantity:0,
+    branch:""
   });
 
   const salee = location.state.sales;
@@ -80,7 +81,8 @@ const SalesEditForm: React.FC<salesProps> = ({ updateSales,product,location }) =
       id: salee.id,
       price:salee.price,
     productid:salee.productid,
-    quantity:salee.quantity
+    quantity:salee.quantity,
+      branch:salee.branch
       
     });
   }, [

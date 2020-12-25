@@ -5,10 +5,23 @@ import { Sales } from "../../models/sales";
 export const registerSales = (sales: Sales) => {
   return async (dispatch: any, getState: any): Promise<Sales | null> => {
     // const fb = getFirebase();
+    var res = await firebase
+        .firestore()
+        .collection("product")
+        .doc(sales.productid)
+        .get();
+      var name = res.data()?.name;
+      var brand=res.data()?.brand;
+      var prod={
+        id:sales.productid,
+        name:name,
+        brand,
+      }
     var resp = await firebase.firestore().collection("sales").add({
-      product: sales.productid,
+      product: prod,
       price: sales.price,
       quantity: sales.quantity,
+      branch:sales.branch,
       createdAt: new Date(),
     });
     if (resp != null) {
@@ -44,6 +57,7 @@ export const updateSales = (sales: Sales) => {
         product: sales.productid,
         price: sales.price,
         quantity: sales.quantity,
+        branch:sales.branch,
         updatedAt: new Date(),
       });
     if (resp != null) {

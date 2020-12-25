@@ -11,7 +11,14 @@ import Container from "@material-ui/core/Container";
 import { connect } from "react-redux";
 
 import { updateProduct } from "../../store/actions/productActions";
-import { Theme, Paper, makeStyles, FormControl } from "@material-ui/core";
+import {
+  Theme,
+  Paper,
+  makeStyles,
+  FormControl,
+  InputLabel,
+  Select,
+} from "@material-ui/core";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { Product } from "../../models/product";
@@ -77,6 +84,7 @@ const ProductEditForm: React.FC<productProps> = ({
     type: "",
     baseprice: 0.0,
     stock: "",
+    branch: "",
   });
   const produc = location.state.product;
   useEffect(() => {
@@ -90,6 +98,7 @@ const ProductEditForm: React.FC<productProps> = ({
       code: produc.code,
       baseprice: produc.price,
       stock: produc.stock,
+      branch: produc.branch,
     });
   }, [
     produc.id,
@@ -115,6 +124,12 @@ const ProductEditForm: React.FC<productProps> = ({
     });
   };
 
+  const handleSelectChange = (
+    event: React.ChangeEvent<{ name?: string; value: unknown }>
+  ) => {
+    const name = event.target.name as string;
+    setUser({ ...product, [name]: event.target.value });
+  };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     var res = await updateProduct(product);
@@ -275,6 +290,29 @@ const ProductEditForm: React.FC<productProps> = ({
                     onChange={handleChange}
                     value={product.color}
                   />
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <FormControl variant='outlined' className={classes.formControl}>
+                  <InputLabel htmlFor='outlined-age-native-simple'>
+                    Branch
+                  </InputLabel>
+                  <Select
+                    native
+                    id='branch'
+                    onChange={handleSelectChange}
+                    label='Branch'
+                    name='branch'
+                    value={product.branch}
+                    inputProps={{
+                      name: "branch",
+                      id: "outlined-age-native-simple",
+                    }}>
+                    <option aria-label='None' value='' />
+                    <option value='branch-1'>branch-1</option>
+                    <option value='branch-2'>branch-2</option>
+                    <option value='branch-3'>branch-3</option>
+                  </Select>
                 </FormControl>
               </Grid>
             </Grid>

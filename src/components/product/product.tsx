@@ -97,6 +97,9 @@ const useStyles = makeStyles((theme) => ({
 interface productProp extends RouteComponentProps {
   product: any;
   deleteProduct: (productId: string) => void;
+  history: any;
+  location: any;
+  match: any;
 }
 
 const Product: React.FC<productProp> = ({
@@ -111,13 +114,23 @@ const Product: React.FC<productProp> = ({
   const [postsPerPage, setPostsPerPage] = useState(5);
   const [filterStr, setFilterStr] = useState("");
 
+  const branch = location.state.branch;
+
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   // const currentMall =
   //   mall != null ? mall.slice(indexOfFirstPost, indexOfLastPost) : null;
-  var filteredElements = null;
+
+  var filteredBybranch = null;
   if (product != null) {
-    filteredElements = product.filter((object: any) => {
+    filteredBybranch = product.filter((object: any) => {
+      return object.branch.toLowerCase().indexOf(branch.toLowerCase()) !== -1;
+    });
+  }
+
+  var filteredElements = null;
+  if (filteredBybranch != null) {
+    filteredElements = filteredBybranch.filter((object: any) => {
       return object.name.toLowerCase().indexOf(filterStr.toLowerCase()) !== -1;
     });
   }
@@ -142,22 +155,6 @@ const Product: React.FC<productProp> = ({
                 width: "100%",
                 paddingLeft: "10",
               }}>
-              <Grid item xs={4} md={4} lg={4}>
-                <br />
-                <Button
-                  variant='outlined'
-                  size='small'
-                  color='primary'
-                  className={classes.button}>
-                  <Link
-                    style={{
-                      textDecoration: "none",
-                    }}
-                    to='/products/add'>
-                    <PlusOneOutlined />
-                  </Link>
-                </Button>
-              </Grid>
               <Grid item xs={4} md={4} lg={4}>
                 <br />
                 <div className={classes.search}>

@@ -4,30 +4,33 @@ export class Product {
   type: string;
   brand: string;
   code: string;
-    color: string;
-    size: string;
-    stock: string;
-    baseprice: number;
+  color: string;
+  size: string;
+  stock: string;
+  baseprice: number;
+  branch: string;
 
   constructor(
     id: string,
     name: string,
-  type: string,
-  brand: string,
-  code: string,
+    type: string,
+    brand: string,
+    code: string,
     color: string,
-      size: string,
-     stock: string,
-    baseprice: number
+    size: string,
+    stock: string,
+    baseprice: number,
+    branch: string
   ) {
     this.id = id;
     this.name = name;
     this.type = type;
     this.code = code;
     this.brand = brand;
-      this.color = color;
-      this.size = size;
-      this.stock = stock;
-      this.baseprice = baseprice;
+    this.color = color;
+    this.size = size;
+    this.stock = stock;
+    this.baseprice = baseprice;
+    this.branch = branch;
   }
 }

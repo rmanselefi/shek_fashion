@@ -46,17 +46,19 @@ export const signout = () => {
 export const signup = (user: User) => {
   return async (dispatch: any, getState: any): Promise<User | null> => {
     try {
+      let originalUser = firebase.auth().currentUser;
       const resp = await firebase
         .auth()
         .createUserWithEmailAndPassword(user.email, user.password);
+      await firebase.auth().updateCurrentUser(originalUser);
       if (resp.user != null) {
         firebase
           .firestore()
           .collection("users")
           .doc(resp.user!.uid)
           .set({
-            name:user.name,
-            email:user.email,
+            name: user.name,
+            email: user.email,
             role: user.role,
           })
           .then((resp) => {

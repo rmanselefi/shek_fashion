@@ -11,7 +11,14 @@ import Container from "@material-ui/core/Container";
 import { connect } from "react-redux";
 
 import { registerProduct } from "../../store/actions/productActions";
-import { Theme, Paper, makeStyles, FormControl } from "@material-ui/core";
+import {
+  Theme,
+  Paper,
+  makeStyles,
+  FormControl,
+  InputLabel,
+  Select,
+} from "@material-ui/core";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { Product } from "../../models/product";
@@ -73,6 +80,7 @@ const ProductForm: React.FC<penaltyProps> = ({ registerProduct }) => {
     type: "",
     baseprice: 0.0,
     stock: "",
+    branch: "",
   });
   const [open, setOpen] = React.useState(false);
 
@@ -93,6 +101,12 @@ const ProductForm: React.FC<penaltyProps> = ({ registerProduct }) => {
     if (res != null) {
       setOpen(true);
     }
+  };
+  const handleSelectChange = (
+    event: React.ChangeEvent<{ name?: string; value: unknown }>
+  ) => {
+    const name = event.target.name as string;
+    setUser({ ...product, [name]: event.target.value });
   };
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
@@ -248,6 +262,29 @@ const ProductForm: React.FC<penaltyProps> = ({ registerProduct }) => {
                   />
                 </FormControl>
               </Grid>
+              <Grid item xs={4}>
+                <FormControl variant='outlined' className={classes.formControl}>
+                  <InputLabel htmlFor='outlined-age-native-simple'>
+                    Branch
+                  </InputLabel>
+                  <Select
+                    native
+                    id='branch'
+                    onChange={handleSelectChange}
+                    label='Branch'
+                    name='branch'
+                    value={product.branch}
+                    inputProps={{
+                      name: "branch",
+                      id: "outlined-age-native-simple",
+                    }}>
+                    <option aria-label='None' value='' />
+                    <option value='branch-1'>branch-1</option>
+                    <option value='branch-2'>branch-2</option>
+                    <option value='branch-3'>branch-3</option>
+                  </Select>
+                </FormControl>
+              </Grid>
             </Grid>
             <Grid item xs={4}>
               <Button
@@ -256,7 +293,7 @@ const ProductForm: React.FC<penaltyProps> = ({ registerProduct }) => {
                 variant='contained'
                 color='primary'
                 className={classes.submit}>
-                Update
+                Regsiter
               </Button>
             </Grid>
           </form>

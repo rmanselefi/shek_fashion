@@ -10,23 +10,30 @@ import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import Badge from "@material-ui/core/Badge";
-
+import Collapse from "@material-ui/core/Collapse";
+import InboxIcon from "@material-ui/icons/MoveToInbox";
+import StarBorder from "@material-ui/icons/StarBorder";
+import Add from "@material-ui/icons/Add";
+import ExpandLess from "@material-ui/icons/ExpandLess";
+import ExpandMore from "@material-ui/icons/ExpandMore";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import NotificationsIcon from "@material-ui/icons/NotificationImportantOutlined";
-import  {mainListItems}  from "../layout/sideNav";
 import { signOut } from "../../store/actions/authActions";
 import { connect } from "react-redux";
 import { ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
+  },
+  nested: {
+    paddingLeft: theme.spacing(4),
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
@@ -105,10 +112,10 @@ const useStyles = makeStyles((theme) => ({
 
 interface navbarProps {
   signOut: () => void;
-  role:string;
+  role: string;
 }
 
-const Navbar: React.FC<navbarProps> = ({ signOut ,role}) => {
+const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
@@ -118,9 +125,13 @@ const Navbar: React.FC<navbarProps> = ({ signOut ,role}) => {
     setOpen(false);
   };
 
-  const handleSignout = (
-    event: React.MouseEvent<SVGSVGElement, MouseEvent>
-  ) => {
+  const [openl, setOpenl] = React.useState(true);
+
+  const handleClick = () => {
+    setOpenl(!openl);
+  };
+
+  const handleSignout = () => {
     signOut();
   };
 
@@ -170,61 +181,120 @@ const Navbar: React.FC<navbarProps> = ({ signOut ,role}) => {
         </div>
         <Divider />
         <List>
-        <div>
-    <ListItem button>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary='Dashboard' />
-    </ListItem>
-    {
-      role=='admin'?(
-<ListItem button>
-      <ListItemIcon>
-        <ShoppingCartIcon />
-      </ListItemIcon>
-      <Link
-        style={{
-          textDecoration: "none",
-        }}
-        to='/products'>
-        Products
-      </Link>
-    </ListItem>
-      ):null
-    }
-    
-    
-    <ListItem button>
-      <ListItemIcon>
-        <ShoppingCartIcon />
-      </ListItemIcon>
-      <Link
-        style={{
-          textDecoration: "none",
-        }}
-        to='/sales'>
-        Sales
-      </Link>
-    </ListItem>
-    {
-      role=='admin'?(
-<ListItem button>
-      <ListItemIcon>
-        <ShoppingCartIcon />
-      </ListItemIcon>
-      <Link
-        style={{
-          textDecoration: "none",
-        }}
-        to='/users'>
-        Users
-      </Link>
-    </ListItem>
-      ):null
-    }
-    
-  </div>
+          <div>
+            <ListItem button>
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText primary='Dashboard' />
+            </ListItem>
+
+            <ListItem button onClick={handleClick}>
+              <ListItemIcon>
+                <ShoppingCartIcon />
+              </ListItemIcon>
+              <ListItemText primary='Products' />
+              {openl ? <ExpandLess /> : <ExpandMore />}
+            </ListItem>
+
+            {/* <ListItem button onClick={handleClick}>
+              <ListItemIcon>
+                <InboxIcon />
+              </ListItemIcon>
+              <ListItemText primary='Inbox' />
+              {openl ? <ExpandLess /> : <ExpandMore />}
+            </ListItem> */}
+            <Collapse in={openl} timeout='auto' unmountOnExit>
+              <List component='div' disablePadding>
+                {role == "admin" ? (
+                  <ListItem button className={classes.nested}>
+                    <ListItemIcon>
+                      <Add />
+                    </ListItemIcon>
+                    <Link
+                      style={{
+                        textDecoration: "none",
+                      }}
+                      to='/products/add'>
+                      Add Product
+                    </Link>
+                  </ListItem>
+                ) : null}
+
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <StarBorder />
+                  </ListItemIcon>
+                  <Link
+                    style={{
+                      textDecoration: "none",
+                    }}
+                    to={{
+                      pathname: `/products`,
+                      state: { branch: "branch-1" },
+                    }}>
+                    Branch-1
+                  </Link>
+                </ListItem>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <StarBorder />
+                  </ListItemIcon>
+                  <Link
+                    style={{
+                      textDecoration: "none",
+                    }}
+                    to={{
+                      pathname: `/products`,
+                      state: { branch: "branch-2" },
+                    }}>
+                    Branch-2
+                  </Link>
+                </ListItem>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <StarBorder />
+                  </ListItemIcon>
+                  <Link
+                    style={{
+                      textDecoration: "none",
+                    }}
+                    to={{
+                      pathname: `/products`,
+                      state: { branch: "branch-3" },
+                    }}>
+                    Branch-3
+                  </Link>
+                </ListItem>
+              </List>
+            </Collapse>
+
+            <ListItem button>
+              <ListItemIcon>
+                <ShoppingCartIcon />
+              </ListItemIcon>
+              <Link
+                style={{
+                  textDecoration: "none",
+                }}
+                to='/sales'>
+                Sales
+              </Link>
+            </ListItem>
+
+            <ListItem button>
+              <ListItemIcon>
+                <ShoppingCartIcon />
+              </ListItemIcon>
+              <Link
+                style={{
+                  textDecoration: "none",
+                }}
+                to='/users'>
+                Users
+              </Link>
+            </ListItem>
+          </div>
         </List>
       </Drawer>
     </>
@@ -232,6 +302,6 @@ const Navbar: React.FC<navbarProps> = ({ signOut ,role}) => {
 };
 const mapStateToProps = (state: any) => ({
   auth: state.firebase.auth,
-  role:state.firebase.profile.role
+  role: state.firebase.profile.role,
 });
 export default connect(mapStateToProps, { signOut })(Navbar);

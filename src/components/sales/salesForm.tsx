@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 120,
+    minWidth: 320,
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
@@ -68,16 +68,18 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface salesProps extends RouteComponentProps {
   registerSales: (sales: Sales) => void;
   product: any;
+  role: any;
   auth: any;
   authError?: any;
   history: any;
 }
-const SalesForm: React.FC<salesProps> = ({ registerSales, product }) => {
+const SalesForm: React.FC<salesProps> = ({ registerSales, product, role }) => {
   const [sale, setUser] = useState<Sales>({
     id: "",
     price: 0,
     productid: "",
     quantity: 0,
+    branch: "",
   });
   const [open, setOpen] = React.useState(false);
 
@@ -115,6 +117,17 @@ const SalesForm: React.FC<salesProps> = ({ registerSales, product }) => {
     setOpen(false);
   };
   const classes = useStyles();
+
+  var filteredElements = null;
+  if (product != null && role != null) {
+    if ((role = "admin")) {
+      filteredElements = product;
+    } else {
+      filteredElements = product.filter((object: any) => {
+        return object.branch.toLowerCase().indexOf(role.toLowerCase()) !== -1;
+      });
+    }
+  }
   return (
     <Container>
       <CssBaseline />
@@ -136,7 +149,7 @@ const SalesForm: React.FC<salesProps> = ({ registerSales, product }) => {
           <br />
           <form onSubmit={handleSubmit} noValidate>
             <Grid container spacing={3}>
-              <Grid item xs={12}>
+              <Grid item xs={4}>
                 <FormControl variant='outlined' className={classes.formControl}>
                   <InputLabel htmlFor='outlined-age-native-simple'>
                     Product
@@ -153,9 +166,12 @@ const SalesForm: React.FC<salesProps> = ({ registerSales, product }) => {
                       id: "outlined-age-native-simple",
                     }}>
                     <option aria-label='None' value='' />
-                    {product != null
-                      ? product.map((row: any) => (
-                          <option value={row.id}>{row.name}</option>
+                    {filteredElements != null
+                      ? filteredElements.map((row: any) => (
+                          <option value={row.id}>
+                            {row.name},{row.brand},
+                            {row.type != null ? row.type : ""}
+                          </option>
                         ))
                       : null}
                   </Select>
@@ -217,6 +233,7 @@ const SalesForm: React.FC<salesProps> = ({ registerSales, product }) => {
 const mapStateToProps = (state: any) => ({
   auth: state.firebase.auth,
   product: state.firestore.ordered.product,
+  role: state.firebase.profile.role,
 });
 
 // export default connect(mapStateToProps, { registerProduct })(SalesForm);

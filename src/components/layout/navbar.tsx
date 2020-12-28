@@ -19,6 +19,7 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import NotificationsIcon from "@material-ui/icons/NotificationImportantOutlined";
+import SettingsIcon from '@material-ui/icons/Settings';
 import { signOut } from "../../store/actions/authActions";
 import { connect } from "react-redux";
 import { Button, ListItem, ListItemIcon, ListItemText, withStyles } from "@material-ui/core";
@@ -159,16 +160,20 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
     setOpen(false);
   };
 
-  const [openl, setOpenl] = React.useState(true);
+  const [openl, setOpenl] = React.useState(false);
 
-   const [opens, setOpens] = React.useState(true);
-
+   const [opens, setOpens] = React.useState(false);
+   const [openr, setOpenr] = React.useState(false);
   const handleClick = () => {
     setOpenl(!openl);
   };
 
   const handleClicks = () => {
     setOpens(!opens);
+  };
+
+  const handleClickr = () => {
+    setOpenr(!openr);
   };
 
   const handleSignout = () => {
@@ -212,7 +217,7 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
             color='inherit'
             noWrap
             className={classes.title}>
-            Dashboard
+            Shik Fashion
           </Typography>
           <div>
       <Button
@@ -438,18 +443,88 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
               </List>
             </Collapse>
 
-            {/* <ListItem button>
+            <ListItem button onClick={handleClickr}>
               <ListItemIcon>
                 <ShoppingCartIcon />
+              </ListItemIcon>
+              <ListItemText primary='Report' />
+              {openr ? <ExpandLess /> : <ExpandMore />}
+            </ListItem>
+
+            {/* <ListItem button onClick={handleClick}>
+              <ListItemIcon>
+                <InboxIcon />
+              </ListItemIcon>
+              <ListItemText primary='Inbox' />
+              {openl ? <ExpandLess /> : <ExpandMore />}
+            </ListItem> */}
+            <Collapse in={openr} timeout='auto' unmountOnExit>
+              <List component='div' disablePadding>
+                
+
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <StarBorder />
+                  </ListItemIcon>
+                  <Link
+                    style={{
+                      textDecoration: "none",
+                    }}
+                    to={{
+                      pathname: `/report`,
+                      state: { branch: "branch-1" },
+                    }}>
+                    Branch-1
+                  </Link>
+                </ListItem>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <StarBorder />
+                  </ListItemIcon>
+                  <Link
+                    style={{
+                      textDecoration: "none",
+                    }}
+                    to={{
+                      pathname: `/report`,
+                      state: { branch: "branch-2" },
+                    }}>
+                    Branch-2
+                  </Link>
+                </ListItem>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <StarBorder />
+                  </ListItemIcon>
+                  <Link
+                    style={{
+                      textDecoration: "none",
+                    }}
+                    to={{
+                      pathname: `/report`,
+                      state: { branch: "branch-3" },
+                    }}>
+                    Branch-3
+                  </Link>
+                </ListItem>
+              </List>
+            </Collapse>
+            {
+              role=='admin'?(
+            <ListItem button>
+              <ListItemIcon>
+                <SettingsIcon />
               </ListItemIcon>
               <Link
                 style={{
                   textDecoration: "none",
                 }}
-                to='/sales'>
-                Sales
+                to='/settings'>
+                Settings
               </Link>
-            </ListItem> */}
+            </ListItem>
+              ):null
+            }
             {
               role=='admin'?(
 <ListItem button>

@@ -86,9 +86,9 @@ const SignUp: React.FC<signupProps> = ({ signup, auth, history }) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     var res = await signup(user);
-    if (res != null) {
-      history.push("/dashboard");
-    }
+    // if (res != null) {
+    //   history.push("/dashboard");
+    // }
   };
 
   const classes = useStyles();

@@ -22,6 +22,8 @@ import {
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { Product } from "../../models/product";
+import { firestoreConnect } from "react-redux-firebase";
+import { compose } from "redux";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant='filled' {...props} />;
@@ -69,10 +71,12 @@ interface productProps extends RouteComponentProps {
   authError?: any;
   history: any;
   location: any;
+  category:any;
 }
 const ProductEditForm: React.FC<productProps> = ({
   updateProduct,
   location,
+  category
 }) => {
   const [product, setUser] = useState<Product>({
     id: "",
@@ -85,6 +89,7 @@ const ProductEditForm: React.FC<productProps> = ({
     baseprice: 0.0,
     stock: "",
     branch: "",
+    category:""
   });
   const produc = location.state.product;
   useEffect(() => {
@@ -99,6 +104,7 @@ const ProductEditForm: React.FC<productProps> = ({
       baseprice: produc.price,
       stock: produc.stock,
       branch: produc.branch,
+      category:produc.category
     });
   }, [
     produc.id,
@@ -315,6 +321,35 @@ const ProductEditForm: React.FC<productProps> = ({
                   </Select>
                 </FormControl>
               </Grid>
+
+              <Grid item xs={4}>
+                <FormControl variant='outlined' className={classes.formControl}>
+                  <InputLabel htmlFor='outlined-age-native-simple'>
+                    Category
+                  </InputLabel>
+                  <Select
+                    native
+                    id='category'
+                    onChange={handleSelectChange}
+                    label='Category'
+                    name='category'
+                    value={product.category}
+                    inputProps={{
+                      name: "category",
+                      id: "outlined-age-native-simple",
+                    }}>
+                    <option aria-label='None' value='' />
+                    {
+                      category!=null?category.map((cat:any,index:any)=>{
+                        return (
+                          <option key={index} value={cat.id}>{cat.name}</option>
+                        )
+                      }):null
+                    }
+                   
+                  </Select>
+                </FormControl>
+              </Grid>
             </Grid>
             <Grid item xs={4}>
               <Button
@@ -339,7 +374,18 @@ const ProductEditForm: React.FC<productProps> = ({
 };
 
 const mapStateToProps = (state: any) => ({
-  auth: state.firebase.auth,
+  auth: state.firebase.auth,  
+  category: state.firestore.ordered.category,
 });
 
-export default connect(mapStateToProps, { updateProduct })(ProductEditForm);
+// export default connect(mapStateToProps, { updateProduct })(ProductEditForm);
+
+export default compose(
+  connect(mapStateToProps, { updateProduct }),
+  firestoreConnect([
+    {
+      collection: "category",
+    },
+   
+  ])
+)(ProductEditForm);

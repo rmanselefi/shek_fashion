@@ -9,6 +9,7 @@ export class Product {
   stock: string;
   baseprice: number;
   branch: string;
+  category:string;
 
   constructor(
     id: string,
@@ -20,7 +21,8 @@ export class Product {
     size: string,
     stock: string,
     baseprice: number,
-    branch: string
+    branch: string,
+    category:string
   ) {
     this.id = id;
     this.name = name;
@@ -32,5 +34,6 @@ export class Product {
     this.stock = stock;
     this.baseprice = baseprice;
     this.branch = branch;
+    this.category=category;
   }
 }

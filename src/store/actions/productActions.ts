@@ -15,6 +15,7 @@ export const registerProduct = (product: Product) => {
       stock: product.stock,
       price: product.baseprice,
       branch: product.branch,
+      category:product.category,
       createdAt: new Date(),
     });
     if (resp != null) {
@@ -42,6 +43,7 @@ export const updateProduct = (product: Product) => {
         stock: product.stock,
         price: product.baseprice,
         branch: product.branch,
+        category:product.category,
         updatedAt: new Date(),
       });
     if (resp != null) {

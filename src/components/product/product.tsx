@@ -11,6 +11,9 @@ import {
   TableCell,
   TableBody,
   Button,
+  FormControl,
+  InputLabel,
+  Select,
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import SearchIcon from "@material-ui/icons/Search";
@@ -75,6 +78,10 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 320,
+  },
   inputRoot: {
     color: "inherit",
   },
@@ -96,6 +103,7 @@ const useStyles = makeStyles((theme) => ({
 
 interface productProp extends RouteComponentProps {
   product: any;
+  category:any;
   deleteProduct: (productId: string) => void;
   history: any;
   location: any;
@@ -108,6 +116,7 @@ const Product: React.FC<productProp> = ({
   location,
   match,
   product,
+  category,
   role,
   deleteProduct,
 }) => {
@@ -115,6 +124,8 @@ const Product: React.FC<productProp> = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(5);
   const [filterStr, setFilterStr] = useState("");
+
+  const [categ, setCategory] = useState("");
 
   const branch = location.state.branch;
 
@@ -130,9 +141,16 @@ const Product: React.FC<productProp> = ({
     });
   }
 
-  var filteredElements = null;
+  var filteredByCategory = null;
   if (filteredBybranch != null) {
-    filteredElements = filteredBybranch.filter((object: any) => {
+    filteredByCategory = filteredBybranch.filter((object: any) => {
+      return object.category.toLowerCase().indexOf(categ.toLowerCase()) !== -1;
+    });
+  }
+
+  var filteredElements = null;
+  if (filteredByCategory != null) {
+    filteredElements = filteredByCategory.filter((object: any) => {
       return object.name.toLowerCase().indexOf(filterStr.toLowerCase()) !== -1;
     });
   }
@@ -146,6 +164,13 @@ const Product: React.FC<productProp> = ({
     }
   };
 
+  const handleSelectChange = (
+    event: React.ChangeEvent<{ name?: string; value: unknown }>
+  ) => {
+    const name = event.target.value as string;
+    setCategory(name );
+  };
+
   return (
     <React.Fragment>
       <main className={classes.content}>
@@ -157,6 +182,7 @@ const Product: React.FC<productProp> = ({
                 width: "100%",
                 paddingLeft: "10",
               }}>
+                <Grid container spacing={3}>
               <Grid item xs={4} md={4} lg={4}>
                 <br />
                 <div className={classes.search}>
@@ -175,9 +201,36 @@ const Product: React.FC<productProp> = ({
                   />
                 </div>
               </Grid>
-
+              <Grid item xs={4}>
+                <FormControl variant='outlined' className={classes.formControl}>
+                  <InputLabel htmlFor='outlined-age-native-simple'>
+                    Category
+                  </InputLabel>
+                  <Select
+                    native
+                    id='category'
+                    onChange={handleSelectChange}
+                    label='Category'
+                    name='category'
+                    value={categ}
+                    inputProps={{
+                      name: "category",
+                      id: "outlined-age-native-simple",
+                    }}>
+                    <option aria-label='None' value='' />
+                    {
+                      category!=null?category.map((cat:any,index:any)=>{
+                        return (
+                          <option key={index} value={cat.id}>{cat.name}</option>
+                        )
+                      }):null
+                    }
+                   
+                  </Select>
+                </FormControl>
+              </Grid>
+              </Grid>
               <Title>Products</Title>
-
               <Table size='small'>
                 <TableHead>
                   <TableRow>
@@ -187,6 +240,7 @@ const Product: React.FC<productProp> = ({
                     <TableCell>Code</TableCell>
                     <TableCell>Stock</TableCell>
                     <TableCell>Color</TableCell>
+                    <TableCell>Base Price</TableCell>
                     <TableCell>Actions</TableCell>
                   </TableRow>
                 </TableHead>
@@ -200,11 +254,12 @@ const Product: React.FC<productProp> = ({
                           <TableCell>{row.code}</TableCell>
                           <TableCell>{row.stock}</TableCell>
                           <TableCell>{row.color}</TableCell>
+                          <TableCell>{row.price}</TableCell>
                           <TableCell>
                             {
                               role=='admin'?(
                                 <>
-<Button
+                            <Button
                               variant='outlined'
                               size='small'
                               color='primary'
@@ -251,6 +306,7 @@ const mapStateToProps = (state: any) => {
   console.log(state);
   return {
     product: state.firestore.ordered.product,
+    category: state.firestore.ordered.category,
     role: state.firebase.profile.role,
   };
 };
@@ -260,5 +316,8 @@ export default compose(
     {
       collection: "product",
     },
+   {
+     collection:'category'
+   }
   ])
 )(Product);

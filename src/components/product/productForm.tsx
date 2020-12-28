@@ -22,6 +22,8 @@ import {
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { Product } from "../../models/product";
+import { firestoreConnect } from "react-redux-firebase";
+import { compose } from "redux";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant='filled' {...props} />;
@@ -68,8 +70,9 @@ interface penaltyProps extends RouteComponentProps {
   auth: any;
   authError?: any;
   history: any;
+  category:any;
 }
-const ProductForm: React.FC<penaltyProps> = ({ registerProduct }) => {
+const ProductForm: React.FC<penaltyProps> = ({ registerProduct ,category}) => {
   const [product, setUser] = useState<Product>({
     id: "",
     name: "",
@@ -81,6 +84,7 @@ const ProductForm: React.FC<penaltyProps> = ({ registerProduct }) => {
     baseprice: 0.0,
     stock: "",
     branch: "",
+    category:""
   });
   const [open, setOpen] = React.useState(false);
 
@@ -285,6 +289,35 @@ const ProductForm: React.FC<penaltyProps> = ({ registerProduct }) => {
                   </Select>
                 </FormControl>
               </Grid>
+
+              <Grid item xs={4}>
+                <FormControl variant='outlined' className={classes.formControl}>
+                  <InputLabel htmlFor='outlined-age-native-simple'>
+                    Category
+                  </InputLabel>
+                  <Select
+                    native
+                    id='category'
+                    onChange={handleSelectChange}
+                    label='Category'
+                    name='category'
+                    value={product.category}
+                    inputProps={{
+                      name: "category",
+                      id: "outlined-age-native-simple",
+                    }}>
+                    <option aria-label='None' value='' />
+                    {
+                      category!=null?category.map((cat:any,index:any)=>{
+                        return (
+                          <option key={index} value={cat.id}>{cat.name}</option>
+                        )
+                      }):null
+                    }
+                   
+                  </Select>
+                </FormControl>
+              </Grid>
             </Grid>
             <Grid item xs={4}>
               <Button
@@ -310,6 +343,17 @@ const ProductForm: React.FC<penaltyProps> = ({ registerProduct }) => {
 
 const mapStateToProps = (state: any) => ({
   auth: state.firebase.auth,
+  category: state.firestore.ordered.category,
 });
 
-export default connect(mapStateToProps, { registerProduct })(ProductForm);
+// export default connect(mapStateToProps, { registerProduct })(ProductForm);
+
+export default compose(
+  connect(mapStateToProps, { registerProduct }),
+  firestoreConnect([
+    {
+      collection: "category",
+    },
+   
+  ])
+)(ProductForm);

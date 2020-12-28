@@ -7,7 +7,8 @@ import PrivateRoute from "./components/router/PrivateRoute";
 import { isLoaded } from "react-redux-firebase";
 import { useSelector } from "react-redux";
 import { CircularProgress } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { MuiThemeProvider, createMuiTheme,makeStyles } from '@material-ui/core/styles';
+
 
 import Navbar from "./components/layout/navbar";
 
@@ -19,6 +20,10 @@ import Sales from "./components/sales/sales";
 import SalesEditForm from "./components/sales/salesEditForm";
 import SalesForm from "./components/sales/salesForm";
 import Users from './components/users/users'
+import Report from './components/report/report';
+import Settings from './components/settings/settings'
+import SettingsEditForm from './components/settings/settingsEditForm';
+import SettingsForm from './components/settings/settingsForm';
 
 
 
@@ -53,6 +58,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const theme = createMuiTheme({
+  palette: {
+    primary:{
+      main:'#7c4a00'
+      
+    },
+    secondary: {
+      main: '#E33E7F'
+    }
+  }
+});
+
 const Main = withRouter(({ location }) => {
   const classes = useStyles();
   return (
@@ -73,6 +90,11 @@ const Main = withRouter(({ location }) => {
       <PrivateRoute exact path='/sales/edit' component={SalesEditForm} />
 
       <PrivateRoute exact path='/users' component={Users} />
+      <PrivateRoute exact path='/report' component={Report} />
+
+      <PrivateRoute exact path='/settings' component={Settings} />
+      <PrivateRoute exact path='/settings/add' component={SettingsForm} />
+      <PrivateRoute exact path='/settings/edit' component={SettingsEditForm} />
       
     </div>
   );
@@ -82,7 +104,9 @@ function App() {
   return (
     <BrowserRouter>
       <AuthIsLoaded>
+      <MuiThemeProvider theme={theme}>
         <Main />
+        </MuiThemeProvider>
       </AuthIsLoaded>
     </BrowserRouter>
   );

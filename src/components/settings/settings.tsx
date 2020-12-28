@@ -17,7 +17,7 @@ import { Title } from "../layout/title";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
-import { deleteUser } from "../../store/actions/userActions";
+import { deleteCategory } from "../../store/actions/categoryActions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,26 +51,38 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface salesProp extends RouteComponentProps {
-  users: any;
-  deleteUser: (userid: string) => void;
+    category: any;
+    deleteCategory: (categoryid: string) => void;
+  role:any;
+  history: any;
+  location: any;
+  match: any;
 }
 
-const Users: React.FC<salesProp> = ({
+const Sales: React.FC<salesProp> = ({
   history,
   location,
   match,
-  users,
-  deleteUser,
+  category,
+  deleteCategory,
+  role
 }) => {
   const classes = useStyles();
   const handelDelete = async (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     id: string
   ) => {
-    if (window.confirm("are you sure you want to delete this user?")) {
-      await deleteUser(id);
+    if (window.confirm("are you sure you want to delete this?")) {
+      await deleteCategory(id);
     }
   };
+
+//   var filteredElements = null;
+//   if (category != null) {
+//     filteredElements = category.filter((object: any) => {
+//       return object.branch.toLowerCase().indexOf(branch.toLowerCase()) !== -1;
+//     });
+//   }
   return (
     <React.Fragment>
       <main className={classes.content}>
@@ -93,33 +105,29 @@ const Users: React.FC<salesProp> = ({
                     style={{
                       textDecoration: "none",
                     }}
-                    to='/signup'>
-                    Register
+                    to='/settings/add'>
+                    Add Category
                   </Link>
                 </Button>
               </Grid>
 
-              <Title>Users</Title>
+              <Title>Categories</Title>
               <Table size='small'>
                 <TableHead>
                   <TableRow>
                     <TableCell>ID</TableCell>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Email</TableCell>
-                    <TableCell>Role</TableCell>   
-                    <TableCell>Actions</TableCell>
+                    <TableCell>Name</TableCell>                    
+                    <TableCell>Action</TableCell> 
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                  {users != null
-                    ? users.map((row: any,index:any) => (
+                  {category != null
+                    ? category.map((row: any,index:any) => (
                         <TableRow key={row.id}>
-                            <TableCell>{index+1}</TableCell>
-                          <TableCell>{row.name}</TableCell>
-                          <TableCell>{row.email}</TableCell>
-                          <TableCell>{row.role}</TableCell>                         
+                          <TableCell>{index+1}</TableCell>
+                          <TableCell>{row.name}</TableCell>                                                   
                           <TableCell>
-                            {/* <Button
+                              <Button
                               variant='outlined'
                               size='small'
                               color='primary'
@@ -129,21 +137,25 @@ const Users: React.FC<salesProp> = ({
                                   textDecoration: "none",
                                 }}
                                 to={{
-                                  pathname: `/users/edit`,
-                                  state: { user: row },
+                                  pathname: `/settings/edit`,
+                                  state: { category: row },
                                 }}>
                                 Edit
                               </Link>
-                            </Button> */}
-                            {/* / */}
-                            <Button
-                              variant='outlined'
-                              size='small'
-                              color='secondary'
-                              className={classes.button}
-                              onClick={(e) => handelDelete(e, row.id)}>
-                              Delete
                             </Button>
+                             /
+                             <Button
+                               variant='outlined'
+                               size='small'
+                               color='secondary'
+                               className={classes.button}
+                               onClick={(e) => handelDelete(e, row.id)}>
+                               Delete
+                             </Button>
+                             
+                              
+                            
+                           
                           </TableCell>
                         </TableRow>
                       ))
@@ -161,14 +173,15 @@ const Users: React.FC<salesProp> = ({
 const mapStateToProps = (state: any) => {
   console.log(state);
   return {
-    users: state.firestore.ordered.users,
+    category: state.firestore.ordered.category,
+    role: state.firebase.profile.role,
   };
 };
 export default compose(
-  connect(mapStateToProps, { deleteUser }),
+  connect(mapStateToProps, { deleteCategory }),
   firestoreConnect([
     {
-      collection: "users",
+      collection: "category",
     },
   ])
-)(Users);
+)(Sales);

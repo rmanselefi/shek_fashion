@@ -70,9 +70,13 @@ interface penaltyProps extends RouteComponentProps {
   auth: any;
   authError?: any;
   history: any;
-  category:any;
+  category: any;
 }
-const ProductForm: React.FC<penaltyProps> = ({ registerProduct ,category}) => {
+const ProductForm: React.FC<penaltyProps> = ({
+  registerProduct,
+  category,
+  history,
+}) => {
   const [product, setUser] = useState<Product>({
     id: "",
     name: "",
@@ -84,7 +88,7 @@ const ProductForm: React.FC<penaltyProps> = ({ registerProduct ,category}) => {
     baseprice: 0.0,
     stock: "",
     branch: "",
-    category:""
+    category: "",
   });
   const [open, setOpen] = React.useState(false);
 
@@ -103,7 +107,11 @@ const ProductForm: React.FC<penaltyProps> = ({ registerProduct ,category}) => {
     event.preventDefault();
     var res = await registerProduct(product);
     if (res != null) {
-      setOpen(true);
+      await setOpen(true);
+      history.push({
+        pathname: `/products`,
+        state: { branch: product.branch },
+      });
     }
   };
   const handleSelectChange = (
@@ -307,14 +315,15 @@ const ProductForm: React.FC<penaltyProps> = ({ registerProduct ,category}) => {
                       id: "outlined-age-native-simple",
                     }}>
                     <option aria-label='None' value='' />
-                    {
-                      category!=null?category.map((cat:any,index:any)=>{
-                        return (
-                          <option key={index} value={cat.id}>{cat.name}</option>
-                        )
-                      }):null
-                    }
-                   
+                    {category != null
+                      ? category.map((cat: any, index: any) => {
+                          return (
+                            <option key={index} value={cat.id}>
+                              {cat.name}
+                            </option>
+                          );
+                        })
+                      : null}
                   </Select>
                 </FormControl>
               </Grid>
@@ -354,6 +363,5 @@ export default compose(
     {
       collection: "category",
     },
-   
   ])
 )(ProductForm);

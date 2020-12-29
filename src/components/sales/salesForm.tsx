@@ -67,15 +67,19 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface salesProps extends RouteComponentProps {
   registerSales: (sales: Sales) => void;
-  location:any;
+  location: any;
   product: any;
   role: any;
   auth: any;
   authError?: any;
   history: any;
 }
-const SalesForm: React.FC<salesProps> = ({ registerSales, product, role,location, }) => {
-  
+const SalesForm: React.FC<salesProps> = ({
+  registerSales,
+  product,
+  role,
+  location,
+}) => {
   const branch = location.state.branch;
   const [sale, setUser] = useState<Sales>({
     id: "",
@@ -122,8 +126,7 @@ const SalesForm: React.FC<salesProps> = ({ registerSales, product, role,location
   const classes = useStyles();
 
   var filteredElements = null;
-  if (product != null && role != null) {   
-    
+  if (product != null && role != null) {
     if (role == "admin") {
       filteredElements = product;
     } else {
@@ -171,7 +174,7 @@ const SalesForm: React.FC<salesProps> = ({ registerSales, product, role,location
                     }}>
                     <option aria-label='None' value='' />
                     {filteredElements != null
-                      ? filteredElements.map((row: any,index:any) => (
+                      ? filteredElements.map((row: any, index: any) => (
                           <option key={index} value={row.id}>
                             {row.name},{row.brand},
                             {row.type != null ? row.type : ""}

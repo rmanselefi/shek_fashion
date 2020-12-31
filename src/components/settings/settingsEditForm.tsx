@@ -11,14 +11,12 @@ import Container from "@material-ui/core/Container";
 import { connect } from "react-redux";
 
 import { updateCategory } from "../../store/actions/categoryActions";
-import { Theme, Paper, makeStyles, FormControl, InputLabel, Select } from "@material-ui/core";
+import { Theme, Paper, makeStyles, FormControl } from "@material-ui/core";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import { Sales } from "../../models/sales";
 import { compose } from "redux";
 import { firestoreConnect } from "react-redux-firebase";
 import { Category } from "../../models/category";
-import moduleName from 'module'
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant='filled' {...props} />;

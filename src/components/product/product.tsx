@@ -17,7 +17,6 @@ import {
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import SearchIcon from "@material-ui/icons/Search";
-import PlusOneOutlined from "@material-ui/icons/Add";
 
 import InputBase from "@material-ui/core/InputBase";
 import { RouteComponentProps, Link } from "react-router-dom";
@@ -112,17 +111,15 @@ interface productProp extends RouteComponentProps {
 }
 
 const Product: React.FC<productProp> = ({
-  history,
   location,
-  match,
   product,
   category,
   role,
   deleteProduct,
 }) => {
   const classes = useStyles();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage, setPostsPerPage] = useState(5);
+  const [currentPage] = useState(1);
+  const [postsPerPage] = useState(5);
   const [filterStr, setFilterStr] = useState("");
 
   const [categ, setCategory] = useState("");
@@ -130,7 +127,6 @@ const Product: React.FC<productProp> = ({
   const branch = location.state.branch;
 
   const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
   // const currentMall =
   //   mall != null ? mall.slice(indexOfFirstPost, indexOfLastPost) : null;
 
@@ -160,7 +156,6 @@ const Product: React.FC<productProp> = ({
     id: string
   ) => {
     if (window.confirm("are you sure you want to delete this?")) {
-      var res = await deleteProduct(id);
     }
   };
 

@@ -11,7 +11,6 @@ import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import Badge from "@material-ui/core/Badge";
 import Collapse from "@material-ui/core/Collapse";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
 import StarBorder from "@material-ui/icons/StarBorder";
 import Add from "@material-ui/icons/Add";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -29,7 +28,6 @@ import { Link } from "react-router-dom";
 import Menu, { MenuProps } from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import SendIcon from '@material-ui/icons/Send';
 
 const drawerWidth = 240;
 
@@ -300,7 +298,7 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
             </ListItem> */}
             <Collapse in={openl} timeout='auto' unmountOnExit>
               <List component='div' disablePadding>
-                {role == "admin" ? (
+                {role === "admin" ? (
                   <ListItem button className={classes.nested}>
                     <ListItemIcon>
                       <Add />
@@ -581,7 +579,7 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
               </List>
             </Collapse>
             {
-              role=='admin'?(
+              role==='admin'?(
             <ListItem button>
               <ListItemIcon>
                 <SettingsIcon />
@@ -597,7 +595,7 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
               ):null
             }
             {
-              role=='admin'?(
+              role==='admin'?(
 <ListItem button>
               <ListItemIcon>
                 <ShoppingCartIcon />

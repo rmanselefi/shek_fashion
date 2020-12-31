@@ -16,12 +16,9 @@ import {
   Paper,
   makeStyles,
   FormControl,
-  InputLabel,
-  Select,
 } from "@material-ui/core";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import { Sales } from "../../models/sales";
 import { compose } from "redux";
 import { firestoreConnect } from "react-redux-firebase";
 import { Category } from "../../models/category";
@@ -74,7 +71,7 @@ interface settingsProps extends RouteComponentProps {
   authError?: any;
   history: any;
 }
-const SettingsForm: React.FC<settingsProps> = ({ registerCategory, role,location, }) => {
+const SettingsForm: React.FC<settingsProps> = ({ registerCategory, }) => {
   
   const [category, setUser] = useState<Category>({
     id: "",
@@ -94,12 +91,6 @@ const SettingsForm: React.FC<settingsProps> = ({ registerCategory, role,location
     });
   };
 
-  const handleSelectChange = (
-    event: React.ChangeEvent<{ name?: string; value: unknown }>
-  ) => {
-    const name = event.target.name as string;
-    setUser({ ...category, [name]: event.target.value });
-  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

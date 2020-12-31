@@ -16,21 +16,18 @@ import {
   Paper,
   makeStyles,
   FormControl,
-  InputLabel,
-  Select,
 } from "@material-ui/core";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { Sales } from "../../models/sales";
 import { compose } from "redux";
 import { firestoreConnect } from "react-redux-firebase";
-import Autocomplete ,{createFilterOptions } from '@material-ui/lab/Autocomplete';
+import Autocomplete  from '@material-ui/lab/Autocomplete';
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-const filter = createFilterOptions<Sales>();
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -94,16 +91,7 @@ const SalesForm: React.FC<salesProps> = ({
     productname:""
   });
 
-  const [saless, setSales] = useState<Sales>({
-    id: "",
-    price: 0,
-    productid: "",
-    quantity: 0,
-    branch: branch,
-    productname:""
-  });
-
-  const [value, setValue] = React.useState<Sales | null>(null);
+  // const [value, setValue] = React.useState<Sales | null>(null);
   const [open, setOpen] = React.useState(false);
   const [opene, setOpenError] = React.useState(false);
 

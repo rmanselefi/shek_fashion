@@ -18,6 +18,11 @@ export const registerProduct = (product: Product) => {
       category:product.category,
       createdAt: new Date(),
     });
+
+    console.log('====================================');
+    console.log(resp);
+    console.log('====================================');
+
     if (resp != null) {
       return product;
     } else {
@@ -46,7 +51,7 @@ export const updateProduct = (product: Product) => {
         category:product.category,
         updatedAt: new Date(),
       });
-    if (resp != null) {
+    if (resp != null || resp===undefined) {
       return product;
     } else {
       return null;

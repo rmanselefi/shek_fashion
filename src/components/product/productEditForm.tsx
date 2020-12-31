@@ -117,6 +117,8 @@ const ProductEditForm: React.FC<productProps> = ({
     produc.code,
     produc.price,
     produc.stock,
+    produc.category,
+    produc.branch
   ]);
   const [open, setOpen] = React.useState(false);
   const [opene, setOpenError] = React.useState(false);

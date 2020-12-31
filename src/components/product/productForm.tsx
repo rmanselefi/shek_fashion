@@ -91,6 +91,7 @@ const ProductForm: React.FC<penaltyProps> = ({
     category: "",
   });
   const [open, setOpen] = React.useState(false);
+  const [opene, setOpenError] = React.useState(false);
 
   const handleChange = (
     event: React.ChangeEvent<
@@ -107,11 +108,14 @@ const ProductForm: React.FC<penaltyProps> = ({
     event.preventDefault();
     var res = await registerProduct(product);
     if (res != null) {
-      await setOpen(true);
+      setOpen(true);
       history.push({
         pathname: `/products`,
         state: { branch: product.branch },
       });
+    }
+    else{
+      setOpenError(true);
     }
   };
   const handleSelectChange = (
@@ -127,6 +131,14 @@ const ProductForm: React.FC<penaltyProps> = ({
     }
 
     setOpen(false);
+  };
+
+  const handleCloseError = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenError(false);
   };
   const classes = useStyles();
   return (
@@ -344,6 +356,11 @@ const ProductForm: React.FC<penaltyProps> = ({
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity='success'>
           This is a success message!
+        </Alert>
+      </Snackbar>
+      <Snackbar open={opene} autoHideDuration={6000} onClose={handleCloseError}>
+        <Alert onClose={handleCloseError} severity='error'>
+          Something is wrong Please check your data
         </Alert>
       </Snackbar>
     </Container>

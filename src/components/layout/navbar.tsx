@@ -161,11 +161,16 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
   };
 
   const [openl, setOpenl] = React.useState(false);
+  const [openst, setOpenst] = React.useState(false);
 
    const [opens, setOpens] = React.useState(false);
    const [openr, setOpenr] = React.useState(false);
   const handleClick = () => {
     setOpenl(!openl);
+  };
+
+  const handleClickst = () => {
+    setOpenst(!openst);
   };
 
   const handleClicks = () => {
@@ -350,6 +355,72 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
                     }}
                     to={{
                       pathname: `/products`,
+                      state: { branch: "branch-3" },
+                    }}>
+                    Branch-3
+                  </Link>
+                </ListItem>
+              </List>
+            </Collapse>
+
+            <ListItem button onClick={handleClickst}>
+              <ListItemIcon>
+                <ShoppingCartIcon />
+              </ListItemIcon>
+              <ListItemText primary='Low Stock' />
+              {openst ? <ExpandLess /> : <ExpandMore />}
+            </ListItem>
+
+            {/* <ListItem button onClick={handleClick}>
+              <ListItemIcon>
+                <InboxIcon />
+              </ListItemIcon>
+              <ListItemText primary='Inbox' />
+              {openl ? <ExpandLess /> : <ExpandMore />}
+            </ListItem> */}
+            <Collapse in={openst} timeout='auto' unmountOnExit>
+              <List component='div' disablePadding>               
+
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <StarBorder />
+                  </ListItemIcon>
+                  <Link
+                    style={{
+                      textDecoration: "none",
+                    }}
+                    to={{
+                      pathname: `/lowstock`,
+                      state: { branch: "branch-1" },
+                    }}>
+                    Branch-1
+                  </Link>
+                </ListItem>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <StarBorder />
+                  </ListItemIcon>
+                  <Link
+                    style={{
+                      textDecoration: "none",
+                    }}
+                    to={{
+                      pathname: `/lowstock`,
+                      state: { branch: "branch-2" },
+                    }}>
+                    Branch-2
+                  </Link>
+                </ListItem>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <StarBorder />
+                  </ListItemIcon>
+                  <Link
+                    style={{
+                      textDecoration: "none",
+                    }}
+                    to={{
+                      pathname: `/lowstock`,
                       state: { branch: "branch-3" },
                     }}>
                     Branch-3

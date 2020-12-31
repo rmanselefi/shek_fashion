@@ -111,7 +111,7 @@ interface productProp extends RouteComponentProps {
   match: any;
 }
 
-const Product: React.FC<productProp> = ({
+const LowStock: React.FC<productProp> = ({
   history,
   location,
   match,
@@ -141,9 +141,16 @@ const Product: React.FC<productProp> = ({
     });
   }
 
-  var filteredByCategory = null;
+  var filteredByStock = null;
   if (filteredBybranch != null) {
-    filteredByCategory = filteredBybranch.filter((object: any) => {
+    filteredByStock = filteredBybranch.filter((object: any) => {
+      return object.stock<4;
+    });
+  }
+
+  var filteredByCategory = null;
+  if (filteredByStock != null) {
+    filteredByCategory = filteredByStock.filter((object: any) => {
       return object.category.toLowerCase().indexOf(categ.toLowerCase()) !== -1;
     });
   }
@@ -320,4 +327,4 @@ export default compose(
      collection:'category'
    }
   ])
-)(Product);
+)(LowStock);

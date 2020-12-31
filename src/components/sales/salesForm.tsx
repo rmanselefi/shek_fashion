@@ -24,10 +24,14 @@ import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { Sales } from "../../models/sales";
 import { compose } from "redux";
 import { firestoreConnect } from "react-redux-firebase";
+import Autocomplete ,{createFilterOptions } from '@material-ui/lab/Autocomplete';
 
 function Alert(props: AlertProps) {
-  return <MuiAlert elevation={6} variant='filled' {...props} />;
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
+
+const filter = createFilterOptions<Sales>();
+
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -87,8 +91,21 @@ const SalesForm: React.FC<salesProps> = ({
     productid: "",
     quantity: 0,
     branch: branch,
+    productname:""
   });
+
+  const [saless, setSales] = useState<Sales>({
+    id: "",
+    price: 0,
+    productid: "",
+    quantity: 0,
+    branch: branch,
+    productname:""
+  });
+
+  const [value, setValue] = React.useState<Sales | null>(null);
   const [open, setOpen] = React.useState(false);
+  const [opene, setOpenError] = React.useState(false);
 
   const handleChange = (
     event: React.ChangeEvent<
@@ -101,20 +118,30 @@ const SalesForm: React.FC<salesProps> = ({
     });
   };
 
-  const handleSelectChange = (
-    event: React.ChangeEvent<{ name?: string; value: unknown }>
-  ) => {
-    const name = event.target.name as string;
-    setUser({ ...sale, [name]: event.target.value });
-  };
-
+ 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     var res = await registerSales(sale);
     if (res != null) {
       setOpen(true);
     }
+    else{
+      setOpenError(true);
+    }
   };
+
+  const onTagsChange = (event:any, values:any) => {
+    
+      // This will output an array of objects
+      // given by Autocompelte options property.
+      if (values!=null) {
+        setUser({...sale,productid:values.id,productname:values.name});
+      console.log('values',values);
+      }     
+    
+  }
+
+
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
     if (reason === "clickaway") {
@@ -123,11 +150,20 @@ const SalesForm: React.FC<salesProps> = ({
 
     setOpen(false);
   };
+
+  const handleCloseError = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenError(false);
+  };
+
   const classes = useStyles();
 
   var filteredElements = null;
   if (product != null && role != null) {
-    if (role == "admin") {
+    if (role === "admin") {
       filteredElements = product;
     } else {
       filteredElements = product.filter((object: any) => {
@@ -141,7 +177,8 @@ const SalesForm: React.FC<salesProps> = ({
       <div
         style={{
           marginTop: "100",
-        }}>
+        }}
+      >
         <br />
         <br />
         <br />
@@ -150,65 +187,52 @@ const SalesForm: React.FC<salesProps> = ({
 
         <Paper>
           <br />
-          <Typography component='h1' variant='h5'>
+          <Typography component="h1" variant="h5">
             Register Sales
           </Typography>
           <br />
           <form onSubmit={handleSubmit} noValidate>
             <Grid container spacing={3}>
               <Grid item xs={4}>
-                <FormControl variant='outlined' className={classes.formControl}>
-                  <InputLabel htmlFor='outlined-age-native-simple'>
-                    Product
-                  </InputLabel>
-                  <Select
-                    native
-                    id='productid'
-                    onChange={handleSelectChange}
-                    label='Product'
-                    name='productid'
-                    value={sale.productid}
-                    inputProps={{
-                      name: "productid",
-                      id: "outlined-age-native-simple",
-                    }}>
-                    <option aria-label='None' value='' />
-                    {filteredElements != null
-                      ? filteredElements.map((row: any, index: any) => (
-                          <option key={index} value={row.id}>
-                            {row.name},{row.brand},
-                            {row.type != null ? row.type : ""}
-                          </option>
-                        ))
-                      : null}
-                  </Select>
+                <FormControl variant="outlined" className={classes.formControl}>
+                 
+                  <Autocomplete
+                    id="combo-box-demo"
+                    options={filteredElements}
+                    getOptionLabel={(option:any) => option.name}
+                    onChange={onTagsChange}
+                    style={{ width: 300 }}
+                    renderInput={(params) => <TextField {...params} label="Combo box" variant="outlined" />}
+                  />
+
+                 
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <FormControl variant='outlined' className={classes.formControl}>
+                <FormControl variant="outlined" className={classes.formControl}>
                   {" "}
                   <TextField
-                    variant='outlined'
+                    variant="outlined"
                     required
                     fullWidth
-                    id='quantity'
-                    label='Quantity'
-                    name='quantity'
+                    id="quantity"
+                    label="Quantity"
+                    name="quantity"
                     onChange={handleChange}
                     value={sale.quantity}
                   />
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <FormControl variant='outlined' className={classes.formControl}>
+                <FormControl variant="outlined" className={classes.formControl}>
                   {" "}
                   <TextField
-                    variant='outlined'
+                    variant="outlined"
                     required
                     fullWidth
-                    name='price'
-                    label='Price'
-                    id='price'
+                    name="price"
+                    label="Price"
+                    id="price"
                     onChange={handleChange}
                     value={sale.price}
                   />
@@ -217,11 +241,12 @@ const SalesForm: React.FC<salesProps> = ({
             </Grid>
             <Grid item xs={4}>
               <Button
-                type='submit'
+                type="submit"
                 fullWidth
-                variant='contained'
-                color='primary'
-                className={classes.submit}>
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
                 Register Sale
               </Button>
             </Grid>
@@ -229,8 +254,14 @@ const SalesForm: React.FC<salesProps> = ({
         </Paper>
       </div>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity='success'>
-          This is a success message!
+        <Alert onClose={handleClose} severity="success">
+          Your sales is registered successfully
+        </Alert>
+      </Snackbar>
+
+      <Snackbar open={opene} autoHideDuration={6000} onClose={handleCloseError}>
+        <Alert onClose={handleCloseError} severity="error">
+          Someting is wrong please check your data
         </Alert>
       </Snackbar>
     </Container>

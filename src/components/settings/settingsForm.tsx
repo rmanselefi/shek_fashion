@@ -81,6 +81,7 @@ const SettingsForm: React.FC<settingsProps> = ({ registerCategory, role,location
    name:""
   });
   const [open, setOpen] = React.useState(false);
+  const [opene, setOpenError] = React.useState(false);
 
   const handleChange = (
     event: React.ChangeEvent<
@@ -106,17 +107,25 @@ const SettingsForm: React.FC<settingsProps> = ({ registerCategory, role,location
     if (res != null) {
       setOpen(true);
     }
+    else{
+      setOpenError(true);
+    }
   };
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
     if (reason === "clickaway") {
       return;
     }
-
     setOpen(false);
   };
-  const classes = useStyles();
 
+  const handleCloseError = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenError(false);
+  };
+  const classes = useStyles();
   
   return (
     <Container>
@@ -134,7 +143,7 @@ const SettingsForm: React.FC<settingsProps> = ({ registerCategory, role,location
         <Paper>
           <br />
           <Typography component='h1' variant='h5'>
-            Register Sales
+            Register Category
           </Typography>
           <br />
           <form onSubmit={handleSubmit} noValidate>
@@ -172,6 +181,11 @@ const SettingsForm: React.FC<settingsProps> = ({ registerCategory, role,location
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity='success'>
           This is a success message!
+        </Alert>
+      </Snackbar>
+      <Snackbar open={opene} autoHideDuration={6000} onClose={handleCloseError}>
+        <Alert onClose={handleCloseError} severity='error'>
+          Something is wrong Please check your data
         </Alert>
       </Snackbar>
     </Container>

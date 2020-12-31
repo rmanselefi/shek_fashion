@@ -28,7 +28,7 @@ export default function ReportTable(props: any) {
       const element = sales[index];
       var createdAt = element.createdAt.toDate();
       var today = new Date();
-      var diff = createdAt.getDay() - today.getDay();
+      var diff = today.getDay()-createdAt.getDay()  ;
       if (diff < 1) {
         dailySales.push(element);
       } else if (diff < 8) {
@@ -50,7 +50,7 @@ export default function ReportTable(props: any) {
   return (
     <React.Fragment>
       <Title>{
-          day==='daily'?'Daily Sales Report':'Weekly Sales Report'
+          day==='daily'?'Daily Sold Products':'Weekly Sold Products'
           }</Title>
       <Table size="small">
         <TableHead>

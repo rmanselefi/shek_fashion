@@ -17,6 +17,9 @@ export const registerSales = (sales: Sales) => {
         name:name,
         brand,
       }
+      if (res.data()?.stock<sales.quantity) {
+        return null;
+      }
     var resp = await firebase.firestore().collection("sales").add({
       product: prod,
       price: sales.price,

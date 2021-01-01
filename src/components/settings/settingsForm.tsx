@@ -139,7 +139,7 @@ const SettingsForm: React.FC<settingsProps> = ({ registerCategory, }) => {
           <br />
           <form onSubmit={handleSubmit} noValidate>
             <Grid container spacing={3}>              
-              <Grid item xs={4}>
+              <Grid item xs={12}>
                 <FormControl variant='outlined' className={classes.formControl}>
                   {" "}
                   <TextField

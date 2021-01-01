@@ -123,8 +123,9 @@ const Product: React.FC<productProp> = ({
   const [filterStr, setFilterStr] = useState("");
 
   const [categ, setCategory] = useState("");
+  const [branch, setBranch] = useState("");
 
-  const branch = location.state.branch;
+  // const branch = location.state.branch;
 
   const indexOfLastPost = currentPage * postsPerPage;
   // const currentMall =
@@ -166,6 +167,13 @@ const Product: React.FC<productProp> = ({
     setCategory(name );
   };
 
+  const handleBranchSelectChange = (
+    event: React.ChangeEvent<{ name?: string; value: unknown }>
+  ) => {
+    const name = event.target.value as string;
+    setBranch(name );
+  };
+
   return (
     <React.Fragment>
       <main className={classes.content}>
@@ -196,6 +204,31 @@ const Product: React.FC<productProp> = ({
                   />
                 </div>
               </Grid>
+
+              <Grid item xs={4}>
+                <FormControl variant='outlined' className={classes.formControl}>
+                  <InputLabel htmlFor='outlined-age-native-simple'>
+                    Branch
+                  </InputLabel>
+                  <Select
+                    native
+                    id='branch'
+                    onChange={handleBranchSelectChange}
+                    label='Branch'
+                    name='branch'
+                    value={branch}
+                    inputProps={{
+                      name: "branch",
+                      id: "outlined-age-native-simple",
+                    }}>
+                    <option aria-label='None' value='' />
+                    <option value='branch-1'>branch-1</option>
+                    <option value='branch-2'>branch-2</option>
+                    <option value='branch-3'>branch-3</option>
+                    </Select>
+                </FormControl>
+              </Grid>
+
               <Grid item xs={4}>
                 <FormControl variant='outlined' className={classes.formControl}>
                   <InputLabel htmlFor='outlined-age-native-simple'>

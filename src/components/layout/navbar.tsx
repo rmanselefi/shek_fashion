@@ -11,7 +11,6 @@ import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import Badge from "@material-ui/core/Badge";
 import Collapse from "@material-ui/core/Collapse";
-import StarBorder from "@material-ui/icons/StarBorder";
 import Add from "@material-ui/icons/Add";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
@@ -24,10 +23,14 @@ import { connect } from "react-redux";
 import { Button, ListItem, ListItemIcon, ListItemText, withStyles } from "@material-ui/core";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
-import { Link } from "react-router-dom";
+import { Link,useLocation  } from "react-router-dom";
 import Menu, { MenuProps } from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import AssessmentIcon from '@material-ui/icons/Assessment';
+import GroupIcon from '@material-ui/icons/Group';
+import ListIcon from '@material-ui/icons/List';
+import CreditCardIcon from '@material-ui/icons/CreditCard';
 
 const drawerWidth = 240;
 
@@ -159,25 +162,19 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
   };
 
   const [openl, setOpenl] = React.useState(false);
-  const [openst, setOpenst] = React.useState(false);
+
 
    const [opens, setOpens] = React.useState(false);
-   const [openr, setOpenr] = React.useState(false);
+
   const handleClick = () => {
     setOpenl(!openl);
   };
 
-  const handleClickst = () => {
-    setOpenst(!openst);
-  };
 
   const handleClicks = () => {
     setOpens(!opens);
   };
 
-  const handleClickr = () => {
-    setOpenr(!openr);
-  };
 
   const handleSignout = () => {
     signOut();
@@ -194,7 +191,7 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
     setAnchorEl(null);
   };
 
-  
+  const location = useLocation()
 
   return (
     <>
@@ -268,7 +265,7 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
         <Divider />
         <List>
           <div>
-            <ListItem button>
+            <ListItem button selected={location.pathname==='/dashboard'}>
               <ListItemIcon>
                 <DashboardIcon />
               </ListItemIcon>
@@ -281,7 +278,7 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
                     </Link>
             </ListItem>
 
-            <ListItem button onClick={handleClick}>
+            <ListItem button onClick={handleClick} selected={location.pathname==='/products'|| location.pathname==='/products/add' || location.pathname==='/products/edit'}>
               <ListItemIcon>
                 <ShoppingCartIcon />
               </ListItemIcon>
@@ -313,75 +310,26 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
                   </ListItem>
                 ) : null}
 
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <StarBorder />
-                  </ListItemIcon>
-                  <Link
-                    style={{
-                      textDecoration: "none",
-                    }}
-                    to={{
-                      pathname: `/products`,
-                      state: { branch: "branch-1" },
-                    }}>
-                    Branch-1
-                  </Link>
-                </ListItem>
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <StarBorder />
-                  </ListItemIcon>
-                  <Link
-                    style={{
-                      textDecoration: "none",
-                    }}
-                    to={{
-                      pathname: `/products`,
-                      state: { branch: "branch-2" },
-                    }}>
-                    Branch-2
-                  </Link>
-                </ListItem>
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <StarBorder />
-                  </ListItemIcon>
-                  <Link
-                    style={{
-                      textDecoration: "none",
-                    }}
-                    to={{
-                      pathname: `/products`,
-                      state: { branch: "branch-3" },
-                    }}>
-                    Branch-3
-                  </Link>
-                </ListItem>
+<ListItem button className={classes.nested}>
+                    <ListItemIcon>
+                      <ListIcon />
+                    </ListItemIcon>
+                    <Link
+                      style={{
+                        textDecoration: "none",
+                      }}
+                      to='/products'>
+                      Products
+                    </Link>
+                  </ListItem>
+
+                
               </List>
             </Collapse>
 
-            <ListItem button onClick={handleClickst}>
-              <ListItemIcon>
-                <ShoppingCartIcon />
-              </ListItemIcon>
-              <ListItemText primary='Low Stock' />
-              {openst ? <ExpandLess /> : <ExpandMore />}
-            </ListItem>
-
-            {/* <ListItem button onClick={handleClick}>
-              <ListItemIcon>
-                <InboxIcon />
-              </ListItemIcon>
-              <ListItemText primary='Inbox' />
-              {openl ? <ExpandLess /> : <ExpandMore />}
-            </ListItem> */}
-            <Collapse in={openst} timeout='auto' unmountOnExit>
-              <List component='div' disablePadding>               
-
-                <ListItem button className={classes.nested}>
+            <ListItem button selected={location.pathname==='/lowstock'} >
                   <ListItemIcon>
-                    <StarBorder />
+                    <ListIcon />
                   </ListItemIcon>
                   <Link
                     style={{
@@ -391,46 +339,13 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
                       pathname: `/lowstock`,
                       state: { branch: "branch-1" },
                     }}>
-                    Branch-1
+                    Low Stock
                   </Link>
                 </ListItem>
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <StarBorder />
-                  </ListItemIcon>
-                  <Link
-                    style={{
-                      textDecoration: "none",
-                    }}
-                    to={{
-                      pathname: `/lowstock`,
-                      state: { branch: "branch-2" },
-                    }}>
-                    Branch-2
-                  </Link>
-                </ListItem>
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <StarBorder />
-                  </ListItemIcon>
-                  <Link
-                    style={{
-                      textDecoration: "none",
-                    }}
-                    to={{
-                      pathname: `/lowstock`,
-                      state: { branch: "branch-3" },
-                    }}>
-                    Branch-3
-                  </Link>
-                </ListItem>
-              </List>
-            </Collapse>
-
-
-            <ListItem button onClick={handleClicks}>
+                
+            <ListItem button onClick={handleClicks} selected={location.pathname==='/sales' || location.pathname==='/sales/add' || location.pathname==='/sales/edit'}>
               <ListItemIcon>
-                <ShoppingCartIcon />
+                <CreditCardIcon />
               </ListItemIcon>
               <ListItemText primary='Sales' />
               {opens ? <ExpandLess /> : <ExpandMore />}
@@ -466,7 +381,7 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
 
                 <ListItem button className={classes.nested}>
                   <ListItemIcon>
-                    <StarBorder />
+                    <ListIcon />
                   </ListItemIcon>
                   <Link
                     style={{
@@ -476,111 +391,30 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
                       pathname: `/sales`,
                       state: { branch: "branch-1" },
                     }}>
-                    Branch-1
+                    Sales
                   </Link>
                 </ListItem>
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <StarBorder />
-                  </ListItemIcon>
-                  <Link
-                    style={{
-                      textDecoration: "none",
-                    }}
-                    to={{
-                      pathname: `/sales`,
-                      state: { branch: "branch-2" },
-                    }}>
-                    Branch-2
-                  </Link>
-                </ListItem>
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <StarBorder />
-                  </ListItemIcon>
-                  <Link
-                    style={{
-                      textDecoration: "none",
-                    }}
-                    to={{
-                      pathname: `/sales`,
-                      state: { branch: "branch-3" },
-                    }}>
-                    Branch-3
-                  </Link>
-                </ListItem>
+                
               </List>
             </Collapse>
 
-            <ListItem button onClick={handleClickr}>
+            <ListItem button selected={location.pathname==='/report'}>
               <ListItemIcon>
-                <ShoppingCartIcon />
+                <AssessmentIcon />
               </ListItemIcon>
-              <ListItemText primary='Report' />
-              {openr ? <ExpandLess /> : <ExpandMore />}
+              <Link
+                style={{
+                  textDecoration: "none",
+                }}
+                to='/report'>
+                Report
+              </Link>
             </ListItem>
 
-            {/* <ListItem button onClick={handleClick}>
-              <ListItemIcon>
-                <InboxIcon />
-              </ListItemIcon>
-              <ListItemText primary='Inbox' />
-              {openl ? <ExpandLess /> : <ExpandMore />}
-            </ListItem> */}
-            <Collapse in={openr} timeout='auto' unmountOnExit>
-              <List component='div' disablePadding>
-                
-
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <StarBorder />
-                  </ListItemIcon>
-                  <Link
-                    style={{
-                      textDecoration: "none",
-                    }}
-                    to={{
-                      pathname: `/report`,
-                      state: { branch: "branch-1" },
-                    }}>
-                    Branch-1
-                  </Link>
-                </ListItem>
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <StarBorder />
-                  </ListItemIcon>
-                  <Link
-                    style={{
-                      textDecoration: "none",
-                    }}
-                    to={{
-                      pathname: `/report`,
-                      state: { branch: "branch-2" },
-                    }}>
-                    Branch-2
-                  </Link>
-                </ListItem>
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <StarBorder />
-                  </ListItemIcon>
-                  <Link
-                    style={{
-                      textDecoration: "none",
-                    }}
-                    to={{
-                      pathname: `/report`,
-                      state: { branch: "branch-3" },
-                    }}>
-                    Branch-3
-                  </Link>
-                </ListItem>
-              </List>
-            </Collapse>
+            
             {
               role==='admin'?(
-            <ListItem button>
+            <ListItem button selected={location.pathname==='/settings'}>
               <ListItemIcon>
                 <SettingsIcon />
               </ListItemIcon>
@@ -596,9 +430,9 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
             }
             {
               role==='admin'?(
-<ListItem button>
+<ListItem button selected={location.pathname==='/users'}>
               <ListItemIcon>
-                <ShoppingCartIcon />
+                <GroupIcon />
               </ListItemIcon>
               <Link
                 style={{

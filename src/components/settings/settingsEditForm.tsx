@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 120,
+    minWidth: 320,
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
@@ -123,14 +123,22 @@ const SettingsEditForm: React.FC<settingsProps> = ({ updateCategory,location }) 
   return (
     <Container>
       <CssBaseline />
-      <div className={classes.paper}>
+      <div >
+      <br />
+        <br />
+        <br />
+        <br />
+        <br />
         <Paper
           style={{
             marginTop: "20",
           }}>
+            <br/>
+            
           <Typography component='h1' variant='h5'>
             Update Category
           </Typography>
+          <br/>
           <form onSubmit={handleSubmit} noValidate>
             <Grid container spacing={3}>
             

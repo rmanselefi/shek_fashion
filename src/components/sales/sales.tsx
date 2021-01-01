@@ -1,5 +1,5 @@
 // @ts-ignore
-import React from "react";
+import React , {useState} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Grid,
@@ -11,6 +11,9 @@ import {
   TableCell,
   TableBody,
   Button,
+  FormControl,
+  InputLabel,
+  Select,
 } from "@material-ui/core";
 import { RouteComponentProps, Link } from "react-router-dom";
 import { Title } from "../layout/title";
@@ -47,6 +50,10 @@ const useStyles = makeStyles((theme) => ({
   button: {
     marginLeft: 20,
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 320,
+  },
   appBarSpacer: theme.mixins.toolbar,
 }));
 
@@ -68,7 +75,16 @@ const Sales: React.FC<salesProp> = ({
   role
 }) => {
   const classes = useStyles();
-  const branch = location.state.branch;
+
+  const [branch, setBranch] = useState("");
+
+  const handleBranchSelectChange = (
+    event: React.ChangeEvent<{ name?: string; value: unknown }>
+  ) => {
+    const name = event.target.value as string;
+    setBranch(name );
+  }; 
+  
   const handelDelete = async (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     id: string
@@ -95,6 +111,29 @@ const Sales: React.FC<salesProp> = ({
                 width: "100%",
                 paddingLeft: "10",
               }}>
+                <Grid item xs={4}>
+                <FormControl variant='outlined' className={classes.formControl}>
+                  <InputLabel htmlFor='outlined-age-native-simple'>
+                    Branch
+                  </InputLabel>
+                  <Select
+                    native
+                    id='branch'
+                    onChange={handleBranchSelectChange}
+                    label='Branch'
+                    name='branch'
+                    value={branch}
+                    inputProps={{
+                      name: "branch",
+                      id: "outlined-age-native-simple",
+                    }}>
+                    <option aria-label='None' value='' />
+                    <option value='branch-1'>branch-1</option>
+                    <option value='branch-2'>branch-2</option>
+                    <option value='branch-3'>branch-3</option>
+                    </Select>
+                </FormControl>
+              </Grid>
               {/* <Grid item xs={4} md={4} lg={4}>
                 <br />
                 <Button

@@ -237,7 +237,7 @@ const LowStock: React.FC<productProp> = ({
                 <TableHead>
                   <TableRow>
                     <TableCell>Product Name</TableCell>
-                    <TableCell>Product Type</TableCell>
+                    <TableCell>Product Size</TableCell>
                     <TableCell>Brand</TableCell>
                     <TableCell>Code</TableCell>
                     <TableCell>Stock</TableCell>
@@ -251,7 +251,7 @@ const LowStock: React.FC<productProp> = ({
                     ? filteredElements.map((row: any) => (
                         <TableRow key={row.id}>
                           <TableCell>{row.name}</TableCell>
-                          <TableCell>{row.type}</TableCell>
+                          <TableCell>{row.size}</TableCell>
                           <TableCell>{row.brand}</TableCell>
                           <TableCell>{row.code}</TableCell>
                           <TableCell>{row.stock<0?0:row.stock}</TableCell>

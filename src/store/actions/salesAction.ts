@@ -28,12 +28,12 @@ export const registerSales = (sales: Sales) => {
       createdAt: new Date(),
     });
     if (resp != null) {
-      var res = await firebase
+      var response = await firebase
         .firestore()
         .collection("product")
         .doc(sales.productid)
         .get();
-      var stock = res.data()?.stock;
+      var stock = response.data()?.stock;
       var remaining = stock - sales.quantity;
       await firebase
         .firestore()

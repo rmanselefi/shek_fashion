@@ -11,7 +11,7 @@ import Container from "@material-ui/core/Container";
 import { connect } from "react-redux";
 
 import { updateSales } from "../../store/actions/salesAction";
-import { Theme, Paper, makeStyles, FormControl, InputLabel, Select } from "@material-ui/core";
+import { Theme, Paper, makeStyles, FormControl } from "@material-ui/core";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { Sales } from "../../models/sales";
@@ -110,12 +110,6 @@ const SalesEditForm: React.FC<salesProps> = ({ updateSales,product,location,role
     });
   };
 
-  const handleSelectChange = (
-    event: React.ChangeEvent<{ name?: string; value: unknown }>
-  ) => {
-    const name = event.target.name as string;
-    setUser({ ...sale, [name]: event.target.value });
-  };
 
 
   const onTagsChange = (event:any, values:any) => {

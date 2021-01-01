@@ -131,7 +131,7 @@ const Sales: React.FC<salesProp> = ({
                           <TableCell>{row.quantity}</TableCell>                         
                           <TableCell>
                             {
-                              branch==role?(
+                              branch===role?(
                                 <>
                                 <Button
                               variant='outlined'

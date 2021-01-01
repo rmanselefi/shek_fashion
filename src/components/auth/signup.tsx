@@ -1,18 +1,13 @@
 import React, { useState } from "react";
-import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from '@material-ui/core/InputLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import NativeSelect from '@material-ui/core/NativeSelect';
 // import Link from "@material-ui/core/Link";
-import { Link, RouteComponentProps, Redirect } from "react-router-dom";
+import { RouteComponentProps } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -21,18 +16,7 @@ import { connect } from "react-redux";
 
 import { signup } from "../../store/actions/authActions";
 import { User } from "../../models/user";
-import { isLoaded, isEmpty } from "react-redux-firebase";
 
-function Copyright() {
-  return (
-    <Typography variant='body2' color='textSecondary' align='center'>
-      {"Copyright © "}
-      <a href='https://material-ui.com/'>Your Website</a>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -67,7 +51,7 @@ interface signupProps extends RouteComponentProps {
   authError: any;
 }
 
-const SignUp: React.FC<signupProps> = ({ signup, auth, history }) => {
+const SignUp: React.FC<signupProps> = ({ signup }) => {
   const [user, setUser] = useState<User>({ name:"", email: "", password: "",role:"" });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,7 +69,6 @@ const SignUp: React.FC<signupProps> = ({ signup, auth, history }) => {
   };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    var res = await signup(user);
     // if (res != null) {
     //   history.push("/dashboard");
     // }

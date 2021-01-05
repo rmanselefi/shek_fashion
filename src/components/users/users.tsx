@@ -107,6 +107,7 @@ const Users: React.FC<salesProp> = ({
                     <TableCell>Name</TableCell>
                     <TableCell>Email</TableCell>
                     <TableCell>Role</TableCell>   
+                    <TableCell>Branch</TableCell>
                     <TableCell>Actions</TableCell>
                     </TableRow>
                 </TableHead>
@@ -117,7 +118,8 @@ const Users: React.FC<salesProp> = ({
                             <TableCell>{index+1}</TableCell>
                           <TableCell>{row.name}</TableCell>
                           <TableCell>{row.email}</TableCell>
-                          <TableCell>{row.role}</TableCell>                         
+                          <TableCell>{row.role}</TableCell>
+                          <TableCell>{row.branch}</TableCell>                         
                           <TableCell>
                             {/* <Button
                               variant='outlined'

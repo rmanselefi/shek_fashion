@@ -23,6 +23,8 @@ import { Sales } from "../../models/sales";
 import { compose } from "redux";
 import { firestoreConnect } from "react-redux-firebase";
 import Autocomplete  from '@material-ui/lab/Autocomplete';
+import { Product } from "../../models/product";
+import { User } from "../../models/user";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -72,23 +74,32 @@ interface salesProps extends RouteComponentProps {
   product: any;
   role: any;
   auth: any;
-  authError?: any;
+  authError?: any; 
+  
   history: any;
+  users:User[];
 }
 const SalesForm: React.FC<salesProps> = ({
   registerSales,
   product,
   role,
+  users,
   location,
+  auth
+  
 }) => {
   const branch = location.state.branch;
+  const profile=location.state.profile;
+  
   const [sale, setUser] = useState<Sales>({
     id: "",
     price: 0,
     productid: "",
     quantity: 0,
     branch: branch,
-    productname:""
+    cashier:profile.name,    
+    cashierid:auth.uid,
+    productname:"",    
   });
 
   // const [value, setValue] = React.useState<Sales | null>(null);
@@ -105,7 +116,6 @@ const SalesForm: React.FC<salesProps> = ({
       [event.currentTarget!.id]: event.currentTarget!.value,
     });
   };
-
  
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -118,18 +128,29 @@ const SalesForm: React.FC<salesProps> = ({
     }
   };
 
-  const onTagsChange = (event:any, values:any) => {
-    
+  const onSoldByChange = (event:any, values:any) => {    
       // This will output an array of objects
       // given by Autocompelte options property.
+      console.log('====================================');
+      console.log(values);
+      console.log('====================================');
       if (values!=null) {
-        setUser({...sale,productid:values.id,productname:values.name});
-      console.log('values',values);
-      }     
+        setUser({...sale,sellerid:values.id,soldby:values.name});
+      // console.log('values',values);
+      }    
     
   }
 
-
+  const onTagsChange= (event:any, values:any) => {
+    
+    // This will output an array of objects
+    // given by Autocompelte options property.
+    if (values!=null) {
+      setUser({...sale,productid:values.id,productname:values.name});
+    console.log('values',values);
+    }     
+  
+}
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
     if (reason === "clickaway") {
@@ -155,10 +176,23 @@ const SalesForm: React.FC<salesProps> = ({
       filteredElements = product;
     } else {
       filteredElements = product.filter((object: any) => {
-        return object.branch.toLowerCase().indexOf(role.toLowerCase()) !== -1;
+        return object.branch.toLowerCase().indexOf(branch.toLowerCase()) !== -1;
       });
     }
   }
+
+  var filteredUsers : User[]=[];
+  var salesRole='sales';
+  if (users != null && role != null) {
+    if (role === "admin") {
+      filteredUsers = users;
+    } else {
+      filteredUsers = users.filter((object: User) => {
+        return object.role.toLowerCase().indexOf(salesRole.toLowerCase()) !== -1;
+      });
+    }
+  }
+
   return (
     <Container>
       <CssBaseline />
@@ -182,18 +216,31 @@ const SalesForm: React.FC<salesProps> = ({
           <form onSubmit={handleSubmit} noValidate>
             <Grid container spacing={3}>
               <Grid item xs={4}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                 
+                <FormControl variant="outlined" className={classes.formControl}>                 
                   <Autocomplete
                     id="combo-box-demo"
                     options={filteredElements}
-                    getOptionLabel={(option:any) => option.name}
+                    getOptionLabel={(option:Product) => {
+                      return option.name + ' , ' + option.color + ', ' + option.size
+                    }}
                     onChange={onTagsChange}
                     style={{ width: 300 }}
                     renderInput={(params) => <TextField {...params} label="Combo box" variant="outlined" />}
-                  />
-
-                 
+                  />                 
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <FormControl variant="outlined" className={classes.formControl}>                 
+                  <Autocomplete
+                    id="combo-box-demo"
+                    options={filteredUsers}
+                    getOptionLabel={(option:User) => {
+                      return option.name;
+                    }}
+                    onChange={onSoldByChange}
+                    style={{ width: 300 }}
+                    renderInput={(params) => <TextField {...params} label="Sold By" variant="outlined" />}
+                  />                 
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
@@ -259,7 +306,10 @@ const SalesForm: React.FC<salesProps> = ({
 const mapStateToProps = (state: any) => ({
   auth: state.firebase.auth,
   product: state.firestore.ordered.product,
+  users:state.firestore.ordered.users,
   role: state.firebase.profile.role,
+  branch: state.firebase.profile.branch,
+  profile:state.firebase.profile
 });
 
 // export default connect(mapStateToProps, { registerProduct })(SalesForm);
@@ -270,5 +320,8 @@ export default compose(
     {
       collection: "product",
     },
+    {
+      collection:'users'
+    }
   ])
 )(SalesForm);

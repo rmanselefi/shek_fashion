@@ -118,8 +118,8 @@ const LowStock: React.FC<productProp> = ({
   deleteProduct,
 }) => {
   const classes = useStyles();
-  const [currentPage] = useState(1);
-  const [postsPerPage] = useState(5);
+  // const [currentPage] = useState(1);
+  // const [postsPerPage] = useState(5);
   const [filterStr, setFilterStr] = useState("");
 
   const [categ, setCategory] = useState("");
@@ -131,7 +131,7 @@ const [branch, setBranch] = useState("");
     const name = event.target.value as string;
     setBranch(name );
   };
-  const indexOfLastPost = currentPage * postsPerPage;
+  // const indexOfLastPost = currentPage * postsPerPage;
   // const currentMall =
   //   mall != null ? mall.slice(indexOfFirstPost, indexOfLastPost) : null;
 

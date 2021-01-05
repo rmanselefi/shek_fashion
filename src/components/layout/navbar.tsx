@@ -115,6 +115,7 @@ const useStyles = makeStyles((theme) => ({
     height: 240,
   },
 }));
+
 const StyledMenu = withStyles({
   paper: {
     border: '1px solid #d3d4d5',
@@ -149,9 +150,12 @@ const StyledMenuItem = withStyles((theme) => ({
 interface navbarProps {
   signOut: () => void;
   role: string;
+  branch:string;
+  name:string;
+  profile:any;
 }
 
-const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
+const Navbar: React.FC<navbarProps> = ({ signOut, role ,branch,name,profile}) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
@@ -227,7 +231,7 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
         color="primary"
         onClick={handleClickm}
       >
-        {role}
+        {branch}, ({name})
       </Button>
       <StyledMenu
         id="customized-menu"
@@ -360,7 +364,7 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
             </ListItem> */}
             <Collapse in={opens} timeout='auto' unmountOnExit>
               <List component='div' disablePadding>
-                {role !== "admin" ? (
+                {role === "cashier" ? (
                   <ListItem button className={classes.nested}>
                     <ListItemIcon>
                       <Add />
@@ -371,7 +375,7 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
                       }}
                       to={{
                         pathname: `/sales/add`,
-                        state: { branch: role },
+                        state: { branch: branch ,profile:profile},
                       }}
                       >
                       Add your sales
@@ -454,5 +458,10 @@ const Navbar: React.FC<navbarProps> = ({ signOut, role }) => {
 const mapStateToProps = (state: any) => ({
   auth: state.firebase.auth,
   role: state.firebase.profile.role,
+  branch: state.firebase.profile.branch,
+  name: state.firebase.profile.name,
+  profile:state.firebase.profile
+
+
 });
 export default connect(mapStateToProps, { signOut })(Navbar);

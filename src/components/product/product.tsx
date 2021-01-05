@@ -118,8 +118,8 @@ const Product: React.FC<productProp> = ({
   deleteProduct,
 }) => {
   const classes = useStyles();
-  const [currentPage] = useState(1);
-  const [postsPerPage] = useState(5);
+  // const [currentPage] = useState(1);
+  // const [postsPerPage] = useState(5);
   const [filterStr, setFilterStr] = useState("");
 
   const [categ, setCategory] = useState("");
@@ -127,7 +127,7 @@ const Product: React.FC<productProp> = ({
 
   // const branch = location.state.branch;
 
-  const indexOfLastPost = currentPage * postsPerPage;
+  // const indexOfLastPost = currentPage * postsPerPage;
   // const currentMall =
   //   mall != null ? mall.slice(indexOfFirstPost, indexOfLastPost) : null;
 
@@ -285,7 +285,7 @@ const Product: React.FC<productProp> = ({
                           <TableCell>{row.price}</TableCell>
                           <TableCell>
                             {
-                              role=='admin'?(
+                              role === 'admin'?(
                                 <>
                             <Button
                               variant='outlined'

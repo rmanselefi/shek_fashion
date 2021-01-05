@@ -64,6 +64,7 @@ interface salesProp extends RouteComponentProps {
   history: any;
   location: any;
   match: any;
+  auth:any;
 }
 
 const Sales: React.FC<salesProp> = ({
@@ -72,7 +73,8 @@ const Sales: React.FC<salesProp> = ({
   match,
   sales,
   deleteSales,
-  role
+  role,
+  auth
 }) => {
   const classes = useStyles();
 
@@ -93,7 +95,7 @@ const Sales: React.FC<salesProp> = ({
       await deleteSales(id);
     }
   };
-
+  var userid=auth.uid;
   var filteredElements = null;
   if (sales != null) {
     filteredElements = sales.filter((object: any) => {
@@ -151,26 +153,32 @@ const Sales: React.FC<salesProp> = ({
                 </Button>
               </Grid> */}
 
-              <Title>Sales</Title>
+              <Title>Sold Items</Title>
               <Table size='small'>
                 <TableHead>
                   <TableRow>
-                    <TableCell>ID</TableCell>
-                    <TableCell>Price</TableCell>
-                    <TableCell>Quantity</TableCell>  
-                    <TableCell>Action</TableCell> 
-                    </TableRow>
+                    <TableCell>Product</TableCell>
+                    <TableCell>Price</TableCell>          
+                    <TableCell>Sale Quantity</TableCell>
+                    <TableCell>Date</TableCell>
+                    <TableCell>Sold By</TableCell>
+                    <TableCell>Cashier</TableCell>
+                    <TableCell>Action</TableCell>
+                  </TableRow>
                 </TableHead>
                 <TableBody>
                   {filteredElements != null
                     ? filteredElements.map((row: any,index:any) => (
                         <TableRow key={row.id}>
-                          <TableCell>{index+1}</TableCell>
+                          <TableCell>{row.product.name},{row.product.brand}</TableCell>
                           <TableCell>{row.price}</TableCell>
-                          <TableCell>{row.quantity}</TableCell>                         
+                          <TableCell>{row.quantity}</TableCell>      
+                          <TableCell>{row.createdAt.toDate().toDateString()}   </TableCell>          
+                          <TableCell>{row.soldby}</TableCell>      
+                          <TableCell>{row.cashier?.name}</TableCell>
                           <TableCell>
                             {
-                              branch===role?(
+                              userid===row.cashier.id?(
                                 <>
                                 <Button
                               variant='outlined'
@@ -219,6 +227,7 @@ const Sales: React.FC<salesProp> = ({
 const mapStateToProps = (state: any) => {
   console.log(state);
   return {
+    auth: state.firebase.auth,
     sales: state.firestore.ordered.sales,
     role: state.firebase.profile.role,
   };

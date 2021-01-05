@@ -18,13 +18,23 @@ export const registerSales = (sales: Sales) => {
         brand,
       }
       if (res.data()?.stock<sales.quantity) {
+        console.log('====================================');
+        console.log('jhgvjhgvhgvhgchgfcvcgfcghcghfc');
+        console.log('====================================');
         return null;
+      }    
+      var cashier={
+        id:sales.cashierid,
+        name:sales.cashier
       }
     var resp = await firebase.firestore().collection("sales").add({
       product: prod,
       price: sales.price,
       quantity: sales.quantity,
       branch:sales.branch,
+      cashier,
+      soldby:sales.soldby,
+      sellerid:sales.sellerid,
       createdAt: new Date(),
     });
     if (resp != null) {
@@ -61,6 +71,8 @@ export const updateSales = (sales: Sales) => {
         price: sales.price,
         quantity: sales.quantity,
         branch:sales.branch,
+        soldby:sales.soldby,
+        sellerid:sales.sellerid,
         updatedAt: new Date(),
       });
     if (resp != null) {

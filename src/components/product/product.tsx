@@ -291,7 +291,7 @@ const Product: React.FC<productProp> = ({
                           <TableCell>{row.color}</TableCell>
                           <TableCell>{row.price}</TableCell>
                           <TableCell>
-                            <img src={row.image} />
+                            <img src={row.image} width='50' height='50' />
                           </TableCell>
                           <TableCell>{row.initialStock}</TableCell>
 

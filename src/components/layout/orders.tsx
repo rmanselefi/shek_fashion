@@ -1,6 +1,4 @@
 import React from "react";
-import Link from "@material-ui/core/Link";
-import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -8,17 +6,13 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { Title } from "./title";
 import Chip from '@material-ui/core/Chip';
+import _ from "lodash";
 
-
-const useStyles = makeStyles((theme) => ({
-  seeMore: {
-    marginTop: theme.spacing(3),
-  },
-}));
 
 export default function Orders(props:any) {
-  const classes = useStyles();
   var sales=props.sales;
+  const myOrderedArray = _.sortBy(sales, o => o.createdAt)
+  
   return (
     <React.Fragment>
       <Title>Recent Sold Items</Title>
@@ -33,8 +27,8 @@ export default function Orders(props:any) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {sales!=null?
-          sales.map((row:any) => (
+          {myOrderedArray!=null?
+          myOrderedArray.map((row:any) => (
             <TableRow key={row.id}>
               <TableCell>{row.product.name},{row.product.brand}</TableCell>
               <TableCell>{row.price}</TableCell>

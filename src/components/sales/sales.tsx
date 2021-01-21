@@ -1,5 +1,5 @@
 // @ts-ignore
-import React from "react";
+import React , {useState} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Grid,
@@ -11,6 +11,9 @@ import {
   TableCell,
   TableBody,
   Button,
+  FormControl,
+  InputLabel,
+  Select,
 } from "@material-ui/core";
 import { RouteComponentProps, Link } from "react-router-dom";
 import { Title } from "../layout/title";
@@ -47,6 +50,10 @@ const useStyles = makeStyles((theme) => ({
   button: {
     marginLeft: 20,
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 320,
+  },
   appBarSpacer: theme.mixins.toolbar,
 }));
 
@@ -57,6 +64,7 @@ interface salesProp extends RouteComponentProps {
   history: any;
   location: any;
   match: any;
+  auth:any;
 }
 
 const Sales: React.FC<salesProp> = ({
@@ -65,10 +73,20 @@ const Sales: React.FC<salesProp> = ({
   match,
   sales,
   deleteSales,
-  role
+  role,
+  auth
 }) => {
   const classes = useStyles();
-  const branch = location.state.branch;
+
+  const [branch, setBranch] = useState("");
+
+  const handleBranchSelectChange = (
+    event: React.ChangeEvent<{ name?: string; value: unknown }>
+  ) => {
+    const name = event.target.value as string;
+    setBranch(name );
+  }; 
+  
   const handelDelete = async (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     id: string
@@ -77,7 +95,7 @@ const Sales: React.FC<salesProp> = ({
       await deleteSales(id);
     }
   };
-
+  var userid=auth.uid;
   var filteredElements = null;
   if (sales != null) {
     filteredElements = sales.filter((object: any) => {
@@ -95,6 +113,29 @@ const Sales: React.FC<salesProp> = ({
                 width: "100%",
                 paddingLeft: "10",
               }}>
+                <Grid item xs={4}>
+                <FormControl variant='outlined' className={classes.formControl}>
+                  <InputLabel htmlFor='outlined-age-native-simple'>
+                    Branch
+                  </InputLabel>
+                  <Select
+                    native
+                    id='branch'
+                    onChange={handleBranchSelectChange}
+                    label='Branch'
+                    name='branch'
+                    value={branch}
+                    inputProps={{
+                      name: "branch",
+                      id: "outlined-age-native-simple",
+                    }}>
+                    <option aria-label='None' value='' />
+                    <option value='branch-1'>branch-1</option>
+                    <option value='branch-2'>branch-2</option>
+                    <option value='branch-3'>branch-3</option>
+                    </Select>
+                </FormControl>
+              </Grid>
               {/* <Grid item xs={4} md={4} lg={4}>
                 <br />
                 <Button
@@ -112,26 +153,32 @@ const Sales: React.FC<salesProp> = ({
                 </Button>
               </Grid> */}
 
-              <Title>Sales</Title>
+              <Title>Sold Items</Title>
               <Table size='small'>
                 <TableHead>
                   <TableRow>
-                    <TableCell>ID</TableCell>
-                    <TableCell>Price</TableCell>
-                    <TableCell>Quantity</TableCell>  
-                    <TableCell>Action</TableCell> 
-                    </TableRow>
+                    <TableCell>Product</TableCell>
+                    <TableCell>Price</TableCell>          
+                    <TableCell>Sale Quantity</TableCell>
+                    <TableCell>Date</TableCell>
+                    <TableCell>Sold By</TableCell>
+                    <TableCell>Cashier</TableCell>
+                    <TableCell>Action</TableCell>
+                  </TableRow>
                 </TableHead>
                 <TableBody>
                   {filteredElements != null
                     ? filteredElements.map((row: any,index:any) => (
                         <TableRow key={row.id}>
-                          <TableCell>{index+1}</TableCell>
+                          <TableCell>{row.product.name},{row.product.brand}</TableCell>
                           <TableCell>{row.price}</TableCell>
-                          <TableCell>{row.quantity}</TableCell>                         
+                          <TableCell>{row.quantity}</TableCell>      
+                          <TableCell>{row.createdAt.toDate().toDateString()}   </TableCell>          
+                          <TableCell>{row.soldby}</TableCell>      
+                          <TableCell>{row.cashier?.name}</TableCell>
                           <TableCell>
                             {
-                              branch==role?(
+                              userid===row.cashier.id?(
                                 <>
                                 <Button
                               variant='outlined'
@@ -180,6 +227,7 @@ const Sales: React.FC<salesProp> = ({
 const mapStateToProps = (state: any) => {
   console.log(state);
   return {
+    auth: state.firebase.auth,
     sales: state.firestore.ordered.sales,
     role: state.firebase.profile.role,
   };

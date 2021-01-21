@@ -11,14 +11,12 @@ import Container from "@material-ui/core/Container";
 import { connect } from "react-redux";
 
 import { updateCategory } from "../../store/actions/categoryActions";
-import { Theme, Paper, makeStyles, FormControl, InputLabel, Select } from "@material-ui/core";
+import { Theme, Paper, makeStyles, FormControl } from "@material-ui/core";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import { Sales } from "../../models/sales";
 import { compose } from "redux";
 import { firestoreConnect } from "react-redux-firebase";
 import { Category } from "../../models/category";
-import moduleName from 'module'
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant='filled' {...props} />;
@@ -53,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 120,
+    minWidth: 320,
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
@@ -84,6 +82,7 @@ const SettingsEditForm: React.FC<settingsProps> = ({ updateCategory,location }) 
     cat.name,  
   ]);
   const [open, setOpen] = React.useState(false);
+  const [opene, setOpenError] = React.useState(false);
 
   const handleChange = (
     event: React.ChangeEvent<
@@ -110,21 +109,36 @@ const SettingsEditForm: React.FC<settingsProps> = ({ updateCategory,location }) 
     if (reason === "clickaway") {
       return;
     }
-
     setOpen(false);
   };
+
+  const handleCloseError = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenError(false);
+  };
+
   const classes = useStyles();
   return (
     <Container>
       <CssBaseline />
-      <div className={classes.paper}>
+      <div >
+      <br />
+        <br />
+        <br />
+        <br />
+        <br />
         <Paper
           style={{
             marginTop: "20",
           }}>
+            <br/>
+            
           <Typography component='h1' variant='h5'>
             Update Category
           </Typography>
+          <br/>
           <form onSubmit={handleSubmit} noValidate>
             <Grid container spacing={3}>
             
@@ -160,6 +174,11 @@ const SettingsEditForm: React.FC<settingsProps> = ({ updateCategory,location }) 
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity='success'>
           This is a success message!
+        </Alert>
+      </Snackbar>
+      <Snackbar open={opene} autoHideDuration={6000} onClose={handleCloseError}>
+        <Alert onClose={handleCloseError} severity='error'>
+          Something is wrong Please check your data
         </Alert>
       </Snackbar>
     </Container>

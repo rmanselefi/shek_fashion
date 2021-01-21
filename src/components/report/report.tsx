@@ -1,5 +1,5 @@
 // @ts-ignore
-import React from "react";
+import React ,{useState} from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
@@ -14,6 +14,7 @@ import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
 import { RouteComponentProps } from "react-router-dom";
 import ReportTable from "./reportTable";
+import { FormControl, InputLabel, Select } from "@material-ui/core";
 function Copyright() {
   return (
     <Typography variant='body2' color='textSecondary' align='center'>
@@ -103,6 +104,10 @@ const useStyles = makeStyles((theme) => ({
     overflow: "auto",
     flexDirection: "column",
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 320,
+  },
   fixedHeight: {
     height: 240,
   },
@@ -115,9 +120,16 @@ interface reportProps extends RouteComponentProps {
 
 const Report:React.FC<reportProps>=({sales,location})=> {
   const classes = useStyles();
-  const branch = location.state.branch;
+  // const branch = location.state.branch;
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
+  const [branch, setBranch] = useState("");
+  const handleBranchSelectChange = (
+    event: React.ChangeEvent<{ name?: string; value: unknown }>
+  ) => {
+    const name = event.target.value as string;
+    setBranch(name );
+  };
   var filteredElements = null;
   if (sales != null) {
     filteredElements = sales.filter((object: any) => {
@@ -129,6 +141,29 @@ const Report:React.FC<reportProps>=({sales,location})=> {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth='lg' className={classes.container}>
+        <Grid item xs={4}>
+                <FormControl variant='outlined' className={classes.formControl}>
+                  <InputLabel htmlFor='outlined-age-native-simple'>
+                    Branch
+                  </InputLabel>
+                  <Select
+                    native
+                    id='branch'
+                    onChange={handleBranchSelectChange}
+                    label='Branch'
+                    name='branch'
+                    value={branch}
+                    inputProps={{
+                      name: "branch",
+                      id: "outlined-age-native-simple",
+                    }}>
+                    <option aria-label='None' value='' />
+                    <option value='branch-1'>branch-1</option>
+                    <option value='branch-2'>branch-2</option>
+                    <option value='branch-3'>branch-3</option>
+                    </Select>
+                </FormControl>
+              </Grid>
           <Grid container spacing={3}>
             {/* Chart */}
             <Grid item xs={6} md={6} lg={6}>

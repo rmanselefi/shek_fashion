@@ -16,12 +16,9 @@ import {
   Paper,
   makeStyles,
   FormControl,
-  InputLabel,
-  Select,
 } from "@material-ui/core";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import { Sales } from "../../models/sales";
 import { compose } from "redux";
 import { firestoreConnect } from "react-redux-firebase";
 import { Category } from "../../models/category";
@@ -74,13 +71,14 @@ interface settingsProps extends RouteComponentProps {
   authError?: any;
   history: any;
 }
-const SettingsForm: React.FC<settingsProps> = ({ registerCategory, role,location, }) => {
+const SettingsForm: React.FC<settingsProps> = ({ registerCategory, }) => {
   
   const [category, setUser] = useState<Category>({
     id: "",
    name:""
   });
   const [open, setOpen] = React.useState(false);
+  const [opene, setOpenError] = React.useState(false);
 
   const handleChange = (
     event: React.ChangeEvent<
@@ -93,12 +91,6 @@ const SettingsForm: React.FC<settingsProps> = ({ registerCategory, role,location
     });
   };
 
-  const handleSelectChange = (
-    event: React.ChangeEvent<{ name?: string; value: unknown }>
-  ) => {
-    const name = event.target.name as string;
-    setUser({ ...category, [name]: event.target.value });
-  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -106,17 +98,25 @@ const SettingsForm: React.FC<settingsProps> = ({ registerCategory, role,location
     if (res != null) {
       setOpen(true);
     }
+    else{
+      setOpenError(true);
+    }
   };
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
     if (reason === "clickaway") {
       return;
     }
-
     setOpen(false);
   };
-  const classes = useStyles();
 
+  const handleCloseError = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenError(false);
+  };
+  const classes = useStyles();
   
   return (
     <Container>
@@ -134,12 +134,12 @@ const SettingsForm: React.FC<settingsProps> = ({ registerCategory, role,location
         <Paper>
           <br />
           <Typography component='h1' variant='h5'>
-            Register Sales
+            Register Category
           </Typography>
           <br />
           <form onSubmit={handleSubmit} noValidate>
             <Grid container spacing={3}>              
-              <Grid item xs={4}>
+              <Grid item xs={12}>
                 <FormControl variant='outlined' className={classes.formControl}>
                   {" "}
                   <TextField
@@ -172,6 +172,11 @@ const SettingsForm: React.FC<settingsProps> = ({ registerCategory, role,location
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity='success'>
           This is a success message!
+        </Alert>
+      </Snackbar>
+      <Snackbar open={opene} autoHideDuration={6000} onClose={handleCloseError}>
+        <Alert onClose={handleCloseError} severity='error'>
+          Something is wrong Please check your data
         </Alert>
       </Snackbar>
     </Container>

@@ -1,6 +1,4 @@
 import React from "react";
-import Link from "@material-ui/core/Link";
-import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -11,14 +9,8 @@ import Chip from '@material-ui/core/Chip';
 
 
 
-const useStyles = makeStyles((theme) => ({
-  seeMore: {
-    marginTop: theme.spacing(3),
-  },
-}));
 
 export default function ReportTable(props: any) {
-  const classes = useStyles();
   var sales = props.sales;
   var day = props.day;
   var dailySales = [];
@@ -28,7 +20,7 @@ export default function ReportTable(props: any) {
       const element = sales[index];
       var createdAt = element.createdAt.toDate();
       var today = new Date();
-      var diff = createdAt.getDay() - today.getDay();
+      var diff = today.getDay()-createdAt.getDay()  ;
       if (diff < 1) {
         dailySales.push(element);
       } else if (diff < 8) {
@@ -50,7 +42,7 @@ export default function ReportTable(props: any) {
   return (
     <React.Fragment>
       <Title>{
-          day==='daily'?'Daily Sales Report':'Weekly Sales Report'
+          day==='daily'?'Daily Sold Products':'Weekly Sold Products'
           }</Title>
       <Table size="small">
         <TableHead>

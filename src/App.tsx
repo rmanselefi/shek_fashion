@@ -4,6 +4,8 @@ import { BrowserRouter, Route, withRouter } from "react-router-dom";
 import SignUp from "./components/auth/signup";
 import Dashboard from "./components/dashboard/dashboard";
 import PrivateRoute from "./components/router/PrivateRoute";
+import PrivateRouteWithRole from "./components/router/PrivateRouteWithRole";
+
 import { isLoaded } from "react-redux-firebase";
 import { useSelector } from "react-redux";
 import { CircularProgress } from "@material-ui/core";
@@ -24,6 +26,7 @@ import Report from './components/report/report';
 import Settings from './components/settings/settings'
 import SettingsEditForm from './components/settings/settingsEditForm';
 import SettingsForm from './components/settings/settingsForm';
+import LowStock from "./components/stock/lowStockList";
 
 
 
@@ -82,19 +85,21 @@ const Main = withRouter(({ location }) => {
       <PrivateRoute exact path='/dashboard' component={Dashboard} />
       
       <PrivateRoute exact path='/products' component={Product} />
-      <PrivateRoute exact path='/products/add' component={ProductForm} />
-      <PrivateRoute exact path='/products/edit' component={ProductEditForm} />
+      <PrivateRouteWithRole exact path='/products/add' component={ProductForm} />
+      <PrivateRouteWithRole exact path='/products/edit' component={ProductEditForm} />
 
       <PrivateRoute exact path='/sales' component={Sales} />
       <PrivateRoute exact path='/sales/add' component={SalesForm} />
       <PrivateRoute exact path='/sales/edit' component={SalesEditForm} />
 
-      <PrivateRoute exact path='/users' component={Users} />
+      <PrivateRouteWithRole exact path='/users' component={Users} />
       <PrivateRoute exact path='/report' component={Report} />
 
-      <PrivateRoute exact path='/settings' component={Settings} />
-      <PrivateRoute exact path='/settings/add' component={SettingsForm} />
-      <PrivateRoute exact path='/settings/edit' component={SettingsEditForm} />
+      <PrivateRouteWithRole exact path='/settings' component={Settings} />
+      <PrivateRouteWithRole exact path='/settings/add' component={SettingsForm} />
+      <PrivateRouteWithRole exact path='/settings/edit' component={SettingsEditForm} />
+
+      <PrivateRoute exact path='/lowstock' component={LowStock} />
       
     </div>
   );

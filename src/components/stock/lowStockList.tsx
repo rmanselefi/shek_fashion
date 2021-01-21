@@ -102,15 +102,15 @@ const useStyles = makeStyles((theme) => ({
 
 interface productProp extends RouteComponentProps {
   product: any;
-  category: any;
+  category:any;
   deleteProduct: (productId: string) => void;
   history: any;
   location: any;
-  role: any;
+  role:any;
   match: any;
 }
 
-const Product: React.FC<productProp> = ({
+const LowStock: React.FC<productProp> = ({
   location,
   product,
   category,
@@ -123,10 +123,14 @@ const Product: React.FC<productProp> = ({
   const [filterStr, setFilterStr] = useState("");
 
   const [categ, setCategory] = useState("");
-  const [branch, setBranch] = useState("");
 
-  // const branch = location.state.branch;
-
+const [branch, setBranch] = useState("");
+  const handleBranchSelectChange = (
+    event: React.ChangeEvent<{ name?: string; value: unknown }>
+  ) => {
+    const name = event.target.value as string;
+    setBranch(name );
+  };
   // const indexOfLastPost = currentPage * postsPerPage;
   // const currentMall =
   //   mall != null ? mall.slice(indexOfFirstPost, indexOfLastPost) : null;
@@ -138,9 +142,16 @@ const Product: React.FC<productProp> = ({
     });
   }
 
-  var filteredByCategory = null;
+  var filteredByStock = null;
   if (filteredBybranch != null) {
-    filteredByCategory = filteredBybranch.filter((object: any) => {
+    filteredByStock = filteredBybranch.filter((object: any) => {
+      return object.stock<4;
+    });
+  }
+
+  var filteredByCategory = null;
+  if (filteredByStock != null) {
+    filteredByCategory = filteredByStock.filter((object: any) => {
       return object.category.toLowerCase().indexOf(categ.toLowerCase()) !== -1;
     });
   }
@@ -164,14 +175,7 @@ const Product: React.FC<productProp> = ({
     event: React.ChangeEvent<{ name?: string; value: unknown }>
   ) => {
     const name = event.target.value as string;
-    setCategory(name);
-  };
-
-  const handleBranchSelectChange = (
-    event: React.ChangeEvent<{ name?: string; value: unknown }>
-  ) => {
-    const name = event.target.value as string;
-    setBranch(name);
+    setCategory(name );
   };
 
   return (
@@ -185,83 +189,78 @@ const Product: React.FC<productProp> = ({
                 width: "100%",
                 paddingLeft: "10",
               }}>
-              <Grid container spacing={3}>
-                <Grid item xs={4} md={4} lg={4}>
-                  <br />
-                  <div className={classes.search}>
-                    <div className={classes.searchIcon}>
-                      <SearchIcon />
-                    </div>
-                    <InputBase
-                      placeholder='Search…'
-                      classes={{
-                        root: classes.inputRoot,
-                        input: classes.inputInput,
-                      }}
-                      inputProps={{ "aria-label": "search product" }}
-                      value={filterStr}
-                      onChange={(e) => setFilterStr(e.target.value)}
-                    />
+                <Grid container spacing={3}>
+              <Grid item xs={4} md={4} lg={4}>
+                <br />
+                <div className={classes.search}>
+                  <div className={classes.searchIcon}>
+                    <SearchIcon />
                   </div>
-                </Grid>
+                  <InputBase
+                    placeholder='Search…'
+                    classes={{
+                      root: classes.inputRoot,
+                      input: classes.inputInput,
+                    }}
+                    inputProps={{ "aria-label": "search product" }}
+                    value={filterStr}
+                    onChange={(e) => setFilterStr(e.target.value)}
+                  />
+                </div>
+              </Grid>
 
-                <Grid item xs={4}>
-                  <FormControl
-                    variant='outlined'
-                    className={classes.formControl}>
-                    <InputLabel htmlFor='outlined-age-native-simple'>
-                      Branch
-                    </InputLabel>
-                    <Select
-                      native
-                      id='branch'
-                      onChange={handleBranchSelectChange}
-                      label='Branch'
-                      name='branch'
-                      value={branch}
-                      inputProps={{
-                        name: "branch",
-                        id: "outlined-age-native-simple",
-                      }}>
-                      <option aria-label='None' value='' />
-                      <option value='branch-1'>branch-1</option>
-                      <option value='branch-2'>branch-2</option>
-                      <option value='branch-3'>branch-3</option>
+              <Grid item xs={4}>
+                <FormControl variant='outlined' className={classes.formControl}>
+                  <InputLabel htmlFor='outlined-age-native-simple'>
+                    Branch
+                  </InputLabel>
+                  <Select
+                    native
+                    id='branch'
+                    onChange={handleBranchSelectChange}
+                    label='Branch'
+                    name='branch'
+                    value={branch}
+                    inputProps={{
+                      name: "branch",
+                      id: "outlined-age-native-simple",
+                    }}>
+                    <option aria-label='None' value='' />
+                    <option value='branch-1'>branch-1</option>
+                    <option value='branch-2'>branch-2</option>
+                    <option value='branch-3'>branch-3</option>
                     </Select>
-                  </FormControl>
-                </Grid>
+                </FormControl>
+              </Grid>
 
-                <Grid item xs={4}>
-                  <FormControl
-                    variant='outlined'
-                    className={classes.formControl}>
-                    <InputLabel htmlFor='outlined-age-native-simple'>
-                      Category
-                    </InputLabel>
-                    <Select
-                      native
-                      id='category'
-                      onChange={handleSelectChange}
-                      label='Category'
-                      name='category'
-                      value={categ}
-                      inputProps={{
-                        name: "category",
-                        id: "outlined-age-native-simple",
-                      }}>
-                      <option aria-label='None' value='' />
-                      {category != null
-                        ? category.map((cat: any, index: any) => {
-                            return (
-                              <option key={index} value={cat.id}>
-                                {cat.name}
-                              </option>
-                            );
-                          })
-                        : null}
-                    </Select>
-                  </FormControl>
-                </Grid>
+              <Grid item xs={4}>
+                <FormControl variant='outlined' className={classes.formControl}>
+                  <InputLabel htmlFor='outlined-age-native-simple'>
+                    Category
+                  </InputLabel>
+                  <Select
+                    native
+                    id='category'
+                    onChange={handleSelectChange}
+                    label='Category'
+                    name='category'
+                    value={categ}
+                    inputProps={{
+                      name: "category",
+                      id: "outlined-age-native-simple",
+                    }}>
+                    <option aria-label='None' value='' />
+                    {
+                      category!=null?category.map((cat:any,index:any)=>{
+                        return (
+                          <option key={index} value={cat.id}>{cat.name}</option>
+                        )
+                      }):null
+                    }
+                   
+                  </Select>
+                </FormControl>
+              </Grid>
               </Grid>
               <Title>Products</Title>
               <Table size='small'>
@@ -274,8 +273,6 @@ const Product: React.FC<productProp> = ({
                     <TableCell>Stock</TableCell>
                     <TableCell>Color</TableCell>
                     <TableCell>Base Price</TableCell>
-                    <TableCell>Product Image</TableCell>
-                    <TableCell>Initial Stock</TableCell>
                     <TableCell>Actions</TableCell>
                   </TableRow>
                 </TableHead>
@@ -287,44 +284,42 @@ const Product: React.FC<productProp> = ({
                           <TableCell>{row.size}</TableCell>
                           <TableCell>{row.brand}</TableCell>
                           <TableCell>{row.code}</TableCell>
-                          <TableCell>{row.stock < 0 ? 0 : row.stock}</TableCell>
+                          <TableCell>{row.stock<0?0:row.stock}</TableCell>
                           <TableCell>{row.color}</TableCell>
                           <TableCell>{row.price}</TableCell>
                           <TableCell>
-                            <img src={row.image} />
-                          </TableCell>
-                          <TableCell>{row.initialStock}</TableCell>
+                            {
+                              role==='admin'?(
+                                <>
+                            <Button
+                              variant='outlined'
+                              size='small'
+                              color='primary'
+                              className={classes.button}>
+                              <Link
+                                style={{
+                                  textDecoration: "none",
+                                }}
+                                to={{
+                                  pathname: `/products/edit`,
+                                  state: { product: row },
+                                }}>
+                                Edit
+                              </Link>
+                            </Button>
 
-                          <TableCell>
-                            {role == "admin" ? (
-                              <>
-                                <Button
-                                  variant='outlined'
-                                  size='small'
-                                  color='primary'
-                                  className={classes.button}>
-                                  <Link
-                                    style={{
-                                      textDecoration: "none",
-                                    }}
-                                    to={{
-                                      pathname: `/products/edit`,
-                                      state: { product: row },
-                                    }}>
-                                    Edit
-                                  </Link>
-                                </Button>
-
-                                <Button
-                                  variant='outlined'
-                                  size='small'
-                                  color='secondary'
-                                  className={classes.button}
-                                  onClick={(e) => handelDelete(e, row.id)}>
-                                  <DeleteIcon />
-                                </Button>
-                              </>
-                            ) : null}
+                            <Button
+                              variant='outlined'
+                              size='small'
+                              color='secondary'
+                              className={classes.button}
+                              onClick={(e) => handelDelete(e, row.id)}>
+                              <DeleteIcon />
+                            </Button>
+                            </>
+                              ):null
+                            }
+                            
                           </TableCell>
                         </TableRow>
                       ))
@@ -353,8 +348,8 @@ export default compose(
     {
       collection: "product",
     },
-    {
-      collection: "category",
-    },
+   {
+     collection:'category'
+   }
   ])
-)(Product);
+)(LowStock);

@@ -60,6 +60,7 @@ export const signup = (user: User) => {
             name: user.name,
             email: user.email,
             role: user.role,
+            branch:user.branch
           })
           .then((resp) => {
             dispatch({ type: "SIGNUP_SUCCESS" });

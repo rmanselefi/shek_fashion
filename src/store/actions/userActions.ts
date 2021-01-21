@@ -1,7 +1,5 @@
 import firebase from "../../config/firebase";
-import { Category } from "../../models/category";
 
-import { User } from "../../models/user";
 
 // export const updateCategory = (user: User) => {
 //   return async (dispatch: any, getState: any): Promise<Category | null> => {
@@ -23,7 +21,7 @@ import { User } from "../../models/user";
 // };
 
 export const deleteUser = (userid: string) => {
-  return async (dispatch: any, getState: any): Promise<string | null> => {
+  return async (): Promise<string | null> => {
     // const fb = getFirebase();
     var resp = await firebase
       .firestore()

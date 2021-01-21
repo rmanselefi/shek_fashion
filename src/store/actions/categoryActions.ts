@@ -1,7 +1,6 @@
 import firebase from "../../config/firebase";
 import { Category } from "../../models/category";
 
-import { Sales } from "../../models/sales";
 
 export const registerCategory = (category: Category) => {
   return async (dispatch: any, getState: any): Promise<Category | null> => {

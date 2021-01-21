@@ -76,6 +76,7 @@ interface productProps extends RouteComponentProps {
 const ProductEditForm: React.FC<productProps> = ({
   updateProduct,
   location,
+  history,
   category,
 }) => {
   const [product, setUser] = useState<Product>({
@@ -118,8 +119,11 @@ const ProductEditForm: React.FC<productProps> = ({
     produc.price,
     produc.stock,
     produc.image,
+    produc.category,
+    produc.branch,
   ]);
   const [open, setOpen] = React.useState(false);
+  const [opene, setOpenError] = React.useState(false);
 
   const handleChange = (
     event: React.ChangeEvent<
@@ -144,6 +148,12 @@ const ProductEditForm: React.FC<productProps> = ({
     // console.log("nhhjgcvchgfchgcghfcgvcgfchgfcgcghfcgcgchfc", res);
     if (res != null) {
       setOpen(true);
+      history.push({
+        pathname: `/products`,
+        state: { branch: product.branch },
+      });
+    } else {
+      setOpenError(true);
     }
   };
 
@@ -158,8 +168,13 @@ const ProductEditForm: React.FC<productProps> = ({
     if (reason === "clickaway") {
       return;
     }
-
     setOpen(false);
+  };
+  const handleCloseError = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenError(false);
   };
   const classes = useStyles();
   return (
@@ -379,6 +394,12 @@ const ProductEditForm: React.FC<productProps> = ({
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity='success'>
           This is a success message!
+        </Alert>
+      </Snackbar>
+
+      <Snackbar open={opene} autoHideDuration={6000} onClose={handleCloseError}>
+        <Alert onClose={handleClose} severity='error'>
+          Something is wrong. Please check your data
         </Alert>
       </Snackbar>
     </Container>

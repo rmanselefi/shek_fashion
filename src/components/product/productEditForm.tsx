@@ -71,12 +71,12 @@ interface productProps extends RouteComponentProps {
   authError?: any;
   history: any;
   location: any;
-  category:any;
+  category: any;
 }
 const ProductEditForm: React.FC<productProps> = ({
   updateProduct,
   location,
-  category
+  category,
 }) => {
   const [product, setUser] = useState<Product>({
     id: "",
@@ -89,7 +89,7 @@ const ProductEditForm: React.FC<productProps> = ({
     baseprice: 0.0,
     stock: "",
     branch: "",
-    category:""
+    category: "",
   });
   const produc = location.state.product;
   useEffect(() => {
@@ -104,7 +104,8 @@ const ProductEditForm: React.FC<productProps> = ({
       baseprice: produc.price,
       stock: produc.stock,
       branch: produc.branch,
-      category:produc.category
+      category: produc.category,
+      file: produc.image,
     });
   }, [
     produc.id,
@@ -116,6 +117,7 @@ const ProductEditForm: React.FC<productProps> = ({
     produc.code,
     produc.price,
     produc.stock,
+    produc.image,
   ]);
   const [open, setOpen] = React.useState(false);
 
@@ -139,10 +141,16 @@ const ProductEditForm: React.FC<productProps> = ({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     var res = await updateProduct(product);
+    // console.log("nhhjgcvchgfchgcghfcgvcgfchgfcgcghfcgcgchfc", res);
     if (res != null) {
-      console.log("nhhjgcvchgfchgcghfcgvcgfchgfcgcghfcgcgchfc");
-
       setOpen(true);
+    }
+  };
+
+  const handleImageChange = (e: any) => {
+    if (e.target.files[0]) {
+      const image = e.target.files[0];
+      setUser({ ...product, image: image });
     }
   };
 
@@ -201,7 +209,6 @@ const ProductEditForm: React.FC<productProps> = ({
                   />
                 </FormControl>
               </Grid>
-
               <Grid item xs={4}>
                 <FormControl variant='outlined' className={classes.formControl}>
                   {" "}
@@ -232,7 +239,6 @@ const ProductEditForm: React.FC<productProps> = ({
                   />
                 </FormControl>
               </Grid>
-
               <Grid item xs={4}>
                 <FormControl variant='outlined' className={classes.formControl}>
                   {" "}
@@ -252,7 +258,6 @@ const ProductEditForm: React.FC<productProps> = ({
                   />
                 </FormControl>
               </Grid>
-
               <Grid item xs={4}>
                 <FormControl variant='outlined' className={classes.formControl}>
                   {" "}
@@ -321,7 +326,6 @@ const ProductEditForm: React.FC<productProps> = ({
                   </Select>
                 </FormControl>
               </Grid>
-
               <Grid item xs={4}>
                 <FormControl variant='outlined' className={classes.formControl}>
                   <InputLabel htmlFor='outlined-age-native-simple'>
@@ -339,16 +343,24 @@ const ProductEditForm: React.FC<productProps> = ({
                       id: "outlined-age-native-simple",
                     }}>
                     <option aria-label='None' value='' />
-                    {
-                      category!=null?category.map((cat:any,index:any)=>{
-                        return (
-                          <option key={index} value={cat.id}>{cat.name}</option>
-                        )
-                      }):null
-                    }
-                   
+                    {category != null
+                      ? category.map((cat: any, index: any) => {
+                          return (
+                            <option key={index} value={cat.id}>
+                              {cat.name}
+                            </option>
+                          );
+                        })
+                      : null}
                   </Select>
                 </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <img src={product.file} width='100' height='100' />
+              </Grid>
+
+              <Grid item xs={4}>
+                <input type='file' onChange={handleImageChange} />
               </Grid>
             </Grid>
             <Grid item xs={4}>
@@ -374,7 +386,7 @@ const ProductEditForm: React.FC<productProps> = ({
 };
 
 const mapStateToProps = (state: any) => ({
-  auth: state.firebase.auth,  
+  auth: state.firebase.auth,
   category: state.firestore.ordered.category,
 });
 
@@ -386,6 +398,5 @@ export default compose(
     {
       collection: "category",
     },
-   
   ])
 )(ProductEditForm);

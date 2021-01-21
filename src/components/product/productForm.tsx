@@ -89,6 +89,7 @@ const ProductForm: React.FC<penaltyProps> = ({
     stock: "",
     branch: "",
     category: "",
+    image: null,
   });
   const [open, setOpen] = React.useState(false);
 
@@ -121,6 +122,12 @@ const ProductForm: React.FC<penaltyProps> = ({
     setUser({ ...product, [name]: event.target.value });
   };
 
+  const handleImageChange = (e: any) => {
+    if (e.target.files[0]) {
+      const image = e.target.files[0];
+      setUser({ ...product, image: image });
+    }
+  };
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
     if (reason === "clickaway") {
       return;
@@ -326,6 +333,9 @@ const ProductForm: React.FC<penaltyProps> = ({
                       : null}
                   </Select>
                 </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <input type='file' onChange={handleImageChange} />
               </Grid>
             </Grid>
             <Grid item xs={4}>

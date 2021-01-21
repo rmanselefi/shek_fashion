@@ -103,11 +103,11 @@ const useStyles = makeStyles((theme) => ({
 
 interface productProp extends RouteComponentProps {
   product: any;
-  category:any;
+  category: any;
   deleteProduct: (productId: string) => void;
   history: any;
   location: any;
-  role:any;
+  role: any;
   match: any;
 }
 
@@ -168,7 +168,7 @@ const Product: React.FC<productProp> = ({
     event: React.ChangeEvent<{ name?: string; value: unknown }>
   ) => {
     const name = event.target.value as string;
-    setCategory(name );
+    setCategory(name);
   };
 
   return (
@@ -182,65 +182,70 @@ const Product: React.FC<productProp> = ({
                 width: "100%",
                 paddingLeft: "10",
               }}>
-                <Grid container spacing={3}>
-              <Grid item xs={4} md={4} lg={4}>
-                <br />
-                <div className={classes.search}>
-                  <div className={classes.searchIcon}>
-                    <SearchIcon />
+              <Grid container spacing={3}>
+                <Grid item xs={4} md={4} lg={4}>
+                  <br />
+                  <div className={classes.search}>
+                    <div className={classes.searchIcon}>
+                      <SearchIcon />
+                    </div>
+                    <InputBase
+                      placeholder='Search…'
+                      classes={{
+                        root: classes.inputRoot,
+                        input: classes.inputInput,
+                      }}
+                      inputProps={{ "aria-label": "search product" }}
+                      value={filterStr}
+                      onChange={(e) => setFilterStr(e.target.value)}
+                    />
                   </div>
-                  <InputBase
-                    placeholder='Search…'
-                    classes={{
-                      root: classes.inputRoot,
-                      input: classes.inputInput,
-                    }}
-                    inputProps={{ "aria-label": "search product" }}
-                    value={filterStr}
-                    onChange={(e) => setFilterStr(e.target.value)}
-                  />
-                </div>
-              </Grid>
-              <Grid item xs={4}>
-                <FormControl variant='outlined' className={classes.formControl}>
-                  <InputLabel htmlFor='outlined-age-native-simple'>
-                    Category
-                  </InputLabel>
-                  <Select
-                    native
-                    id='category'
-                    onChange={handleSelectChange}
-                    label='Category'
-                    name='category'
-                    value={categ}
-                    inputProps={{
-                      name: "category",
-                      id: "outlined-age-native-simple",
-                    }}>
-                    <option aria-label='None' value='' />
-                    {
-                      category!=null?category.map((cat:any,index:any)=>{
-                        return (
-                          <option key={index} value={cat.id}>{cat.name}</option>
-                        )
-                      }):null
-                    }
-                   
-                  </Select>
-                </FormControl>
-              </Grid>
+                </Grid>
+                <Grid item xs={4}>
+                  <FormControl
+                    variant='outlined'
+                    className={classes.formControl}>
+                    <InputLabel htmlFor='outlined-age-native-simple'>
+                      Category
+                    </InputLabel>
+                    <Select
+                      native
+                      id='category'
+                      onChange={handleSelectChange}
+                      label='Category'
+                      name='category'
+                      value={categ}
+                      inputProps={{
+                        name: "category",
+                        id: "outlined-age-native-simple",
+                      }}>
+                      <option aria-label='None' value='' />
+                      {category != null
+                        ? category.map((cat: any, index: any) => {
+                            return (
+                              <option key={index} value={cat.id}>
+                                {cat.name}
+                              </option>
+                            );
+                          })
+                        : null}
+                    </Select>
+                  </FormControl>
+                </Grid>
               </Grid>
               <Title>Products</Title>
               <Table size='small'>
                 <TableHead>
                   <TableRow>
                     <TableCell>Product Name</TableCell>
-                    <TableCell>Product Type</TableCell>
+
                     <TableCell>Brand</TableCell>
                     <TableCell>Code</TableCell>
                     <TableCell>Stock</TableCell>
                     <TableCell>Color</TableCell>
                     <TableCell>Base Price</TableCell>
+                    <TableCell>Product Image</TableCell>
+                    <TableCell>Initial Stock</TableCell>
                     <TableCell>Actions</TableCell>
                   </TableRow>
                 </TableHead>
@@ -249,45 +254,47 @@ const Product: React.FC<productProp> = ({
                     ? filteredElements.map((row: any) => (
                         <TableRow key={row.id}>
                           <TableCell>{row.name}</TableCell>
-                          <TableCell>{row.type}</TableCell>
+
                           <TableCell>{row.brand}</TableCell>
                           <TableCell>{row.code}</TableCell>
                           <TableCell>{row.stock}</TableCell>
                           <TableCell>{row.color}</TableCell>
                           <TableCell>{row.price}</TableCell>
                           <TableCell>
-                            {
-                              role=='admin'?(
-                                <>
-                            <Button
-                              variant='outlined'
-                              size='small'
-                              color='primary'
-                              className={classes.button}>
-                              <Link
-                                style={{
-                                  textDecoration: "none",
-                                }}
-                                to={{
-                                  pathname: `/products/edit`,
-                                  state: { product: row },
-                                }}>
-                                Edit
-                              </Link>
-                            </Button>
+                            <img src={row.image} width='50' height='50' />
+                          </TableCell>
+                          <TableCell>{row.initialStock}</TableCell>
 
-                            <Button
-                              variant='outlined'
-                              size='small'
-                              color='secondary'
-                              className={classes.button}
-                              onClick={(e) => handelDelete(e, row.id)}>
-                              <DeleteIcon />
-                            </Button>
-                            </>
-                              ):null
-                            }
-                            
+                          <TableCell>
+                            {role == "admin" ? (
+                              <>
+                                <Button
+                                  variant='outlined'
+                                  size='small'
+                                  color='primary'
+                                  className={classes.button}>
+                                  <Link
+                                    style={{
+                                      textDecoration: "none",
+                                    }}
+                                    to={{
+                                      pathname: `/products/edit`,
+                                      state: { product: row },
+                                    }}>
+                                    Edit
+                                  </Link>
+                                </Button>
+
+                                <Button
+                                  variant='outlined'
+                                  size='small'
+                                  color='secondary'
+                                  className={classes.button}
+                                  onClick={(e) => handelDelete(e, row.id)}>
+                                  <DeleteIcon />
+                                </Button>
+                              </>
+                            ) : null}
                           </TableCell>
                         </TableRow>
                       ))
@@ -316,8 +323,8 @@ export default compose(
     {
       collection: "product",
     },
-   {
-     collection:'category'
-   }
+    {
+      collection: "category",
+    },
   ])
 )(Product);

@@ -6,11 +6,13 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { Title } from "./title";
 import Chip from '@material-ui/core/Chip';
-
+import _ from "lodash";
 
 
 export default function Orders(props:any) {
   var sales=props.sales;
+  const myOrderedArray = _.sortBy(sales, o => o.createdAt)
+  
   return (
     <React.Fragment>
       <Title>Recent Sold Items</Title>
@@ -25,8 +27,8 @@ export default function Orders(props:any) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {sales!=null?
-          sales.map((row:any) => (
+          {myOrderedArray!=null?
+          myOrderedArray.map((row:any) => (
             <TableRow key={row.id}>
               <TableCell>{row.product.name},{row.product.brand}</TableCell>
               <TableCell>{row.price}</TableCell>

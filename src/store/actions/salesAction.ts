@@ -1,5 +1,4 @@
 import firebase from "../../config/firebase";
-
 import { Sales } from "../../models/sales";
 
 export const registerSales = (sales: Sales) => {

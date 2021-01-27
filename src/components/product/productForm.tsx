@@ -108,7 +108,7 @@ const ProductForm: React.FC<penaltyProps> = ({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     var res = await registerProduct(product);
-    if (res != null) {
+    if (res != null || res===undefined) {
       setOpen(true);
       history.push({
         pathname: `/products`,

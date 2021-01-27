@@ -95,7 +95,7 @@ const SettingsForm: React.FC<settingsProps> = ({ registerCategory, }) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     var res = await registerCategory(category);
-    if (res != null) {
+    if (res != null || res===undefined) {
       setOpen(true);
     }
     else{

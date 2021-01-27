@@ -4,6 +4,18 @@ import { Product } from "../../models/product";
 
 export const registerProduct = (product: Product) => {
   return async (dispatch: any, getState: any): Promise<Product | null> => {
+
+    let catRef = await firebase
+      .firestore()
+      .collection("category")
+      .doc(product.category)
+      .get();
+    
+    var name = catRef.data()?.name;   
+    var cat={
+      id:product.category,
+      name:name
+    }
     if (product.image != null) {
       const uploadTask = firebase
         .storage()
@@ -42,7 +54,7 @@ export const registerProduct = (product: Product) => {
                     initialStock: product.stock,
                     price: product.baseprice,
                     branch: product.branch,
-                    category: product.category,
+                    category: cat,
                     image: url,
                     createdAt: new Date(),
                   });
@@ -67,7 +79,7 @@ export const registerProduct = (product: Product) => {
         initialStock: product.stock,
         price: product.baseprice,
         branch: product.branch,
-        category: product.category,
+        category: cat,
         createdAt: new Date(),
       });
       if (resp != null || resp === undefined) {
@@ -83,7 +95,17 @@ export const registerProduct = (product: Product) => {
 export const updateProduct = (product: Product) => {
   return async (dispatch: any, getState: any): Promise<Product | null> => {
     // const fb = getFirebase();
-
+    let catRef = await firebase
+    .firestore()
+    .collection("category")
+    .doc(product.category)
+    .get();
+  
+  var name = catRef.data()?.name;   
+  var cat={
+    id:product.category,
+    name:name
+  }
     if (product.image != null) {
       const uploadTask = firebase
         .storage()
@@ -123,7 +145,7 @@ export const updateProduct = (product: Product) => {
                     initialStock: product.stock,
                     price: product.baseprice,
                     branch: product.branch,
-                    category: product.category,
+                    category: cat,
                     image: url,
                     updatedAt: new Date(),
                   });
@@ -153,7 +175,7 @@ export const updateProduct = (product: Product) => {
           initialStock: product.stock,
           price: product.baseprice,
           branch: product.branch,
-          category: product.category,
+          category: cat,
           updatedAt: new Date(),
         });
       if (resp != null || resp === undefined) {

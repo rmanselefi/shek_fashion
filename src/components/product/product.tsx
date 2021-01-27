@@ -141,7 +141,7 @@ const Product: React.FC<productProp> = ({
   var filteredByCategory = null;
   if (filteredBybranch != null) {
     filteredByCategory = filteredBybranch.filter((object: any) => {
-      return object.category.toLowerCase().indexOf(categ.toLowerCase()) !== -1;
+      return object.category.id.toLowerCase().indexOf(categ.toLowerCase()) !== -1;
     });
   }
 
@@ -157,6 +157,7 @@ const Product: React.FC<productProp> = ({
     id: string
   ) => {
     if (window.confirm("are you sure you want to delete this?")) {
+      deleteProduct(id);
     }
   };
 
@@ -291,7 +292,7 @@ const Product: React.FC<productProp> = ({
                           <TableCell>{row.color}</TableCell>
                           <TableCell>{row.price}</TableCell>
                           <TableCell>
-                            <img src={row.image} />
+                            <img src={row.image} width='50' height='50' alt='Product' />
                           </TableCell>
                           <TableCell>{row.initialStock}</TableCell>
 

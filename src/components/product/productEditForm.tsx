@@ -146,7 +146,7 @@ const ProductEditForm: React.FC<productProps> = ({
     event.preventDefault();
     var res = await updateProduct(product);
     // console.log("nhhjgcvchgfchgcghfcgvcgfchgfcgcghfcgcgchfc", res);
-    if (res != null) {
+    if (res != null || res ===undefined) {
       setOpen(true);
       history.push({
         pathname: `/products`,

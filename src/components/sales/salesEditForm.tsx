@@ -126,7 +126,7 @@ const SalesEditForm: React.FC<salesProps> = ({ updateSales,product,location,role
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     var res = await updateSales(sale);
-    if (res != null) {
+    if (res != null || res===undefined) {
       setOpen(true);
     }
   };

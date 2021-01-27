@@ -177,9 +177,9 @@ const Sales: React.FC<salesProp> = ({
                           <TableCell>{row.soldby}</TableCell>      
                           <TableCell>{row.cashier?.name}</TableCell>
                           <TableCell>
-                            {
-                              userid===row.cashier.id?(
-                                <>
+                            {/* {
+                              userid===row.cashier.id?( */}
+                                {/* <> */}
                                 <Button
                               variant='outlined'
                               size='small'
@@ -205,9 +205,9 @@ const Sales: React.FC<salesProp> = ({
                                onClick={(e) => handelDelete(e, row.id)}>
                                Delete
                              </Button>
-                             </>
+                             {/* </>
                               ):null
-                            }
+                            } */}
                             
                            
                           </TableCell>

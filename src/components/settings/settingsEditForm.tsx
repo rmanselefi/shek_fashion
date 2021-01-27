@@ -100,7 +100,7 @@ const SettingsEditForm: React.FC<settingsProps> = ({ updateCategory,location }) 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     var res = await updateCategory(category);
-    if (res != null) {
+    if (res != null || res===undefined) {
       setOpen(true);
     }
   };

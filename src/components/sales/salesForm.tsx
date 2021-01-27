@@ -11,26 +11,19 @@ import Container from "@material-ui/core/Container";
 import { connect } from "react-redux";
 
 import { registerSales } from "../../store/actions/salesAction";
-import {
-  Theme,
-  Paper,
-  makeStyles,
-  FormControl,
-} from "@material-ui/core";
+import { Theme, Paper, makeStyles, FormControl } from "@material-ui/core";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { Sales } from "../../models/sales";
 import { compose } from "redux";
 import { firestoreConnect } from "react-redux-firebase";
-import Autocomplete  from '@material-ui/lab/Autocomplete';
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import { Product } from "../../models/product";
 import { User } from "../../models/user";
 
 function Alert(props: AlertProps) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
+  return <MuiAlert elevation={6} variant='filled' {...props} />;
 }
-
-
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -74,10 +67,10 @@ interface salesProps extends RouteComponentProps {
   product: any;
   role: any;
   auth: any;
-  authError?: any; 
-  
+  authError?: any;
+
   history: any;
-  users:User[];
+  users: User[];
 }
 const SalesForm: React.FC<salesProps> = ({
   registerSales,
@@ -85,21 +78,20 @@ const SalesForm: React.FC<salesProps> = ({
   role,
   users,
   location,
-  auth
-  
+  auth,
 }) => {
   const branch = location.state.branch;
-  const profile=location.state.profile;
-  
+  const profile = location.state.profile;
+
   const [sale, setUser] = useState<Sales>({
     id: "",
     price: 0,
     productid: "",
     quantity: 0,
     branch: branch,
-    cashier:profile.name,    
-    cashierid:auth.uid,
-    productname:"",    
+    cashier: profile.name,
+    cashierid: auth.uid,
+    productname: "",
   });
 
   // const [value, setValue] = React.useState<Sales | null>(null);
@@ -116,41 +108,34 @@ const SalesForm: React.FC<salesProps> = ({
       [event.currentTarget!.id]: event.currentTarget!.value,
     });
   };
- 
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     var res = await registerSales(sale);
     if (res != null) {
       setOpen(true);
-    }
-    else{
+    } else {
       setOpenError(true);
     }
   };
 
-  const onSoldByChange = (event:any, values:any) => {    
-      // This will output an array of objects
-      // given by Autocompelte options property.
-      console.log('====================================');
-      console.log(values);
-      console.log('====================================');
-      if (values!=null) {
-        setUser({...sale,sellerid:values.id,soldby:values.name});
-      // console.log('values',values);
-      }    
-    
-  }
-
-  const onTagsChange= (event:any, values:any) => {
-    
+  const onSoldByChange = (event: any, values: any) => {
     // This will output an array of objects
     // given by Autocompelte options property.
-    if (values!=null) {
-      setUser({...sale,productid:values.id,productname:values.name});
-    console.log('values',values);
-    }     
-  
-}
+    if (values != null) {
+      setUser({ ...sale, sellerid: values.id, soldby: values.name });
+      // console.log('values',values);
+    }
+  };
+
+  const onTagsChange = (event: any, values: any) => {
+    // This will output an array of objects
+    // given by Autocompelte options property.
+    if (values != null) {
+      setUser({ ...sale, productid: values.id, productname: values.name });
+      console.log("values", values);
+    }
+  };
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
     if (reason === "clickaway") {
@@ -184,14 +169,16 @@ const SalesForm: React.FC<salesProps> = ({
   
   
 
-  var filteredUsers : User[]=[];
-  var salesRole='sales';
+  var filteredUsers: User[] = [];
+  var salesRole = "sales";
   if (users != null && role != null) {
     if (role === "admin") {
       filteredUsers = users;
     } else {
       filteredUsers = users.filter((object: User) => {
-        return object.role.toLowerCase().indexOf(salesRole.toLowerCase()) !== -1;
+        return (
+          object.role.toLowerCase().indexOf(salesRole.toLowerCase()) !== -1
+        );
       });
     }
   }
@@ -202,8 +189,7 @@ const SalesForm: React.FC<salesProps> = ({
       <div
         style={{
           marginTop: "100",
-        }}
-      >
+        }}>
         <br />
         <br />
         <br />
@@ -212,65 +198,79 @@ const SalesForm: React.FC<salesProps> = ({
 
         <Paper>
           <br />
-          <Typography component="h1" variant="h5">
+          <Typography component='h1' variant='h5'>
             Register Sales
           </Typography>
           <br />
           <form onSubmit={handleSubmit} noValidate>
             <Grid container spacing={3}>
               <Grid item xs={4}>
-                <FormControl variant="outlined" className={classes.formControl}>                 
+                <FormControl variant='outlined' className={classes.formControl}>
                   <Autocomplete
-                    id="combo-box-demo"
+                    id='combo-box-demo'
                     options={filteredElements}
-                    getOptionLabel={(option:Product) => {
-                      return option.name + ' , ' + option.color + ', ' + option.size
+                    getOptionLabel={(option: Product) => {
+                      return (
+                        option.name + " , " + option.color + ", " + option.size
+                      );
                     }}
                     onChange={onTagsChange}
                     style={{ width: 300 }}
-                    renderInput={(params) => <TextField {...params} label="Combo box" variant="outlined" />}
-                  />                 
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label='Combo box'
+                        variant='outlined'
+                      />
+                    )}
+                  />
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <FormControl variant="outlined" className={classes.formControl}>                 
+                <FormControl variant='outlined' className={classes.formControl}>
                   <Autocomplete
-                    id="combo-box-demo"
+                    id='combo-box-demo'
                     options={filteredUsers}
-                    getOptionLabel={(option:User) => {
+                    getOptionLabel={(option: User) => {
                       return option.name;
                     }}
                     onChange={onSoldByChange}
                     style={{ width: 300 }}
-                    renderInput={(params) => <TextField {...params} label="Sold By" variant="outlined" />}
-                  />                 
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label='Sold By'
+                        variant='outlined'
+                      />
+                    )}
+                  />
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <FormControl variant="outlined" className={classes.formControl}>
+                <FormControl variant='outlined' className={classes.formControl}>
                   {" "}
                   <TextField
-                    variant="outlined"
+                    variant='outlined'
                     required
                     fullWidth
-                    id="quantity"
-                    label="Quantity"
-                    name="quantity"
+                    id='quantity'
+                    label='Quantity'
+                    name='quantity'
                     onChange={handleChange}
                     value={sale.quantity}
                   />
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <FormControl variant="outlined" className={classes.formControl}>
+                <FormControl variant='outlined' className={classes.formControl}>
                   {" "}
                   <TextField
-                    variant="outlined"
+                    variant='outlined'
                     required
                     fullWidth
-                    name="price"
-                    label="Price"
-                    id="price"
+                    name='price'
+                    label='Price'
+                    id='price'
                     onChange={handleChange}
                     value={sale.price}
                   />
@@ -279,12 +279,11 @@ const SalesForm: React.FC<salesProps> = ({
             </Grid>
             <Grid item xs={4}>
               <Button
-                type="submit"
+                type='submit'
                 fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-              >
+                variant='contained'
+                color='primary'
+                className={classes.submit}>
                 Register Sale
               </Button>
             </Grid>
@@ -292,13 +291,13 @@ const SalesForm: React.FC<salesProps> = ({
         </Paper>
       </div>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="success">
+        <Alert onClose={handleClose} severity='success'>
           Your sales is registered successfully
         </Alert>
       </Snackbar>
 
       <Snackbar open={opene} autoHideDuration={6000} onClose={handleCloseError}>
-        <Alert onClose={handleCloseError} severity="error">
+        <Alert onClose={handleCloseError} severity='error'>
           Someting is wrong please check your data
         </Alert>
       </Snackbar>
@@ -309,10 +308,10 @@ const SalesForm: React.FC<salesProps> = ({
 const mapStateToProps = (state: any) => ({
   auth: state.firebase.auth,
   product: state.firestore.ordered.product,
-  users:state.firestore.ordered.users,
+  users: state.firestore.ordered.users,
   role: state.firebase.profile.role,
   branch: state.firebase.profile.branch,
-  profile:state.firebase.profile
+  profile: state.firebase.profile,
 });
 
 // export default connect(mapStateToProps, { registerProduct })(SalesForm);
@@ -324,7 +323,7 @@ export default compose(
       collection: "product",
     },
     {
-      collection:'users'
-    }
+      collection: "users",
+    },
   ])
 )(SalesForm);

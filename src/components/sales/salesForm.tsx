@@ -175,11 +175,14 @@ const SalesForm: React.FC<salesProps> = ({
     if (role === "admin") {
       filteredElements = product;
     } else {
+      console.log('filteredElementsfilteredElementsfilteredElements',branch);
       filteredElements = product.filter((object: any) => {
         return object.branch.toLowerCase().indexOf(branch.toLowerCase()) !== -1;
       });
     }
   }
+  
+  
 
   var filteredUsers : User[]=[];
   var salesRole='sales';

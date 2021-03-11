@@ -26,7 +26,7 @@ import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
 
 function Alert(props: AlertProps) {
-  return <MuiAlert elevation={6} variant='filled' {...props} />;
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 120,
+    minWidth: 320,
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
@@ -66,18 +66,22 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface productProps extends RouteComponentProps {
-  updateProduct: (product: Product) => void;
+  updateProduct: (product: Product) => Promise<Product | null>;
   auth: any;
   authError?: any;
   history: any;
   location: any;
   category: any;
+  saved: boolean;
+  hasError: boolean;
 }
 const ProductEditForm: React.FC<productProps> = ({
   updateProduct,
   location,
   history,
   category,
+  saved,
+  hasError,
 }) => {
   const [product, setUser] = useState<Product>({
     id: "",
@@ -105,7 +109,7 @@ const ProductEditForm: React.FC<productProps> = ({
       baseprice: produc.price,
       stock: produc.stock,
       branch: produc.branch,
-      category: produc.category,
+      category: produc.category.id,
       file: produc.image,
     });
   }, [
@@ -144,17 +148,7 @@ const ProductEditForm: React.FC<productProps> = ({
   };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    var res = await updateProduct(product);
-    // console.log("nhhjgcvchgfchgcghfcgvcgfchgfcgcghfcgcgchfc", res);
-    if (res != null || res ===undefined) {
-      setOpen(true);
-      history.push({
-        pathname: `/products`,
-        state: { branch: product.branch },
-      });
-    } else {
-      setOpenError(true);
-    }
+    await updateProduct(product);
   };
 
   const handleImageChange = (e: any) => {
@@ -186,85 +180,86 @@ const ProductEditForm: React.FC<productProps> = ({
         <Paper
           style={{
             marginTop: "20",
-          }}>
+          }}
+        >
           <br />
-          <Typography component='h5' variant='h5'>
+          <Typography component="h5" variant="h5">
             Update Product
           </Typography>
           <br />
           <form onSubmit={handleSubmit} noValidate>
             <Grid container spacing={3}>
               <Grid item xs={4}>
-                <FormControl variant='outlined' className={classes.formControl}>
+                <FormControl variant="outlined" className={classes.formControl}>
                   {" "}
                   <TextField
-                    variant='outlined'
+                    variant="outlined"
                     required
                     fullWidth
-                    id='name'
-                    label='Product Name'
-                    name='name'
+                    id="name"
+                    label="Product Name"
+                    name="name"
                     onChange={handleChange}
                     value={product.name}
                   />
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <FormControl variant='outlined' className={classes.formControl}>
+                <FormControl variant="outlined" className={classes.formControl}>
                   {" "}
                   <TextField
-                    variant='outlined'
+                    variant="outlined"
                     required
                     fullWidth
-                    name='brand'
-                    label='Brand'
-                    id='brand'
+                    name="brand"
+                    label="Brand"
+                    id="brand"
                     onChange={handleChange}
                     value={product.brand}
                   />
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <FormControl variant='outlined' className={classes.formControl}>
+                <FormControl variant="outlined" className={classes.formControl}>
                   {" "}
                   <TextField
-                    variant='outlined'
+                    variant="outlined"
                     required
                     fullWidth
-                    id='stock'
-                    label='Stock'
-                    name='stock'
+                    id="stock"
+                    label="Stock"
+                    name="stock"
                     onChange={handleChange}
                     value={product.stock}
                   />
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <FormControl variant='outlined' className={classes.formControl}>
+                <FormControl variant="outlined" className={classes.formControl}>
                   {" "}
                   <TextField
-                    variant='outlined'
+                    variant="outlined"
                     required
                     fullWidth
-                    name='baseprice'
-                    label='Base Price'
-                    id='baseprice'
+                    name="baseprice"
+                    label="Base Price"
+                    id="baseprice"
                     onChange={handleChange}
                     value={product.baseprice}
                   />
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <FormControl variant='outlined' className={classes.formControl}>
+                <FormControl variant="outlined" className={classes.formControl}>
                   {" "}
                   <TextField
-                    variant='outlined'
+                    variant="outlined"
                     required
                     fullWidth
-                    name='type'
-                    label='Type'
-                    type='text'
-                    id='type'
+                    name="type"
+                    label="Type"
+                    type="text"
+                    id="type"
                     onChange={handleChange}
                     value={product.type}
                     InputLabelProps={{
@@ -274,90 +269,92 @@ const ProductEditForm: React.FC<productProps> = ({
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <FormControl variant='outlined' className={classes.formControl}>
+                <FormControl variant="outlined" className={classes.formControl}>
                   {" "}
                   <TextField
-                    variant='outlined'
+                    variant="outlined"
                     required
                     fullWidth
-                    name='size'
-                    label='Size'
-                    id='size'
+                    name="size"
+                    label="Size"
+                    id="size"
                     onChange={handleChange}
                     value={product.size}
                   />
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <FormControl variant='outlined' className={classes.formControl}>
+                <FormControl variant="outlined" className={classes.formControl}>
                   {" "}
                   <TextField
-                    variant='outlined'
+                    variant="outlined"
                     required
                     fullWidth
-                    name='code'
-                    label='Code'
-                    id='code'
+                    name="code"
+                    label="Code"
+                    id="code"
                     onChange={handleChange}
                     value={product.code}
                   />
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <FormControl variant='outlined' className={classes.formControl}>
+                <FormControl variant="outlined" className={classes.formControl}>
                   {" "}
                   <TextField
-                    variant='outlined'
+                    variant="outlined"
                     required
                     fullWidth
-                    name='color'
-                    label='Color'
-                    id='color'
+                    name="color"
+                    label="Color"
+                    id="color"
                     onChange={handleChange}
                     value={product.color}
                   />
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <FormControl variant='outlined' className={classes.formControl}>
-                  <InputLabel htmlFor='outlined-age-native-simple'>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel htmlFor="outlined-age-native-simple">
                     Branch
                   </InputLabel>
                   <Select
                     native
-                    id='branch'
+                    id="branch"
                     onChange={handleSelectChange}
-                    label='Branch'
-                    name='branch'
+                    label="Branch"
+                    name="branch"
                     value={product.branch}
                     inputProps={{
                       name: "branch",
                       id: "outlined-age-native-simple",
-                    }}>
-                    <option aria-label='None' value='' />
-                    <option value='branch-1'>branch-1</option>
-                    <option value='branch-2'>branch-2</option>
-                    <option value='branch-3'>branch-3</option>
+                    }}
+                  >
+                    <option aria-label="None" value="" />
+                    <option value="branch-1">branch-1</option>
+                    <option value="branch-2">branch-2</option>
+                    <option value="branch-3">branch-3</option>
                   </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <FormControl variant='outlined' className={classes.formControl}>
-                  <InputLabel htmlFor='outlined-age-native-simple'>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel htmlFor="outlined-age-native-simple">
                     Category
                   </InputLabel>
                   <Select
                     native
-                    id='category'
+                    id="category"
                     onChange={handleSelectChange}
-                    label='Category'
-                    name='category'
+                    label="Category"
+                    name="category"
                     value={product.category}
                     inputProps={{
                       name: "category",
                       id: "outlined-age-native-simple",
-                    }}>
-                    <option aria-label='None' value='' />
+                    }}
+                  >
+                    <option aria-label="None" value="" />
                     {category != null
                       ? category.map((cat: any, index: any) => {
                           return (
@@ -371,34 +368,35 @@ const ProductEditForm: React.FC<productProps> = ({
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <img src={product.file} width='100' height='100' />
+                <img src={product.file} width="100" height="100" />
               </Grid>
 
               <Grid item xs={4}>
-                <input type='file' onChange={handleImageChange} />
+                <input type="file" onChange={handleImageChange} />
               </Grid>
             </Grid>
             <Grid item xs={4}>
               <Button
-                type='submit'
+                type="submit"
                 fullWidth
-                variant='contained'
-                color='primary'
-                className={classes.submit}>
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
                 Update
               </Button>
             </Grid>
           </form>
         </Paper>
       </div>
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity='success'>
+      <Snackbar open={saved?true:false} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success">
           This is a success message!
         </Alert>
       </Snackbar>
 
-      <Snackbar open={opene} autoHideDuration={6000} onClose={handleCloseError}>
-        <Alert onClose={handleClose} severity='error'>
+      <Snackbar open={hasError?true:false} autoHideDuration={6000} onClose={handleCloseError}>
+        <Alert onClose={handleClose} severity="error">
           Something is wrong. Please check your data
         </Alert>
       </Snackbar>
@@ -409,6 +407,8 @@ const ProductEditForm: React.FC<productProps> = ({
 const mapStateToProps = (state: any) => ({
   auth: state.firebase.auth,
   category: state.firestore.ordered.category,
+  saved: state.product.saved,
+  hasError: state.product.hasError,
 });
 
 // export default connect(mapStateToProps, { updateProduct })(ProductEditForm);

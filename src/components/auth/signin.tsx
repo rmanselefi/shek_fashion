@@ -4,7 +4,6 @@ import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import Box from "@material-ui/core/Box";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -16,6 +15,8 @@ import { isLoaded, isEmpty } from "react-redux-firebase";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 
+import icon from '../../assets/icon.jpg';
+
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant='filled' {...props} />;
 }
@@ -24,7 +25,7 @@ function Copyright() {
   return (
     <Typography variant='body2' color='textSecondary' align='center'>
       {"Copyright © "}
-      <a href='https://material-ui.com/'>Your Website</a>{" "}
+      <a href='https://www.qemertech.com/'>Qemer Software Technology PLC</a>{" "}
       {new Date().getFullYear()}
       {"."}
     </Typography>
@@ -48,6 +49,10 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+  },
+  large: {
+    width: theme.spacing(7),
+    height: theme.spacing(7),
   },
 }));
 
@@ -89,9 +94,10 @@ const SignIn: React.FC<signinProps> = ({ signIn, history, auth }) => {
     <Container component='main' maxWidth='xs'>
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
+        {/* <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
-        </Avatar>
+        </Avatar> */}
+        <Avatar alt="Remy Sharp" src={icon} className={classes.large} />
         <Typography component='h1' variant='h5'>
           Sign in
         </Typography>

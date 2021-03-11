@@ -108,12 +108,14 @@ interface productProp extends RouteComponentProps {
   location: any;
   role: any;
   match: any;
+  brands:any;
 }
 
 const Product: React.FC<productProp> = ({
   location,
   product,
   category,
+  brands,
   role,
   deleteProduct,
 }) => {
@@ -124,6 +126,7 @@ const Product: React.FC<productProp> = ({
 
   const [categ, setCategory] = useState("");
   const [branch, setBranch] = useState("");
+  const [brand, setBrand] = useState("");
 
   // const branch = location.state.branch;
 
@@ -145,10 +148,17 @@ const Product: React.FC<productProp> = ({
     });
   }
 
-  var filteredElements = null;
+  var filteredByBrand = null;
   if (filteredByCategory != null) {
-    filteredElements = filteredByCategory.filter((object: any) => {
-      return object.name.toLowerCase().indexOf(filterStr.toLowerCase()) !== -1;
+    filteredByBrand = filteredByCategory.filter((object: any) => {
+      return object.brand.toLowerCase().indexOf(brand.toLowerCase()) !== -1;
+    });
+  }
+
+  var filteredElements = null;
+  if (filteredByBrand != null) {
+    filteredElements = filteredByBrand.filter((object: any) => {
+      return object.code.toLowerCase().indexOf(filterStr.toLowerCase()) !== -1;
     });
   }
 
@@ -175,6 +185,13 @@ const Product: React.FC<productProp> = ({
     setBranch(name);
   };
 
+  const handleBrandSelectChange = (
+    event: React.ChangeEvent<{ name?: string; value: unknown }>
+  ) => {
+    const name = event.target.value as string;
+    setBrand(name);
+  };
+
   return (
     <React.Fragment>
       <main className={classes.content}>
@@ -186,8 +203,8 @@ const Product: React.FC<productProp> = ({
                 width: "100%",
                 paddingLeft: "10",
               }}>
-              <Grid container spacing={3}>
-                <Grid item xs={4} md={4} lg={4}>
+              <Grid container spacing={1}>
+                <Grid item xs={3} md={3} lg={3}>
                   <br />
                   <div className={classes.search}>
                     <div className={classes.searchIcon}>
@@ -206,7 +223,7 @@ const Product: React.FC<productProp> = ({
                   </div>
                 </Grid>
 
-                <Grid item xs={4}>
+                <Grid item xs={3}>
                   <FormControl
                     variant='outlined'
                     className={classes.formControl}>
@@ -232,7 +249,7 @@ const Product: React.FC<productProp> = ({
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={4}>
+                <Grid item xs={3}>
                   <FormControl
                     variant='outlined'
                     className={classes.formControl}>
@@ -263,20 +280,50 @@ const Product: React.FC<productProp> = ({
                     </Select>
                   </FormControl>
                 </Grid>
+                <Grid item xs={3}>
+                  <FormControl
+                    variant='outlined'
+                    className={classes.formControl}>
+                    <InputLabel htmlFor='outlined-age-native-simple'>
+                      Brand
+                    </InputLabel>
+                    <Select
+                      native
+                      id='brand'
+                      onChange={handleBrandSelectChange}
+                      label='Brand'
+                      name='brand'
+                      value={brand}
+                      inputProps={{
+                        name: "brand",
+                        id: "outlined-age-native-simple",
+                      }}>
+                      <option aria-label='None' value='' />
+                      {brands != null
+                        ? brands.map((cat: any, index: any) => {
+                            return (
+                              <option key={index} value={cat.name}>
+                                {cat.name}
+                              </option>
+                            );
+                          })
+                        : null}
+                    </Select>
+                  </FormControl>
+                </Grid>
               </Grid>
               <Title>Products</Title>
               <Table size='small'>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Product Name</TableCell>
-                    <TableCell>Product Size</TableCell>
+                    <TableCell>Name</TableCell>
+                    <TableCell>Size</TableCell>
                     <TableCell>Brand</TableCell>
                     <TableCell>Code</TableCell>
                     <TableCell>Stock</TableCell>
                     <TableCell>Color</TableCell>
                     <TableCell>Base Price</TableCell>
-                    <TableCell>Product Image</TableCell>
-                    <TableCell>Initial Stock</TableCell>
+                    <TableCell>Image</TableCell>
                     <TableCell>Actions</TableCell>
                   </TableRow>
                 </TableHead>
@@ -292,9 +339,11 @@ const Product: React.FC<productProp> = ({
                           <TableCell>{row.color}</TableCell>
                           <TableCell>{row.price}</TableCell>
                           <TableCell>
-                            <img src={row.image} width='50' height='50' alt='Product' />
+                            {
+                              row.image!=null?<img src={row.image} width='50' height='50' alt='Product' />:null
+                            }
+                            
                           </TableCell>
-                          <TableCell>{row.initialStock}</TableCell>
 
                           <TableCell>
                             {role == "admin" ? (
@@ -346,6 +395,7 @@ const mapStateToProps = (state: any) => {
     product: state.firestore.ordered.product,
     category: state.firestore.ordered.category,
     role: state.firebase.profile.role,
+    brands: state.firestore.ordered.brand,
   };
 };
 export default compose(
@@ -356,6 +406,9 @@ export default compose(
     },
     {
       collection: "category",
+    },
+    {
+      collection: "brand",
     },
   ])
 )(Product);

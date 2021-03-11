@@ -11,6 +11,11 @@ import {
   TableCell,
   TableBody,
   Button,
+  Tabs,
+  Tab,
+  AppBar,
+  Typography,
+  Box,
 } from "@material-ui/core";
 import { RouteComponentProps, Link } from "react-router-dom";
 import { Title } from "../layout/title";
@@ -18,6 +23,11 @@ import { compose } from "redux";
 import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
 import { deleteCategory } from "../../store/actions/categoryActions";
+import Categories from '../category/category';
+import Brands from '../brand/brands';
+
+const Category = (Categories) as React.ElementType;
+const Brand =(Brands) as React.ElementType;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,22 +60,58 @@ const useStyles = makeStyles((theme) => ({
   appBarSpacer: theme.mixins.toolbar,
 }));
 
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+function a11yProps(index: any) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
+
 interface salesProp extends RouteComponentProps {
-    category: any;
-    deleteCategory: (categoryid: string) => void;
-  role:any;
+  category: any;
+  deleteCategory: (categoryid: string) => void;
+  role: any;
   history: any;
   location: any;
   match: any;
+  children?: React.ReactNode;
+  index: any;
+  value: any;
 }
 
-const Sales: React.FC<salesProp> = ({
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: any;
+  value: any;
+}
+
+const Settings: React.FC<salesProp> = ({
   history,
   location,
   match,
   category,
   deleteCategory,
-  role
+  role,
 }) => {
   const classes = useStyles();
   const handelDelete = async (
@@ -77,61 +123,81 @@ const Sales: React.FC<salesProp> = ({
     }
   };
 
-//   var filteredElements = null;
-//   if (category != null) {
-//     filteredElements = category.filter((object: any) => {
-//       return object.branch.toLowerCase().indexOf(branch.toLowerCase()) !== -1;
-//     });
-//   }
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    setValue(newValue);
+  };
+
   return (
     <React.Fragment>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <Container maxWidth='lg' className={classes.container}>
-          <Grid container spacing={3}>
+        <Container maxWidth="lg" className={classes.container}>
+          <AppBar position="static">
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="simple tabs example"
+            >
+              <Tab label="Category" {...a11yProps(0)} />
+              <Tab label="Brand" {...a11yProps(1)} />              
+            </Tabs>
+          </AppBar>
+          <TabPanel value={value} index={0}>
+            <Category/>
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            <Brand/>
+          </TabPanel>
+          {/* <Grid container spacing={3}>
             <Paper
               style={{
                 width: "100%",
                 paddingLeft: "10",
-              }}>
+              }}
+            >
               <Grid item xs={4} md={4} lg={4}>
                 <br />
                 <Button
-                  variant='outlined'
-                  size='medium'
-                  color='primary'
-                  className={classes.button}>
+                  variant="outlined"
+                  size="medium"
+                  color="primary"
+                  className={classes.button}
+                >
                   <Link
                     style={{
                       textDecoration: "none",
                     }}
-                    to='/settings/add'>
+                    to="/settings/add"
+                  >
                     Add Category
                   </Link>
                 </Button>
               </Grid>
 
               <Title>Categories</Title>
-              <Table size='small'>
+              <Table size="small">
                 <TableHead>
                   <TableRow>
                     <TableCell>ID</TableCell>
-                    <TableCell>Name</TableCell>                    
-                    <TableCell>Action</TableCell> 
-                    </TableRow>
+                    <TableCell>Name</TableCell>
+                    <TableCell>Action</TableCell>
+                  </TableRow>
                 </TableHead>
                 <TableBody>
                   {category != null
-                    ? category.map((row: any,index:any) => (
+                    ? category.map((row: any, index: any) => (
                         <TableRow key={row.id}>
-                          <TableCell>{index+1}</TableCell>
-                          <TableCell>{row.name}</TableCell>                                                   
+                          <TableCell>{index + 1}</TableCell>
+                          <TableCell>{row.name}</TableCell>
                           <TableCell>
-                              <Button
-                              variant='outlined'
-                              size='small'
-                              color='primary'
-                              className={classes.button}>
+                            <Button
+                              variant="outlined"
+                              size="small"
+                              color="primary"
+                              className={classes.button}
+                            >
                               <Link
                                 style={{
                                   textDecoration: "none",
@@ -139,23 +205,21 @@ const Sales: React.FC<salesProp> = ({
                                 to={{
                                   pathname: `/settings/edit`,
                                   state: { category: row },
-                                }}>
+                                }}
+                              >
                                 Edit
                               </Link>
                             </Button>
-                             /
-                             <Button
-                               variant='outlined'
-                               size='small'
-                               color='secondary'
-                               className={classes.button}
-                               onClick={(e) => handelDelete(e, row.id)}>
-                               Delete
-                             </Button>
-                             
-                              
-                            
-                           
+                            /
+                            <Button
+                              variant="outlined"
+                              size="small"
+                              color="secondary"
+                              className={classes.button}
+                              onClick={(e) => handelDelete(e, row.id)}
+                            >
+                              Delete
+                            </Button>
                           </TableCell>
                         </TableRow>
                       ))
@@ -163,7 +227,7 @@ const Sales: React.FC<salesProp> = ({
                 </TableBody>
               </Table>
             </Paper>
-          </Grid>
+          </Grid> */}
         </Container>
       </main>
     </React.Fragment>
@@ -184,4 +248,4 @@ export default compose(
       collection: "category",
     },
   ])
-)(Sales);
+)(Settings);

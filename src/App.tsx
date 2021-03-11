@@ -27,6 +27,9 @@ import Settings from './components/settings/settings'
 import SettingsEditForm from './components/settings/settingsEditForm';
 import SettingsForm from './components/settings/settingsForm';
 import LowStock from "./components/stock/lowStockList";
+import Brands from "./components/brand/brands";
+import BrandForm from "./components/brand/brandForm";
+import BrandEditForm from './components/brand/brandEditForm';
 
 
 
@@ -96,8 +99,13 @@ const Main = withRouter(({ location }) => {
       <PrivateRoute exact path='/report' component={Report} />
 
       <PrivateRouteWithRole exact path='/settings' component={Settings} />
+      
       <PrivateRouteWithRole exact path='/settings/add' component={SettingsForm} />
       <PrivateRouteWithRole exact path='/settings/edit' component={SettingsEditForm} />
+
+      <PrivateRouteWithRole exact path='/brand' component={Brands} />
+      <PrivateRouteWithRole exact path='/brand/add' component={BrandForm} />
+      <PrivateRouteWithRole exact path='/brand/edit' component={BrandEditForm} />
 
       <PrivateRoute exact path='/lowstock' component={LowStock} />
       

@@ -1,5 +1,6 @@
 // @ts-ignore
 import React, { useState } from "react";
+import _ from 'lodash';
 import { makeStyles, fade } from "@material-ui/core/styles";
 import {
   Grid,
@@ -79,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
   },
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 320,
+    minWidth: 250,
   },
   inputRoot: {
     color: "inherit",
@@ -134,9 +135,11 @@ const Product: React.FC<productProp> = ({
   // const currentMall =
   //   mall != null ? mall.slice(indexOfFirstPost, indexOfLastPost) : null;
 
+  var productss=_.sortBy(product,[function(o) { return o.name; }]);
+
   var filteredBybranch = null;
-  if (product != null) {
-    filteredBybranch = product.filter((object: any) => {
+  if (productss != null) {
+    filteredBybranch = productss.filter((object: any) => {
       return object.branch.toLowerCase().indexOf(branch.toLowerCase()) !== -1;
     });
   }
@@ -226,7 +229,7 @@ const Product: React.FC<productProp> = ({
                 <Grid item xs={3}>
                   <FormControl
                     variant='outlined'
-                    className={classes.formControl}>
+                    className={classes.formControl} size='small' >
                     <InputLabel htmlFor='outlined-age-native-simple'>
                       Branch
                     </InputLabel>
@@ -252,7 +255,7 @@ const Product: React.FC<productProp> = ({
                 <Grid item xs={3}>
                   <FormControl
                     variant='outlined'
-                    className={classes.formControl}>
+                    className={classes.formControl} size='small' >
                     <InputLabel htmlFor='outlined-age-native-simple'>
                       Category
                     </InputLabel>
@@ -283,7 +286,7 @@ const Product: React.FC<productProp> = ({
                 <Grid item xs={3}>
                   <FormControl
                     variant='outlined'
-                    className={classes.formControl}>
+                    className={classes.formControl} size='small' >
                     <InputLabel htmlFor='outlined-age-native-simple'>
                       Brand
                     </InputLabel>
@@ -317,7 +320,6 @@ const Product: React.FC<productProp> = ({
                 <TableHead>
                   <TableRow>
                     <TableCell>Name</TableCell>
-                    <TableCell>Size</TableCell>
                     <TableCell>Brand</TableCell>
                     <TableCell>Code</TableCell>
                     <TableCell>Stock</TableCell>
@@ -332,7 +334,6 @@ const Product: React.FC<productProp> = ({
                     ? filteredElements.map((row: any) => (
                         <TableRow key={row.id}>
                           <TableCell>{row.name}</TableCell>
-                          <TableCell>{row.size}</TableCell>
                           <TableCell>{row.brand}</TableCell>
                           <TableCell>{row.code}</TableCell>
                           <TableCell>{row.stock < 0 ? 0 : row.stock}</TableCell>
@@ -346,7 +347,7 @@ const Product: React.FC<productProp> = ({
                           </TableCell>
 
                           <TableCell>
-                            {role == "admin" ? (
+                            {role === "admin" ? (
                               <>
                                 <Button
                                   variant='outlined'

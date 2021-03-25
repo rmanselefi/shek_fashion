@@ -11,7 +11,7 @@ import _ from "lodash";
 
 export default function Orders(props:any) {
   var sales=props.sales;
-  const myOrderedArray = _.sortBy(sales, o => o.createdAt)
+  const myOrderedArray = _.orderBy(sales, ['createdAt', 'createdAt'], ['desc', 'desc']);
   
   return (
     <React.Fragment>

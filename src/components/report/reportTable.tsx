@@ -18,21 +18,23 @@ export default function ReportTable(props: any) {
       const element = sales[index];
       var createdAt = element.createdAt.toDate();
       var today = new Date();
-      var diff = today.getDay() - createdAt.getDay();
-      if (diff < 1) {
+      // var diff = today.getDay() - createdAt.getDay();
+      var Difference_In_Time = today.getTime() - createdAt.getTime();
+      var diff = Math.round(Difference_In_Time / (1000 * 3600 * 24));
+      if (Number(diff) < 1) {
         dailySales.push(element);
-      } else if (diff < 8) {
+      } if (Number(diff) < 8) {
         weeklySales.push(element);
-      } else if (diff < 31) {
+      } if (Number(diff) < 31) {
         monthlySales.push(element);
-      }
+      }    
 
     }
   }
   var salesR;
-  if (day === "daily") {
+  if (day === "Daily") {
     salesR = dailySales;
-  } else if (day === "monthly") {
+  } else if (day === "Monthly") {
     salesR = monthlySales;
   } else {
     salesR = weeklySales;

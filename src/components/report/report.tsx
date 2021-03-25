@@ -186,6 +186,14 @@ const Report: React.FC<reportProps> = ({ sales, location }) => {
             </Grid>
           </Grid>
           <Grid container spacing={3}>
+          <Grid item xs={12}>
+              <Paper className={classes.paper}>
+                <Orders sales={filteredElements} />
+              </Paper>
+            </Grid>
+          </Grid>
+         
+          <Grid container spacing={3}>
             {/* Chart */}
             <Grid item xs={6} md={6} lg={6}>
               <Paper className={fixedHeightPaper}>
@@ -205,11 +213,7 @@ const Report: React.FC<reportProps> = ({ sales, location }) => {
               </Paper>
             </Grid>
             {/* Recent Orders */}
-            <Grid item xs={6}>
-              <Paper className={classes.paper}>
-                <Orders sales={filteredElements} />
-              </Paper>
-            </Grid>
+           
           </Grid>
           <Box pt={4}>
             <Copyright />

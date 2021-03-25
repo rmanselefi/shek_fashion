@@ -38,13 +38,13 @@ export default function ReportTotalCard(props: any) {
       var today = new Date();
 
       var Difference_In_Time = today.getTime() - createdAt.getTime();
-      var diff = Math.ceil(Difference_In_Time / (1000 * 3600 * 24));
+      var diff = Math.round(Difference_In_Time / (1000 * 3600 * 24));
 
       if (Number(diff) < 1) {
         dailySales.push(element);
-      } else if (Number(diff) < 8) {
+      } if (Number(diff) < 8) {
         weeklySales.push(element);
-      } else if (Number(diff) < 31) {
+      } if (Number(diff) < 31) {
         monthlySales.push(element);
       }    
     }
@@ -54,9 +54,9 @@ export default function ReportTotalCard(props: any) {
   if (day === "Daily") {
     salesR = dailySales;
   } else if (day === "Monthly") {
-    salesR = weeklySales;
-  } else {
     salesR = monthlySales;
+  } else {
+    salesR = weeklySales;
   }
 
   var total = 0;

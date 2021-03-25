@@ -419,7 +419,7 @@ const Product: React.FC<productProp> = ({
                                     Sale
                                   </Link>
                                 </Button>
-                              </>
+                              </> 
                             ) : null}
                           </TableCell>
                         </TableRow>

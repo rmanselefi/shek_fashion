@@ -2,23 +2,14 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
-  Grid,
   Container,
-  Paper,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Button,
   Tabs,
   Tab,
   AppBar,
   Typography,
   Box,
 } from "@material-ui/core";
-import { RouteComponentProps, Link } from "react-router-dom";
-import { Title } from "../layout/title";
+import { RouteComponentProps } from "react-router-dom";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
@@ -113,15 +104,7 @@ const Settings: React.FC<salesProp> = ({
   deleteCategory,
   role,
 }) => {
-  const classes = useStyles();
-  const handelDelete = async (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    id: string
-  ) => {
-    if (window.confirm("are you sure you want to delete this?")) {
-      await deleteCategory(id);
-    }
-  };
+  const classes = useStyles(); 
 
   const [value, setValue] = React.useState(0);
 

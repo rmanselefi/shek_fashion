@@ -20,7 +20,7 @@ import { firestoreConnect } from "react-redux-firebase";
 import { Autocomplete } from "@material-ui/lab";
 
 function Alert(props: AlertProps) {
-  return <MuiAlert elevation={6} variant='filled' {...props} />;
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -60,42 +60,45 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface salesProps extends RouteComponentProps {
-    updateSales: (sales: Sales) => void;
-  product:any;
+  updateSales: (sales: Sales) => void;
+  product: any;
   auth: any;
   authError?: any;
-  role:any;
+  role: any;
   history: any;
   location: any;
 }
-const SalesEditForm: React.FC<salesProps> = ({ updateSales,product,location,role }) => {
+const SalesEditForm: React.FC<salesProps> = ({
+  updateSales,
+  product,
+  location,
+  role,
+}) => {
   const [sale, setUser] = useState<Sales>({
     id: "",
-    price:0,
-    productid:"",
-    quantity:0,
-    branch:"",
-    productname:""
+    price: 0,
+    productid: "",
+    quantity: 0,
+    branch: "",
+    productname: "",
   });
 
   const salee = location.state.sales;
   useEffect(() => {
     setUser({
       id: salee.id,
-      price:salee.price,
-    productid:salee.productid,
-    quantity:salee.quantity,
-      branch:salee.branch,
-      productname:""
-      
+      price: salee.price,
+      productid: salee.productid,
+      quantity: salee.quantity,
+      branch: salee.branch,
+      productname: "",
     });
   }, [
     salee.id,
-      salee.price,
+    salee.price,
     salee.productid,
     salee.quantity,
-    salee.branch,
-    ""
+    salee.branch,  
   ]);
   const [open, setOpen] = React.useState(false);
 
@@ -110,23 +113,19 @@ const SalesEditForm: React.FC<salesProps> = ({ updateSales,product,location,role
     });
   };
 
-
-
-  const onTagsChange = (event:any, values:any) => {
-    
+  const onTagsChange = (event: any, values: any) => {
     // This will output an array of objects
     // given by Autocompelte options property.
-    if (values!=null) {
-      setUser({...sale,productid:values.id,productname:values.name});
-    console.log('values',values);
-    }     
-  
-}
+    if (values != null) {
+      setUser({ ...sale, productid: values.id, productname: values.name });
+      console.log("values", values);
+    }
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     var res = await updateSales(sale);
-    if (res != null || res===undefined) {
+    if (res != null || res === undefined) {
       setOpen(true);
     }
   };
@@ -154,21 +153,22 @@ const SalesEditForm: React.FC<salesProps> = ({ updateSales,product,location,role
     <Container>
       <CssBaseline />
       <div className={classes.paper}>
-      <br />
         <br />
-        
+        <br />
+
         <Paper
           style={{
             marginTop: "20",
-          }}>
-          <Typography component='h1' variant='h5'>
+          }}
+        >
+          <Typography component="h1" variant="h5">
             Update Sales
           </Typography>
           <form onSubmit={handleSubmit} noValidate>
             <Grid container spacing={3}>
-            <Grid item xs={4}>
-            <FormControl variant="outlined" className={classes.formControl}>
-        {/* <InputLabel htmlFor="outlined-age-native-simple">Role</InputLabel>
+              <Grid item xs={4}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  {/* <InputLabel htmlFor="outlined-age-native-simple">Role</InputLabel>
         <Select
           native
           id='productid'
@@ -190,54 +190,61 @@ const SalesEditForm: React.FC<salesProps> = ({ updateSales,product,location,role
          
         </Select> */}
 
-<Autocomplete
+                  <Autocomplete
                     id="combo-box-demo"
                     options={filteredElements}
-                    getOptionLabel={(option:any) => option.name}
+                    getOptionLabel={(option: any) => option.name}
                     onChange={onTagsChange}
                     style={{ width: 300 }}
-                    renderInput={(params) => <TextField {...params} label="Combo box" variant="outlined" />}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Combo box"
+                        variant="outlined"
+                      />
+                    )}
                   />
-              </FormControl>
+                </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <FormControl variant='outlined' className={classes.formControl}>
+                <FormControl variant="outlined" className={classes.formControl}>
                   {" "}
-                <TextField
-                  variant='outlined'
-                  required
-                  fullWidth
-                  id='quantity'
-                  label='Quantity'
-                  name='quantity'
-                  onChange={handleChange}
-                  value={sale.quantity}
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="quantity"
+                    label="Quantity"
+                    name="quantity"
+                    onChange={handleChange}
+                    value={sale.quantity}
                   />
-                  </FormControl>
+                </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <FormControl variant='outlined' className={classes.formControl}>
+                <FormControl variant="outlined" className={classes.formControl}>
                   {" "}
-                <TextField
-                  variant='outlined'
-                  required
-                  fullWidth
-                  name='price'
-                  label='Price'
-                  id='price'
-                  onChange={handleChange}
-                  value={sale.price}
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    name="price"
+                    label="Price"
+                    id="price"
+                    onChange={handleChange}
+                    value={sale.price}
                   />
-                  </FormControl>
+                </FormControl>
               </Grid>
-              </Grid>
+            </Grid>
             <Grid item xs={4}>
               <Button
-                type='submit'
+                type="submit"
                 fullWidth
-                variant='contained'
-                color='primary'
-                className={classes.submit}>
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
                 Register Sale
               </Button>
             </Grid>
@@ -245,7 +252,7 @@ const SalesEditForm: React.FC<salesProps> = ({ updateSales,product,location,role
         </Paper>
       </div>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity='success'>
+        <Alert onClose={handleClose} severity="success">
           This is a success message!
         </Alert>
       </Snackbar>
@@ -257,16 +264,15 @@ const mapStateToProps = (state: any) => ({
   auth: state.firebase.auth,
   product: state.firestore.ordered.product,
   role: state.firebase.profile.role,
-
 });
 
 // export default connect(mapStateToProps, { registerProduct })(SalesForm);
 
 export default compose(
-    connect(mapStateToProps, { updateSales }),
-    firestoreConnect([
-      {
-        collection: "product",
-      },      
-    ])
-  )(SalesEditForm);
+  connect(mapStateToProps, { updateSales }),
+  firestoreConnect([
+    {
+      collection: "product",
+    },
+  ])
+)(SalesEditForm);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -7,6 +7,10 @@ import { RouteComponentProps } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
+import Divider from '@material-ui/core/Divider';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+
 
 import { connect } from "react-redux";
 
@@ -65,22 +69,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+
 interface productProps extends RouteComponentProps {
-  registerProduct: (penalty: Product) => void;
+  registerProduct: (penalty: Product, sizes: any) => void;
   auth: any;
   authError?: any;
   history: any;
   category: any;
   brand: any;
   saved: boolean;
-  hasError:boolean;
+  hasError: boolean;
 }
 const ProductForm: React.FC<productProps> = ({
   registerProduct,
   category,
   brand,
   saved,
-  hasError
+  hasError,
 }) => {
   const [product, setUser] = useState<Product>({
     id: "",
@@ -88,16 +93,41 @@ const ProductForm: React.FC<productProps> = ({
     brand: "",
     code: "",
     color: "",
-    size: "",
     type: "",
     baseprice: 0.0,
     stock: "",
     branch: "",
     category: "",
     image: null,
+    size: "",
+    sizeQuantity: 0,
   });
+
   const [open, setOpen] = React.useState(false);
   const [opene, setOpenError] = React.useState(false);
+  const [sizes, setSizes] = React.useState([
+    {
+      id: 0,
+      size: "",
+      sizeQuantity: 0,
+    },
+  ]);
+  useEffect(() => {
+    if (hasError) {
+      setOpenError(true);
+      setOpen(false);
+    }
+    if (!hasError) {
+      setOpenError(false);
+    }
+    if (saved) {
+      setOpen(true);
+      setOpenError(false);
+    }
+    if (!saved) {
+      setOpen(false);
+    }
+  }, [hasError, saved]);
 
   const handleChange = (
     event: React.ChangeEvent<
@@ -110,11 +140,48 @@ const ProductForm: React.FC<productProps> = ({
     });
   };
 
+  const handleSizeChange = (
+    event: React.ChangeEvent<
+      HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
+    >,
+    index: any
+  ) => {
+    setSizes(
+      sizes.map((obj) =>
+        obj.id === index
+          ? Object.assign(obj, {
+              [event.currentTarget.id]: event.currentTarget.value,
+            })
+          : obj
+      )
+    );
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await registerProduct(product);   
-    // setOpen(true);      
-    
+    if (sizes.length === 1) {
+      sizes.map((siz) => {
+        if (siz.size === "") {
+          setOpenError(true);
+          return false;
+        } else {
+          registerProduct(product, sizes);
+          return true;
+        }
+      });
+    } else if (sizes.length > 1) {
+      sizes.map((siz, i) => {
+        if (siz.size === "") {
+          sizes.splice(i, 1);
+        }
+        return false;
+      });
+      registerProduct(product, sizes);
+    } else {
+      await registerProduct(product, sizes);
+    }
+
+    // setOpen(true);
   };
   const handleSelectChange = (
     event: React.ChangeEvent<{ name?: string; value: unknown }>
@@ -144,25 +211,48 @@ const ProductForm: React.FC<productProps> = ({
 
     setOpenError(false);
   };
-  const classes = useStyles();
+
+  const handleDelete = (i: any) => {
+    return (e: any) => {
+      e.preventDefault();
+      var sizess = [...sizes.slice(0, i), ...sizes.slice(i + 1)];
+      setSizes(sizess);
+    };
+  };
+
+  const addSizes = (e: any) => {
+    e.preventDefault();
+    let filters = sizes.concat([
+      {
+        id: sizes.length,
+        size: "",
+        sizeQuantity: 0,
+      },
+    ]);
+    setSizes(filters);
+    console.log(sizes);
+  };
+
   
+  const classes = useStyles();
+
   return (
     <Container>
       <CssBaseline />
       <div className={classes.paper}>
-        <br />
-        <br />
-        <Paper
-          style={{
-            marginTop: "20",
-          }}
-        >
-          <br />
-          <Typography component="h1" variant="h5">
-            Register Product
-          </Typography>
-          <br />
-          <form onSubmit={handleSubmit} noValidate>
+        <form onSubmit={handleSubmit} noValidate>
+          <br/>
+          <Paper
+            style={{
+              marginTop: "20",
+            }}
+          >
+            <br />
+            <Typography component="h1" variant="h5">
+              Register Product
+            </Typography>
+            <br />
+
             <Grid container spacing={3}>
               <Grid item xs={4}>
                 <FormControl variant="outlined" className={classes.formControl}>
@@ -183,6 +273,9 @@ const ProductForm: React.FC<productProps> = ({
               <Grid item xs={4}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   {" "}
+                  <InputLabel htmlFor="outlined-age-native-simple">
+                    Brand
+                  </InputLabel>
                   <Select
                     native
                     id="brand"
@@ -256,22 +349,6 @@ const ProductForm: React.FC<productProps> = ({
                     InputLabelProps={{
                       shrink: true,
                     }}
-                  />
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={4}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  {" "}
-                  <TextField
-                    variant="outlined"
-                    required
-                    fullWidth
-                    name="size"
-                    label="Size"
-                    id="size"
-                    onChange={handleChange}
-                    value={product.size}
                   />
                 </FormControl>
               </Grid>
@@ -364,6 +441,68 @@ const ProductForm: React.FC<productProps> = ({
                 <input type="file" onChange={handleImageChange} />
               </Grid>
             </Grid>
+          </Paper>
+          <br/>
+          <Divider />
+          <Paper
+            style={{
+              marginTop: "20",
+            }}
+          >
+            <Typography component="h1" variant="h5">
+              Add Sizes
+            </Typography>
+            <br />
+            <Button color="primary" startIcon={<AddCircleIcon />} onClick={addSizes}>Add Size</Button>
+            <Grid container>
+              {sizes != null
+                ? sizes.map((filter, index) => (
+                    <>
+                      <Grid item xs={4}>
+                        <FormControl
+                          variant="outlined"
+                          className={classes.formControl}
+                        >
+                          {" "}
+                          <TextField
+                            variant="outlined"
+                            required
+                            fullWidth
+                            name="size"
+                            label="Size"
+                            id="size"
+                            onChange={(e) => handleSizeChange(e, index)}
+                            value={filter.size}
+                          />
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <FormControl
+                          variant="outlined"
+                          className={classes.formControl}
+                        >
+                          {" "}
+                          <TextField
+                            variant="outlined"
+                            required
+                            fullWidth
+                            name="sizeQuantity"
+                            label="Quantity"
+                            id="sizeQuantity"
+                            onChange={(e) => handleSizeChange(e, index)}
+                            value={filter.sizeQuantity}
+                          />
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Button color="secondary" startIcon={<HighlightOffIcon />} onClick={handleDelete(index)}>
+                          Remove Size
+                        </Button>
+                      </Grid>
+                    </>
+                  ))
+                : null}
+            </Grid>
             <Grid item xs={4}>
               <Button
                 type="submit"
@@ -375,15 +514,15 @@ const ProductForm: React.FC<productProps> = ({
                 Regsiter
               </Button>
             </Grid>
-          </form>
-        </Paper>
+          </Paper>
+        </form>
       </div>
-      <Snackbar open={saved?true:false} autoHideDuration={6000} onClose={handleClose}>
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success">
           This is a success message!
         </Alert>
       </Snackbar>
-      <Snackbar open={hasError?true:false} autoHideDuration={6000} onClose={handleCloseError}>
+      <Snackbar open={opene} autoHideDuration={6000} onClose={handleCloseError}>
         <Alert onClose={handleCloseError} severity="error">
           Something is wrong Please check your data
         </Alert>
@@ -397,7 +536,7 @@ const mapStateToProps = (state: any) => ({
   category: state.firestore.ordered.category,
   brand: state.firestore.ordered.brand,
   saved: state.product.saved,
-  hasError:state.product.hasError
+  hasError: state.product.hasError,
 });
 
 // export default connect(mapStateToProps, { registerProduct })(ProductForm);

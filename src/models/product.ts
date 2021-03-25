@@ -5,9 +5,9 @@ export class Product {
   brand: string;
   code: string;
   color: string;
-  size: string;
   stock: string;
-
+  size?:string;
+  sizeQuantity?:number;
   baseprice: number;
   branch: string;
   category: string;
@@ -22,15 +22,15 @@ export class Product {
     brand: string,
     code: string,
     color: string,
-    size: string,
-    stock: string,
-
+    stock: string,    
     baseprice: number,
     branch: string,
     category: string,
     image?: string,
     file?: any,
-    initialstock?: string
+    initialstock?: string,
+    size?:string,
+    sizeQuantity?:number,
   ) {
     this.id = id;
     this.name = name;
@@ -38,7 +38,6 @@ export class Product {
     this.code = code;
     this.brand = brand;
     this.color = color;
-    this.size = size;
     this.stock = stock;
     this.baseprice = baseprice;
     this.branch = branch;
@@ -46,5 +45,7 @@ export class Product {
     this.image = image;
     this.file = file;
     this.initialstock = initialstock;
+    this.size=size;
+    this.sizeQuantity=sizeQuantity;
   }
 }

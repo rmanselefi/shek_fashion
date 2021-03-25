@@ -3,8 +3,8 @@ import firebase from "../../config/firebase";
 import { Product } from "../../models/product";
 import { ADD_PRODUCT, PRODUCT_ERROR } from "../reducers/types";
 
-export const registerProduct = (product: Product) => {
-  return async (dispatch: any, getState: any): Promise<Product | null> => {
+export const registerProduct = (product: Product, sizes: []) => {
+  return async (dispatch: any, getState: any) => {
     try {
       let catRef = await firebase
         .firestore()
@@ -17,6 +17,11 @@ export const registerProduct = (product: Product) => {
         id: product.category,
         name: name,
       };
+      var size: any[] = [];
+
+      if (sizes != null) {
+        size = sizes;
+      }
       if (product.image != null) {
         const uploadTask = firebase
           .storage()
@@ -44,7 +49,7 @@ export const registerProduct = (product: Product) => {
                   await firebase.firestore().collection("product").add({
                     name: product.name,
                     brand: product.brand,
-                    size: product.size,
+                    size: size,
                     color: product.color,
                     code: product.code,
                     type: product.type,
@@ -68,7 +73,7 @@ export const registerProduct = (product: Product) => {
         await firebase.firestore().collection("product").add({
           name: product.name,
           brand: product.brand,
-          size: product.size,
+          size: size,
           color: product.color,
           code: product.code,
           type: product.type,
@@ -92,106 +97,105 @@ export const registerProduct = (product: Product) => {
         },
       });
     }
-
-    return null;
   };
 };
 
-export const updateProduct = (product: Product) => {
-  return async (dispatch: any, getState: any): Promise<Product | null> => {
-
+export const updateProduct = (product: Product, sizes: []) => {
+  return async (dispatch: any, getState: any) => {
     try {
       let catRef = await firebase
-      .firestore()
-      .collection("category")
-      .doc(product.category)
-      .get();
+        .firestore()
+        .collection("category")
+        .doc(product.category)
+        .get();
 
-    var name = catRef.data()?.name;
-    var cat = {
-      id: product.category,
-      name: name,
-    };
-    if (product.image != null) {
-      const uploadTask = firebase
-        .storage()
-        .ref(`${product.name}_images/${product.image.name}`)
-        .put(product.image);
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          // progress function ...
-          console.log(snapshot.state);
-        },
-        (error) => {
-          // Error function ...
-          console.log(error);
-        },
-        () => {
-          var path = `${product.name}_images`;
-          firebase
-            .storage()
-            .ref(path)
-            .child(product.image.name)
-            .getDownloadURL()
-            .then(async (urls) => {
-              if (urls != null) {
-                firebase
+      var name = catRef.data()?.name;
+      var cat = {
+        id: product.category,
+        name: name,
+      };
+      var size: any[] = [];
+
+      if (sizes != null) {
+        size = sizes;
+      }
+      if (product.image != null) {
+        const uploadTask = firebase
+          .storage()
+          .ref(`${product.name}_images/${product.image.name}`)
+          .put(product.image);
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            // progress function ...
+            console.log(snapshot.state);
+          },
+          (error) => {
+            // Error function ...
+            console.log(error);
+          },
+          () => {
+            var path = `${product.name}_images`;
+            firebase
+              .storage()
+              .ref(path)
+              .child(product.image.name)
+              .getDownloadURL()
+              .then(async (urls) => {
+                if (urls != null) {
+                  firebase
+                    .firestore()
+                    .collection("product")
+                    .doc(product.id)
+                    .update({
+                      name: product.name,
+                      brand: product.brand,
+                      color: product.color,
+                      code: product.code,
+                      type: product.type,
+                      stock: product.stock,
+                      initialStock: product.stock,
+                      price: product.baseprice,
+                      branch: product.branch,
+                      size: size,
+                      category: cat,
+                      image: urls,
+                      updatedAt: new Date(),
+                    })
+                    .then((resp) => {
+                      dispatch({
+                        type: ADD_PRODUCT,
+                        payload: product,
+                      });
+                    });
+                }
+              });
+          }
+        );
+      } else {
+        await firebase
           .firestore()
           .collection("product")
           .doc(product.id)
           .update({
             name: product.name,
             brand: product.brand,
-            size: product.size,
             color: product.color,
             code: product.code,
             type: product.type,
+            size: size,
             stock: product.stock,
             initialStock: product.stock,
             price: product.baseprice,
             branch: product.branch,
             category: cat,
-            image: urls,
             updatedAt: new Date(),
-          })
-          .then((resp) => {
-            dispatch({
-              type: ADD_PRODUCT,
-              payload: product,
-            });
           });
-              }
-            });
-        }
-      );
-      
-        
-      
-    } else {
-      var resp = await firebase
-        .firestore()
-        .collection("product")
-        .doc(product.id)
-        .update({
-          name: product.name,
-          brand: product.brand,
-          size: product.size,
-          color: product.color,
-          code: product.code,
-          type: product.type,
-          stock: product.stock,
-          initialStock: product.stock,
-          price: product.baseprice,
-          branch: product.branch,
-          category: cat,
-          updatedAt: new Date(),
-        });
         dispatch({
           type: ADD_PRODUCT,
           payload: product,
         });
-    }
+      }
     } catch (error) {
       dispatch({
         type: PRODUCT_ERROR,
@@ -200,8 +204,6 @@ export const updateProduct = (product: Product) => {
         },
       });
     }
-    
-    return null;
   };
 };
 

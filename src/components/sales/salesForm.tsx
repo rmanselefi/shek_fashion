@@ -8,21 +8,29 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 
+
 import { connect } from "react-redux";
 
 import { registerSales } from "../../store/actions/salesAction";
-import { Theme, Paper, makeStyles, FormControl } from "@material-ui/core";
+import {
+  Theme,
+  Paper,
+  makeStyles,
+  FormControl,
+  Divider,
+  Select,
+  InputLabel
+} from "@material-ui/core";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { Sales } from "../../models/sales";
 import { compose } from "redux";
 import { firestoreConnect } from "react-redux-firebase";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import { Product } from "../../models/product";
 import { User } from "../../models/user";
 
 function Alert(props: AlertProps) {
-  return <MuiAlert elevation={6} variant='filled' {...props} />;
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -62,7 +70,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface salesProps extends RouteComponentProps {
-  registerSales: (sales: Sales) => void;
+  registerSales: (sales: Sales,size:any) => void;
   location: any;
   product: any;
   role: any;
@@ -82,11 +90,12 @@ const SalesForm: React.FC<salesProps> = ({
 }) => {
   const branch = location.state.branch;
   const profile = location.state.profile;
+  const prod = location.state.product;
 
   const [sale, setUser] = useState<Sales>({
     id: "",
     price: 0,
-    productid: "",
+    productid: prod.id,
     quantity: 0,
     branch: branch,
     cashier: profile.name,
@@ -97,6 +106,11 @@ const SalesForm: React.FC<salesProps> = ({
   // const [value, setValue] = React.useState<Sales | null>(null);
   const [open, setOpen] = React.useState(false);
   const [opene, setOpenError] = React.useState(false);
+  const [size, setSize] = React.useState({
+    size:"",
+    quantity:0
+  });
+
 
   const handleChange = (
     event: React.ChangeEvent<
@@ -109,9 +123,30 @@ const SalesForm: React.FC<salesProps> = ({
     });
   };
 
+  const handleSelectChange = (
+    event: React.ChangeEvent<{ name?: string; value: unknown }>
+  ) => {
+    const name = event.target.value as string;
+    setSize({
+      size:name,
+      quantity:size.quantity
+    });
+  };
+
+  const handleSizeChange = (
+    event: React.ChangeEvent<
+      HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
+    >
+  ) => {
+    setSize({
+      ...size,
+      [event.currentTarget!.id]: event.currentTarget!.value,
+    });
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    var res = await registerSales(sale);
+    var res = await registerSales(sale,size);
     if (res != null) {
       setOpen(true);
     } else {
@@ -127,15 +162,7 @@ const SalesForm: React.FC<salesProps> = ({
       // console.log('values',values);
     }
   };
-
-  const onTagsChange = (event: any, values: any) => {
-    // This will output an array of objects
-    // given by Autocompelte options property.
-    if (values != null) {
-      setUser({ ...sale, productid: values.id, productname: values.name });
-      console.log("values", values);
-    }
-  };
+  
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
     if (reason === "clickaway") {
@@ -155,19 +182,16 @@ const SalesForm: React.FC<salesProps> = ({
 
   const classes = useStyles();
 
-  var filteredElements = null;
-  if (product != null && role != null) {
-    if (role === "admin") {
-      filteredElements = product;
-    } else {
-      console.log('filteredElementsfilteredElementsfilteredElements',branch);
-      filteredElements = product.filter((object: any) => {
-        return object.branch.toLowerCase().indexOf(branch.toLowerCase()) !== -1;
-      });
-    }
-  }
-  
-  
+  // var filteredElements = null;
+  // if (product != null && role != null) {
+  //   if (role === "admin") {
+  //     filteredElements = product;
+  //   } else {
+  //     filteredElements = product.filter((object: any) => {
+  //       return object.branch.toLowerCase().indexOf(branch.toLowerCase()) !== -1;
+  //     });
+  //   }
+  // }
 
   var filteredUsers: User[] = [];
   var salesRole = "sales";
@@ -189,7 +213,8 @@ const SalesForm: React.FC<salesProps> = ({
       <div
         style={{
           marginTop: "100",
-        }}>
+        }}
+      >
         <br />
         <br />
         <br />
@@ -198,20 +223,37 @@ const SalesForm: React.FC<salesProps> = ({
 
         <Paper>
           <br />
-          <Typography component='h1' variant='h5'>
+          <Typography component="h1" variant="h5">
             Register Sales
           </Typography>
           <br />
           <form onSubmit={handleSubmit} noValidate>
             <Grid container spacing={3}>
               <Grid item xs={4}>
-                <FormControl variant='outlined' className={classes.formControl}>
-                  <Autocomplete
+                <div
+                  style={{
+                    paddingLeft: "10px",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontWeight: "bolder",
+                    }}
+                  >
+                    Product
+                  </span>
+                  <br />
+                  <Typography>
+                    {prod.name},{prod.brand}
+                  </Typography>
+                </div>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  {/* <Autocomplete
                     id='combo-box-demo'
                     options={filteredElements}
                     getOptionLabel={(option: Product) => {
                       return (
-                        option.name + " , " + option.color + ", " + option.size
+                        option.name + " , " + option.color
                       );
                     }}
                     onChange={onTagsChange}
@@ -223,13 +265,13 @@ const SalesForm: React.FC<salesProps> = ({
                         variant='outlined'
                       />
                     )}
-                  />
+                  /> */}
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <FormControl variant='outlined' className={classes.formControl}>
+                <FormControl variant="outlined" className={classes.formControl} size='small'>
                   <Autocomplete
-                    id='combo-box-demo'
+                    id="combo-box-demo"
                     options={filteredUsers}
                     getOptionLabel={(option: User) => {
                       return option.name;
@@ -239,14 +281,14 @@ const SalesForm: React.FC<salesProps> = ({
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        label='Sold By'
-                        variant='outlined'
+                        label="Sold By"
+                        variant="outlined"
                       />
                     )}
                   />
                 </FormControl>
               </Grid>
-              <Grid item xs={4}>
+              {/* <Grid item xs={4}>
                 <FormControl variant='outlined' className={classes.formControl}>
                   {" "}
                   <TextField
@@ -260,30 +302,86 @@ const SalesForm: React.FC<salesProps> = ({
                     value={sale.quantity}
                   />
                 </FormControl>
-              </Grid>
+              </Grid> */}
               <Grid item xs={4}>
-                <FormControl variant='outlined' className={classes.formControl}>
+                <FormControl variant="outlined" className={classes.formControl}>
                   {" "}
                   <TextField
-                    variant='outlined'
+                    variant="outlined"
                     required
                     fullWidth
-                    name='price'
-                    label='Price'
-                    id='price'
+                    name="price"
+                    label="Price"
+                    id="price"
                     onChange={handleChange}
-                    value={sale.price}
+                    value={sale.price} size='small'
+                  />
+                </FormControl>
+              </Grid>
+            </Grid>
+            <Divider />
+            <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <Typography>Slect size and quantity sold</Typography>
+              </Grid>
+              <Grid item xs={4}>
+              <FormControl
+                    variant="outlined"
+                    className={classes.formControl} size="small"
+                  >
+                    <InputLabel htmlFor="outlined-age-native-simple">
+                      Select Size
+                    </InputLabel>
+                    <Select
+                      native
+                      id="size"
+                      onChange={handleSelectChange}
+                      label="Size"
+                      name="size"
+                      value={size.size}
+                      inputProps={{
+                        name: "size",
+                        id: "outlined-age-native-simple",
+                      }}
+                    >
+                      <option aria-label="None" value="" />
+                      {prod.size != null
+                        ? prod.size.map((cat: any, index: any) => {
+                            return (
+                              <option key={index} value={cat.size}>
+                                {cat.size}
+                              </option>
+                            );
+                          })
+                        : null}
+                    </Select>
+                  </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+                <FormControl variant="outlined" className={classes.formControl} size='small'
+                >
+                  {" "}
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    name="quantity"
+                    label="Quantity"
+                    id="quantity"
+                    onChange={ handleSizeChange}
+                    value={size.quantity} size='small'
                   />
                 </FormControl>
               </Grid>
             </Grid>
             <Grid item xs={4}>
               <Button
-                type='submit'
+                type="submit"
                 fullWidth
-                variant='contained'
-                color='primary'
-                className={classes.submit}>
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
                 Register Sale
               </Button>
             </Grid>
@@ -291,13 +389,13 @@ const SalesForm: React.FC<salesProps> = ({
         </Paper>
       </div>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity='success'>
+        <Alert onClose={handleClose} severity="success">
           Your sales is registered successfully
         </Alert>
       </Snackbar>
 
       <Snackbar open={opene} autoHideDuration={6000} onClose={handleCloseError}>
-        <Alert onClose={handleCloseError} severity='error'>
+        <Alert onClose={handleCloseError} severity="error">
           Someting is wrong please check your data
         </Alert>
       </Snackbar>

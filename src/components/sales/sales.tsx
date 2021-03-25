@@ -95,7 +95,6 @@ const Sales: React.FC<salesProp> = ({
       await deleteSales(id);
     }
   };
-  var userid=auth.uid;
   var filteredElements = null;
   if (sales != null) {
     filteredElements = sales.filter((object: any) => {

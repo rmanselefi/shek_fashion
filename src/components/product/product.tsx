@@ -62,6 +62,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: fade(theme.palette.common.black, 0.25),
     },
     marginLeft: 0,
+    marginTop:10,
     width: "100%",
     [theme.breakpoints.up("sm")]: {
       marginLeft: theme.spacing(1),
@@ -79,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
   },
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 320,
+    minWidth: 250,
   },
   inputRoot: {
     color: "inherit",
@@ -108,7 +109,10 @@ interface productProp extends RouteComponentProps {
   location: any;
   role: any;
   match: any;
-  brands:any;
+  brands: any;
+  branch: string;
+  name: string;
+  profile: any;
 }
 
 const Product: React.FC<productProp> = ({
@@ -118,6 +122,9 @@ const Product: React.FC<productProp> = ({
   brands,
   role,
   deleteProduct,
+  branch,
+  name,
+  profile,
 }) => {
   const classes = useStyles();
   // const [currentPage] = useState(1);
@@ -125,7 +132,7 @@ const Product: React.FC<productProp> = ({
   const [filterStr, setFilterStr] = useState("");
 
   const [categ, setCategory] = useState("");
-  const [branch, setBranch] = useState("");
+  const [branche, setBranch] = useState("");
   const [brand, setBrand] = useState("");
 
   // const branch = location.state.branch;
@@ -137,14 +144,16 @@ const Product: React.FC<productProp> = ({
   var filteredBybranch = null;
   if (product != null) {
     filteredBybranch = product.filter((object: any) => {
-      return object.branch.toLowerCase().indexOf(branch.toLowerCase()) !== -1;
+      return object.branch.toLowerCase().indexOf(branche.toLowerCase()) !== -1;
     });
   }
 
   var filteredByCategory = null;
   if (filteredBybranch != null) {
     filteredByCategory = filteredBybranch.filter((object: any) => {
-      return object.category.id.toLowerCase().indexOf(categ.toLowerCase()) !== -1;
+      return (
+        object.category.id.toLowerCase().indexOf(categ.toLowerCase()) !== -1
+      );
     });
   }
 
@@ -196,22 +205,23 @@ const Product: React.FC<productProp> = ({
     <React.Fragment>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <Container maxWidth='lg' className={classes.container}>
+        <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
             <Paper
               style={{
                 width: "100%",
                 paddingLeft: "10",
-              }}>
+              }}
+            >
               <Grid container spacing={1}>
                 <Grid item xs={3} md={3} lg={3}>
-                  <br />
+                  
                   <div className={classes.search}>
                     <div className={classes.searchIcon}>
                       <SearchIcon />
                     </div>
                     <InputBase
-                      placeholder='Search…'
+                      placeholder="Search Code"
                       classes={{
                         root: classes.inputRoot,
                         input: classes.inputInput,
@@ -225,49 +235,53 @@ const Product: React.FC<productProp> = ({
 
                 <Grid item xs={3}>
                   <FormControl
-                    variant='outlined'
-                    className={classes.formControl}>
-                    <InputLabel htmlFor='outlined-age-native-simple'>
+                    variant="outlined"
+                    className={classes.formControl} size="small"
+                  >
+                    <InputLabel htmlFor="outlined-age-native-simple">
                       Branch
                     </InputLabel>
                     <Select
                       native
-                      id='branch'
+                      id="branch"
                       onChange={handleBranchSelectChange}
-                      label='Branch'
-                      name='branch'
-                      value={branch}
+                      label="Branch"
+                      name="branch"
+                      value={branche}
                       inputProps={{
                         name: "branch",
                         id: "outlined-age-native-simple",
-                      }}>
-                      <option aria-label='None' value='' />
-                      <option value='branch-1'>branch-1</option>
-                      <option value='branch-2'>branch-2</option>
-                      <option value='branch-3'>branch-3</option>
+                      }}
+                    >
+                      <option aria-label="None" value="" />
+                      <option value="branch-1">branch-1</option>
+                      <option value="branch-2">branch-2</option>
+                      <option value="branch-3">branch-3</option>
                     </Select>
                   </FormControl>
                 </Grid>
 
                 <Grid item xs={3}>
                   <FormControl
-                    variant='outlined'
-                    className={classes.formControl}>
-                    <InputLabel htmlFor='outlined-age-native-simple'>
+                    variant="outlined"
+                    className={classes.formControl} size="small"
+                  >
+                    <InputLabel htmlFor="outlined-age-native-simple">
                       Category
                     </InputLabel>
                     <Select
                       native
-                      id='category'
+                      id="category"
                       onChange={handleSelectChange}
-                      label='Category'
-                      name='category'
+                      label="Category"
+                      name="category"
                       value={categ}
-                      inputProps={{
+                      inputProps={{ 
                         name: "category",
                         id: "outlined-age-native-simple",
-                      }}>
-                      <option aria-label='None' value='' />
+                      }}
+                    > 
+                      <option aria-label="None" value="" />
                       {category != null
                         ? category.map((cat: any, index: any) => {
                             return (
@@ -282,23 +296,25 @@ const Product: React.FC<productProp> = ({
                 </Grid>
                 <Grid item xs={3}>
                   <FormControl
-                    variant='outlined'
-                    className={classes.formControl}>
-                    <InputLabel htmlFor='outlined-age-native-simple'>
+                    variant="outlined"
+                    className={classes.formControl} size="small"
+                  >
+                    <InputLabel htmlFor="outlined-age-native-simple">
                       Brand
                     </InputLabel>
                     <Select
                       native
-                      id='brand'
+                      id="brand"
                       onChange={handleBrandSelectChange}
-                      label='Brand'
-                      name='brand'
+                      label="Brand"
+                      name="brand"
                       value={brand}
                       inputProps={{
                         name: "brand",
                         id: "outlined-age-native-simple",
-                      }}>
-                      <option aria-label='None' value='' />
+                      }}
+                    >
+                      <option aria-label="None" value="" />
                       {brands != null
                         ? brands.map((cat: any, index: any) => {
                             return (
@@ -313,16 +329,17 @@ const Product: React.FC<productProp> = ({
                 </Grid>
               </Grid>
               <Title>Products</Title>
-              <Table size='small'>
-                <TableHead>
-                  <TableRow>
+              <Table size="small">
+                <TableHead style={{
+                    fontWeight:"bolder"
+                  }}>
+                  <TableRow >
                     <TableCell>Name</TableCell>
-                    <TableCell>Size</TableCell>
                     <TableCell>Brand</TableCell>
                     <TableCell>Code</TableCell>
                     <TableCell>Stock</TableCell>
                     <TableCell>Color</TableCell>
-                    <TableCell>Base Price</TableCell>
+                    <TableCell>Price</TableCell>
                     <TableCell>Image</TableCell>
                     <TableCell>Actions</TableCell>
                   </TableRow>
@@ -331,28 +348,32 @@ const Product: React.FC<productProp> = ({
                   {filteredElements != null
                     ? filteredElements.map((row: any) => (
                         <TableRow key={row.id}>
-                          <TableCell>{row.name}</TableCell>
-                          <TableCell>{row.size}</TableCell>
+                          <TableCell>{row.name}</TableCell>                          
                           <TableCell>{row.brand}</TableCell>
                           <TableCell>{row.code}</TableCell>
                           <TableCell>{row.stock < 0 ? 0 : row.stock}</TableCell>
                           <TableCell>{row.color}</TableCell>
                           <TableCell>{row.price}</TableCell>
                           <TableCell>
-                            {
-                              row.image!=null?<img src={row.image} width='50' height='50' alt='Product' />:null
-                            }
-                            
+                            {row.image != null ? (
+                              <img
+                                src={row.image}
+                                width="50"
+                                height="50"
+                                alt={"Loading"}
+                              />
+                            ) : null}
                           </TableCell>
 
                           <TableCell>
-                            {role == "admin" ? (
+                            {role === "admin" ? (
                               <>
                                 <Button
-                                  variant='outlined'
-                                  size='small'
-                                  color='primary'
-                                  className={classes.button}>
+                                  variant="outlined"
+                                  size="small"
+                                  color="primary"
+                                  className={classes.button}
+                                >
                                   <Link
                                     style={{
                                       textDecoration: "none",
@@ -360,18 +381,43 @@ const Product: React.FC<productProp> = ({
                                     to={{
                                       pathname: `/products/edit`,
                                       state: { product: row },
-                                    }}>
+                                    }}
+                                  >
                                     Edit
                                   </Link>
                                 </Button>
 
                                 <Button
-                                  variant='outlined'
-                                  size='small'
-                                  color='secondary'
+                                  variant="outlined"
+                                  size="small"
+                                  color="secondary"
                                   className={classes.button}
-                                  onClick={(e) => handelDelete(e, row.id)}>
+                                  onClick={(e) => handelDelete(e, row.id)}
+                                >
                                   <DeleteIcon />
+                                </Button>
+
+                                <Button
+                                  variant="outlined"
+                                  size="small"
+                                  color="primary"
+                                  className={classes.button}
+                                >
+                                  <Link
+                                    style={{
+                                      textDecoration: "none",
+                                    }}
+                                    to={{
+                                      pathname: `/sales/add`,
+                                      state: {
+                                        branch: branch,
+                                        profile: profile,
+                                        product: row,
+                                      },
+                                    }}
+                                  >
+                                    Sale
+                                  </Link>
                                 </Button>
                               </>
                             ) : null}
@@ -390,12 +436,14 @@ const Product: React.FC<productProp> = ({
 };
 
 const mapStateToProps = (state: any) => {
-  console.log(state);
   return {
     product: state.firestore.ordered.product,
     category: state.firestore.ordered.category,
     role: state.firebase.profile.role,
     brands: state.firestore.ordered.brand,
+    branch: state.firebase.profile.branch,
+    name: state.firebase.profile.name,
+    profile: state.firebase.profile,
   };
 };
 export default compose(

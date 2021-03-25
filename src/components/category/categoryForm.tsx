@@ -85,11 +85,15 @@ const CategoryForm: React.FC<settingsProps> = ({ registerCategory }) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    var res = await registerCategory(category);
-    if (res != null || res === undefined) {
-      setOpen(true);
-    } else {
+    if (category.name === "") {
       setOpenError(true);
+    } else {
+      var res = await registerCategory(category);
+      if (res != null || res === undefined) {
+        setOpen(true);
+      } else {
+        setOpenError(true);
+      }
     }
   };
 

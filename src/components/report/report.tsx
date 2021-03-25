@@ -177,6 +177,12 @@ const Report:React.FC<reportProps>=({sales,location})=> {
               <ReportTable sales={filteredElements} day={'weekly'} />
               </Paper>
             </Grid>
+
+            <Grid item xs={6} md={6} lg={6}>
+              <Paper className={fixedHeightPaper}>
+              <ReportTable sales={filteredElements} day={'monthly'} />
+              </Paper>
+            </Grid>
             {/* Recent Orders */}
             <Grid item xs={6}>
               <Paper className={classes.paper}>

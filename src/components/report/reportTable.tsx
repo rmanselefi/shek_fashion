@@ -5,45 +5,46 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { Title } from "../layout/title";
-import Chip from '@material-ui/core/Chip';
-
-
-
+import Chip from "@material-ui/core/Chip";
 
 export default function ReportTable(props: any) {
   var sales = props.sales;
   var day = props.day;
   var dailySales = [];
   var weeklySales = [];
+  var monthlySales = [];
   if (sales != null) {
     for (let index = 0; index < sales.length; index++) {
       const element = sales[index];
       var createdAt = element.createdAt.toDate();
       var today = new Date();
-      var diff = today.getDay()-createdAt.getDay()  ;
-      if (diff < 1) {
+      // var diff = today.getDay() - createdAt.getDay();
+      var Difference_In_Time = today.getTime() - createdAt.getTime();
+      var diff = Math.round(Difference_In_Time / (1000 * 3600 * 24));
+      if (Number(diff) < 1) {
         dailySales.push(element);
-      } else if (diff < 8) {
+      } if (Number(diff) < 8) {
         weeklySales.push(element);
-      }
-      
-      //   console.log('elementelementelement',new Date().getDay()-element.createdAt.toDate().getDay())
+      } if (Number(diff) < 31) {
+        monthlySales.push(element);
+      }    
+
     }
   }
   var salesR;
-  if(day==='daily'){
-      salesR=dailySales;
+  if (day === "Daily") {
+    salesR = dailySales;
+  } else if (day === "Monthly") {
+    salesR = monthlySales;
+  } else {
+    salesR = weeklySales;
   }
-  else{
-      salesR=weeklySales;
-  }
-  console.log("elementelementelement", salesR);
 
   return (
     <React.Fragment>
-      <Title>{
-          day==='daily'?'Daily Sold Products':'Weekly Sold Products'
-          }</Title>
+      <Title>
+        {day + ' Sold Products'}
+      </Title>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -55,22 +56,23 @@ export default function ReportTable(props: any) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {salesR != null
-            ? salesR.map((row: any) => (
-                <TableRow key={row.id}>
-                  <TableCell>
-                    {row.product.name},{row.product.brand}
-                  </TableCell>
-                  <TableCell>{row.price}</TableCell>
-                  <TableCell>{row.branch}</TableCell>
-                  <TableCell>{row.createdAt.toDate().toDateString()}</TableCell>
-                  <TableCell align="right">{row.quantity}</TableCell>
-                </TableRow>
-              ))
-            : <Chip label="Basic" variant="outlined" />}
+          {salesR != null ? (
+            salesR.map((row: any) => (
+              <TableRow key={row.id}>
+                <TableCell>
+                  {row.product.name},{row.product.brand}
+                </TableCell>
+                <TableCell>{row.price}</TableCell>
+                <TableCell>{row.branch}</TableCell>
+                <TableCell>{row.createdAt.toDate().toDateString()}</TableCell>
+                <TableCell align="right">{row.quantity}</TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <Chip label="Basic" variant="outlined" />
+          )}
         </TableBody>
       </Table>
-      
     </React.Fragment>
   );
 }

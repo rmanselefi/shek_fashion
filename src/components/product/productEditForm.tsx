@@ -27,6 +27,7 @@ import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { Product } from "../../models/product";
 import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
+import { Size } from "../../models/size";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -69,13 +70,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface productProps extends RouteComponentProps {
-  updateProduct: (product: Product, sizes: any) => Promise<Product | null>;
+  updateProduct: (product: Product, sizes: Size[]) => Promise<Product | null>;
   auth: any;
   authError?: any;
   history: any;
   location: any;
   category: any;
-  saved: boolean;
+  updated: boolean;
   hasError: boolean;
 }
 const ProductEditForm: React.FC<productProps> = ({
@@ -83,7 +84,7 @@ const ProductEditForm: React.FC<productProps> = ({
   location,
   history,
   category,
-  saved,
+  updated,
   hasError,
 }) => {
   const [product, setUser] = useState<Product>({
@@ -94,15 +95,14 @@ const ProductEditForm: React.FC<productProps> = ({
     color: "",
     type: "",
     baseprice: 0.0,
-    stock: "",
     branch: "",
     category: "",
   });
-  const [sizes, setSizes] = React.useState([
+  const [sizes, setSizes] = React.useState<Size[]>([
     {
       id: 0,
       size: "",
-      sizeQuantity: 0,
+      sizeQuantiy: 0,
     },
   ]);
   const produc = location.state.product;
@@ -115,7 +115,6 @@ const ProductEditForm: React.FC<productProps> = ({
       type: produc.type,
       code: produc.code,
       baseprice: produc.price,
-      stock: produc.stock,
       branch: produc.branch,
       category: produc.category.id,
       file: produc.image,
@@ -131,11 +130,11 @@ const ProductEditForm: React.FC<productProps> = ({
     if (!hasError) {
       setOpenError(false);
     }
-    if (saved) {
+    if (updated) {
       setOpen(true);
       setOpenError(false);
     }
-    if (!saved) {
+    if (!updated) {
       setOpen(false);
     }
   }, [
@@ -146,12 +145,11 @@ const ProductEditForm: React.FC<productProps> = ({
     produc.type,
     produc.code,
     produc.price,
-    produc.stock,
     produc.image,
     produc.category,
     produc.branch,
     hasError,
-    saved,
+    updated,
     produc.size,
   ]);
   const [open, setOpen] = React.useState(false);
@@ -230,7 +228,7 @@ const ProductEditForm: React.FC<productProps> = ({
       {
         id: sizes.length,
         size: "",
-        sizeQuantity: 0,
+        sizeQuantiy: 0,
       },
     ]);
     setSizes(filters);
@@ -286,22 +284,7 @@ const ProductEditForm: React.FC<productProps> = ({
                     value={product.brand}
                   />
                 </FormControl>
-              </Grid>
-              <Grid item xs={4}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  {" "}
-                  <TextField
-                    variant="outlined"
-                    required
-                    fullWidth
-                    id="stock"
-                    label="Stock"
-                    name="stock"
-                    onChange={handleChange}
-                    value={product.stock}
-                  />
-                </FormControl>
-              </Grid>
+              </Grid>              
               <Grid item xs={4}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   {" "}
@@ -480,11 +463,11 @@ const ProductEditForm: React.FC<productProps> = ({
                             variant="outlined"
                             required
                             fullWidth
-                            name="sizeQuantity"
+                            name="sizeQuantiy"
                             label="Quantity"
-                            id="sizeQuantity"
+                            id="sizeQuantiy"
                             onChange={(e) => handleSizeChange(e, index)}
-                            value={filter.sizeQuantity}
+                            value={filter.sizeQuantiy}
                           />
                         </FormControl>
                       </Grid>
@@ -533,7 +516,7 @@ const ProductEditForm: React.FC<productProps> = ({
 const mapStateToProps = (state: any) => ({
   auth: state.firebase.auth,
   category: state.firestore.ordered.category,
-  saved: state.product.saved,
+  updated: state.product.updated,
   hasError: state.product.hasError,
 });
 

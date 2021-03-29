@@ -1,5 +1,5 @@
 // @ts-ignore
-import React ,{useState} from "react";
+import React, { useState } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
@@ -8,18 +8,21 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Link from "@material-ui/core/Link";
-import Orders from '../layout/orders'
+import Orders from "../layout/orders";
 import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
 import { RouteComponentProps } from "react-router-dom";
 import ReportTable from "./reportTable";
 import { FormControl, InputLabel, Select } from "@material-ui/core";
+
+import ReportTotalCard from "./reportTotalCard";
+
 function Copyright() {
   return (
-    <Typography variant='body2' color='textSecondary' align='center'>
+    <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color='inherit' href='https://material-ui.com/'>
+      <Link color="inherit" href="https://material-ui.com/">
         Your Website
       </Link>{" "}
       {new Date().getFullYear()}
@@ -111,14 +114,17 @@ const useStyles = makeStyles((theme) => ({
   fixedHeight: {
     height: 240,
   },
+  depositContext: {
+    flex: 1,
+  },
 }));
 
 interface reportProps extends RouteComponentProps {
-  sales:any;
-  location:any;
+  sales: any;
+  location: any;
 }
 
-const Report:React.FC<reportProps>=({sales,location})=> {
+const Report: React.FC<reportProps> = ({ sales, location }) => {
   const classes = useStyles();
   // const branch = location.state.branch;
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
@@ -128,7 +134,7 @@ const Report:React.FC<reportProps>=({sales,location})=> {
     event: React.ChangeEvent<{ name?: string; value: unknown }>
   ) => {
     const name = event.target.value as string;
-    setBranch(name );
+    setBranch(name);
   };
   var filteredElements = null;
   if (sales != null) {
@@ -136,59 +142,78 @@ const Report:React.FC<reportProps>=({sales,location})=> {
       return object.branch.toLowerCase().indexOf(branch.toLowerCase()) !== -1;
     });
   }
+
+  
+
   return (
     <div className={classes.root}>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <Container maxWidth='lg' className={classes.container}>
-        <Grid item xs={4}>
-                <FormControl variant='outlined' className={classes.formControl}>
-                  <InputLabel htmlFor='outlined-age-native-simple'>
-                    Branch
-                  </InputLabel>
-                  <Select
-                    native
-                    id='branch'
-                    onChange={handleBranchSelectChange}
-                    label='Branch'
-                    name='branch'
-                    value={branch}
-                    inputProps={{
-                      name: "branch",
-                      id: "outlined-age-native-simple",
-                    }}>
-                    <option aria-label='None' value='' />
-                    <option value='branch-1'>branch-1</option>
-                    <option value='branch-2'>branch-2</option>
-                    <option value='branch-3'>branch-3</option>
-                    </Select>
-                </FormControl>
-              </Grid>
+        <Container maxWidth="lg" className={classes.container}>
+          <Grid item xs={4}>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel htmlFor="outlined-age-native-simple">
+                Branch
+              </InputLabel>
+              <Select
+                native
+                id="branch"
+                onChange={handleBranchSelectChange}
+                label="Branch"
+                name="branch"
+                value={branch}
+                inputProps={{
+                  name: "branch",
+                  id: "outlined-age-native-simple",
+                }}
+              >
+                <option aria-label="None" value="" />
+                <option value="branch-1">branch-1</option>
+                <option value="branch-2">branch-2</option>
+                <option value="branch-3">branch-3</option>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid container spacing={3}>
+            <Grid item xs={4} md={4} lg={4}>
+              <ReportTotalCard sales={filteredElements} day={"Daily"} />
+            </Grid>
+            <Grid item xs={4} md={4} lg={4}>
+              <ReportTotalCard sales={filteredElements} day={"Weekly"} />
+            </Grid>
+            <Grid item xs={4} md={4} lg={4}>
+              <ReportTotalCard sales={filteredElements} day={"Monthly"} />
+            </Grid>
+          </Grid>
+          <Grid container spacing={3}>
+          <Grid item xs={12}>
+              <Paper className={classes.paper}>
+                <Orders sales={filteredElements} />
+              </Paper>
+            </Grid>
+          </Grid>
+         
           <Grid container spacing={3}>
             {/* Chart */}
             <Grid item xs={6} md={6} lg={6}>
               <Paper className={fixedHeightPaper}>
-              <ReportTable sales={filteredElements} day={'daily'} />
+                <ReportTable sales={filteredElements} day={"Daily"} />
               </Paper>
             </Grid>
             {/* Recent Deposits */}
             <Grid item xs={6} md={6} lg={6}>
               <Paper className={fixedHeightPaper}>
-              <ReportTable sales={filteredElements} day={'weekly'} />
+                <ReportTable sales={filteredElements} day={"Weekly"} />
               </Paper>
             </Grid>
 
             <Grid item xs={6} md={6} lg={6}>
               <Paper className={fixedHeightPaper}>
-              <ReportTable sales={filteredElements} day={'monthly'} />
+              <ReportTable sales={filteredElements} day={'Monthly'} />
               </Paper>
             </Grid>
-            {/* Recent Orders */}
-            <Grid item xs={6}>
-              <Paper className={classes.paper}>
-                <Orders sales={filteredElements} />
-              </Paper>
-            </Grid>
+           
+           
           </Grid>
           <Box pt={4}>
             <Copyright />
@@ -197,7 +222,7 @@ const Report:React.FC<reportProps>=({sales,location})=> {
       </main>
     </div>
   );
-}
+};
 
 const mapStateToProps = (state: any) => ({
   auth: state.firebase.auth,
@@ -208,6 +233,7 @@ export default compose(
   connect(mapStateToProps, null),
   firestoreConnect([
     {
-      collection: "sales",      
+      collection: "sales",
     },
-  ]))(Report)
+  ])
+)(Report);

@@ -28,6 +28,7 @@ import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { Product } from "../../models/product";
 import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
+import { Size } from "../../models/size";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -71,7 +72,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 
 interface productProps extends RouteComponentProps {
-  registerProduct: (penalty: Product, sizes: any) => void;
+  registerProduct: (penalty: Product, sizes: Size[]) => void;
   auth: any;
   authError?: any;
   history: any;
@@ -95,7 +96,6 @@ const ProductForm: React.FC<productProps> = ({
     color: "",
     type: "",
     baseprice: 0.0,
-    stock: "",
     branch: "",
     category: "",
     image: null,
@@ -105,11 +105,11 @@ const ProductForm: React.FC<productProps> = ({
 
   const [open, setOpen] = React.useState(false);
   const [opene, setOpenError] = React.useState(false);
-  const [sizes, setSizes] = React.useState([
+  const [sizes, setSizes] = React.useState<Size[]>([
     {
       id: 0,
       size: "",
-      sizeQuantity: 0,
+      sizeQuantiy: 0,
     },
   ]);
   useEffect(() => {
@@ -123,6 +123,7 @@ const ProductForm: React.FC<productProps> = ({
     if (saved) {
       setOpen(true);
       setOpenError(false);
+      
     }
     if (!saved) {
       setOpen(false);
@@ -226,7 +227,7 @@ const ProductForm: React.FC<productProps> = ({
       {
         id: sizes.length,
         size: "",
-        sizeQuantity: 0,
+        sizeQuantiy: 0,
       },
     ]);
     setSizes(filters);
@@ -300,23 +301,7 @@ const ProductForm: React.FC<productProps> = ({
                       : null}
                   </Select>
                 </FormControl>
-              </Grid>
-
-              <Grid item xs={4}>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  {" "}
-                  <TextField
-                    variant="outlined"
-                    required
-                    fullWidth
-                    id="stock"
-                    label="Stock"
-                    name="stock"
-                    onChange={handleChange}
-                    value={product.stock}
-                  />
-                </FormControl>
-              </Grid>
+              </Grid>             
               <Grid item xs={4}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   {" "}
@@ -457,7 +442,7 @@ const ProductForm: React.FC<productProps> = ({
             <Grid container>
               {sizes != null
                 ? sizes.map((filter, index) => (
-                    <>
+                    <React.Fragment key={index}>
                       <Grid item xs={4}>
                         <FormControl
                           variant="outlined"
@@ -486,11 +471,11 @@ const ProductForm: React.FC<productProps> = ({
                             variant="outlined"
                             required
                             fullWidth
-                            name="sizeQuantity"
+                            name="sizeQuantiy"
                             label="Quantity"
-                            id="sizeQuantity"
+                            id="sizeQuantiy"
                             onChange={(e) => handleSizeChange(e, index)}
-                            value={filter.sizeQuantity}
+                            value={filter.sizeQuantiy}
                           />
                         </FormControl>
                       </Grid>
@@ -499,7 +484,7 @@ const ProductForm: React.FC<productProps> = ({
                           Remove Size
                         </Button>
                       </Grid>
-                    </>
+                    </React.Fragment>
                   ))
                 : null}
             </Grid>

@@ -1,9 +1,10 @@
 import firebase from "../../config/firebase";
 
 import { Product } from "../../models/product";
-import { ADD_PRODUCT, PRODUCT_ERROR } from "../reducers/types";
+import { Size } from "../../models/size";
+import { ADD_PRODUCT, PRODUCT_ERROR ,UPDATE_PRODUCT} from "../reducers/types";
 
-export const registerProduct = (product: Product, sizes: []) => {
+export const registerProduct = (product: Product, sizes: Size[]) => {
   return async (dispatch: any, getState: any) => {
     try {
       let catRef = await firebase
@@ -17,11 +18,14 @@ export const registerProduct = (product: Product, sizes: []) => {
         id: product.category,
         name: name,
       };
-      var size: any[] = [];
 
-      if (sizes != null) {
-        size = sizes;
+      var total = 0;
+      if (sizes.length !== 0) {
+        for (let index = 0; index < sizes.length; index++) {
+          total = total + Number(sizes[index].sizeQuantiy);
+        }
       }
+      
       if (product.image != null) {
         const uploadTask = firebase
           .storage()
@@ -49,12 +53,12 @@ export const registerProduct = (product: Product, sizes: []) => {
                   await firebase.firestore().collection("product").add({
                     name: product.name,
                     brand: product.brand,
-                    size: size,
+                    size: sizes,
                     color: product.color,
                     code: product.code,
                     type: product.type,
-                    stock: product.stock,
-                    initialStock: product.stock,
+                    stock: total,
+                    initialStock: total,
                     price: product.baseprice,
                     branch: product.branch,
                     category: cat,
@@ -73,12 +77,12 @@ export const registerProduct = (product: Product, sizes: []) => {
         await firebase.firestore().collection("product").add({
           name: product.name,
           brand: product.brand,
-          size: size,
+          size: sizes,
           color: product.color,
           code: product.code,
           type: product.type,
-          stock: product.stock,
-          initialStock: product.stock,
+          stock: total,
+          initialStock: total,
           price: product.baseprice,
           branch: product.branch,
           category: cat,
@@ -100,7 +104,7 @@ export const registerProduct = (product: Product, sizes: []) => {
   };
 };
 
-export const updateProduct = (product: Product, sizes: []) => {
+export const updateProduct = (product: Product, sizes: Size[]) => {
   return async (dispatch: any, getState: any) => {
     try {
       let catRef = await firebase
@@ -114,10 +118,11 @@ export const updateProduct = (product: Product, sizes: []) => {
         id: product.category,
         name: name,
       };
-      var size: any[] = [];
-
-      if (sizes != null) {
-        size = sizes;
+      var total = 0;
+      if (sizes.length !== 0) {
+        for (let index = 0; index < sizes.length; index++) {
+          total = total + Number(sizes[index].sizeQuantiy);
+        }
       }
       if (product.image != null) {
         const uploadTask = firebase
@@ -153,18 +158,17 @@ export const updateProduct = (product: Product, sizes: []) => {
                       color: product.color,
                       code: product.code,
                       type: product.type,
-                      stock: product.stock,
-                      initialStock: product.stock,
+                      stock: total,
                       price: product.baseprice,
                       branch: product.branch,
-                      size: size,
+                      size: sizes,
                       category: cat,
                       image: urls,
                       updatedAt: new Date(),
                     })
                     .then((resp) => {
                       dispatch({
-                        type: ADD_PRODUCT,
+                        type: UPDATE_PRODUCT,
                         payload: product,
                       });
                     });
@@ -183,16 +187,15 @@ export const updateProduct = (product: Product, sizes: []) => {
             color: product.color,
             code: product.code,
             type: product.type,
-            size: size,
-            stock: product.stock,
-            initialStock: product.stock,
+            size: sizes,
+            stock: total,
             price: product.baseprice,
             branch: product.branch,
             category: cat,
             updatedAt: new Date(),
           });
         dispatch({
-          type: ADD_PRODUCT,
+          type: UPDATE_PRODUCT,
           payload: product,
         });
       }

@@ -1,7 +1,8 @@
 import firebase from "../../config/firebase";
 import { Sales } from "../../models/sales";
+import { Size } from "../../models/size";
 
-export const registerSales = (sales: Sales, size: any) => {
+export const registerSales = (sales: Sales, size: Size) => {
   return async (dispatch: any, getState: any): Promise<Sales | null> => {
     // const fb = getFirebase();
     try {
@@ -16,8 +17,9 @@ export const registerSales = (sales: Sales, size: any) => {
       var brand = res.data()?.brand;
       var color = res.data()?.color;
       var sizes = res.data()?.size;
-      let obj = sizes.find((o:any) => o.size === size.size);      
-      if (Number(obj.sizeQuantity) < Number(size.quantity)) {
+      var stock = res.data()?.stock;
+      let obj = sizes.find((o: any) => o.size === size.size);
+      if (Number(obj.sizeQuantiy) < Number(size.sizeQuantiy)) {
         return null;
       }
 
@@ -35,46 +37,47 @@ export const registerSales = (sales: Sales, size: any) => {
         id: sales.cashierid,
         name: sales.cashier,
       };
-      var resp = await firebase.firestore().collection("sales").add({
-        product: prod,
-        price: sales.price,
-        // quantity: sales.quantity,
-        branch: sales.branch!==undefined?sales.branch:"",
-        cashier,
-        soldby: sales.soldby,
-        sellerid: sales.sellerid,
-        createdAt: new Date(),
-      });
+      var resp = await firebase
+        .firestore()
+        .collection("sales")
+        .add({
+          product: prod,
+          price: sales.price,
+          quantity: size.sizeQuantiy,
+          branch: sales.branch !== undefined ? sales.branch : "",
+          cashier,
+          soldby: sales.soldby,
+          sellerid: sales.sellerid,
+          createdAt: new Date(),
+        });
 
       if (resp != null) {
-        var response = await firebase
+        await firebase
           .firestore()
           .collection("product")
           .doc(sales.productid)
           .get();
-        var sizess = res.data()?.size;
-        let obj = sizess.find((o:any) => o.size === size.size);
-        var remaining = obj.sizeQuantity - size.quantity;
+        var remaining = obj.sizeQuantiy - size.sizeQuantiy;
+        var remainingStock = stock - size.sizeQuantiy;
 
-
-        var objIndex = sizess.findIndex((obj:any) => obj.size === size.size);
+        var objIndex = sizes.findIndex((obj: any) => obj.size === size.size);
 
         //Log object to Console.
-        console.log("Before update: ", sizess[objIndex]);
+        console.log("Before update: ", sizes[objIndex]);
 
         //Update object's name property.
-        sizess[objIndex].sizeQuantity = remaining;
+        sizes[objIndex].sizeQuantiy = remaining;
 
         //Log object to console again.
-        console.log("After update: ", sizess[objIndex]);
-        
+        console.log("After update: ", sizes[objIndex]);
+
         await firebase
           .firestore()
           .collection("product")
           .doc(sales.productid)
           .update({
-            stock: remaining,
-            size:sizess
+            stock: remainingStock,
+            size: sizes,
           });
         return sales;
       } else {

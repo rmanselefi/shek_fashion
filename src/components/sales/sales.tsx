@@ -1,5 +1,6 @@
 // @ts-ignore
 import React , {useState} from "react";
+import _ from 'lodash';
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Grid,
@@ -95,9 +96,11 @@ const Sales: React.FC<salesProp> = ({
       await deleteSales(id);
     }
   };
+  const myOrderedArray = _.orderBy(sales, ['createdAt', 'createdAt'], ['desc', 'desc']);
   var filteredElements = null;
-  if (sales != null) {
-    filteredElements = sales.filter((object: any) => {
+
+  if (myOrderedArray != null) {
+    filteredElements = myOrderedArray.filter((object: any) => {
       return object.branch.toLowerCase().indexOf(branch.toLowerCase()) !== -1;
     });
   }

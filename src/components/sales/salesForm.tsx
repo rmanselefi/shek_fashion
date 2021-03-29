@@ -19,7 +19,8 @@ import {
   FormControl,
   Divider,
   Select,
-  InputLabel
+  InputLabel,
+  
 } from "@material-ui/core";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
@@ -28,6 +29,7 @@ import { compose } from "redux";
 import { firestoreConnect } from "react-redux-firebase";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { User } from "../../models/user";
+import { Size } from "../../models/size";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -106,9 +108,12 @@ const SalesForm: React.FC<salesProps> = ({
   // const [value, setValue] = React.useState<Sales | null>(null);
   const [open, setOpen] = React.useState(false);
   const [opene, setOpenError] = React.useState(false);
-  const [size, setSize] = React.useState({
+  const [openError, setOpenValidationError] = React.useState(false);
+  const [errorMessage,setErrorMessage]=React.useState("");
+
+  const [size, setSize] = React.useState<Size>({
     size:"",
-    quantity:0
+    sizeQuantiy:0
   });
 
 
@@ -129,7 +134,7 @@ const SalesForm: React.FC<salesProps> = ({
     const name = event.target.value as string;
     setSize({
       size:name,
-      quantity:size.quantity
+      sizeQuantiy:size.sizeQuantiy
     });
   };
 
@@ -146,12 +151,23 @@ const SalesForm: React.FC<salesProps> = ({
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    var res = await registerSales(sale,size);
-    if (res != null) {
-      setOpen(true);
-    } else {
-      setOpenError(true);
+    if (sale.price===0 || sale.soldby==="") {
+      setErrorMessage("Sales Price and Sold By is required! Please Provide Value for Both");
+      setOpenValidationError(true);
     }
+    else if(size.size==="" || size.sizeQuantiy===0){
+      setErrorMessage("Size and its quantity is required! Please Provide value for both");
+      setOpenValidationError(true);
+    }
+    else{
+      var res = await registerSales(sale,size);
+      if (res != null) {
+        setOpen(true);
+      } else {
+        setOpenError(true);
+      }
+    }
+    
   };
 
   const onSoldByChange = (event: any, values: any) => {
@@ -180,18 +196,16 @@ const SalesForm: React.FC<salesProps> = ({
     setOpenError(false);
   };
 
+  const handleCloseOpenError = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenValidationError(false);
+  };
+
   const classes = useStyles();
 
-  // var filteredElements = null;
-  // if (product != null && role != null) {
-  //   if (role === "admin") {
-  //     filteredElements = product;
-  //   } else {
-  //     filteredElements = product.filter((object: any) => {
-  //       return object.branch.toLowerCase().indexOf(branch.toLowerCase()) !== -1;
-  //     });
-  //   }
-  // }
 
   var filteredUsers: User[] = [];
   var salesRole = "sales";
@@ -244,33 +258,18 @@ const SalesForm: React.FC<salesProps> = ({
                   </span>
                   <br />
                   <Typography>
-                    {prod.name},{prod.brand}
+                    <ul>
+                      <li>{prod.name}</li>
+                      <li>{prod.brand}</li>
+                      <li>{prod.code}</li>
+                      </ul>,
                   </Typography>
                 </div>
-                <FormControl variant="outlined" className={classes.formControl}>
-                  {/* <Autocomplete
-                    id='combo-box-demo'
-                    options={filteredElements}
-                    getOptionLabel={(option: Product) => {
-                      return (
-                        option.name + " , " + option.color
-                      );
-                    }}
-                    onChange={onTagsChange}
-                    style={{ width: 300 }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label='Combo box'
-                        variant='outlined'
-                      />
-                    )}
-                  /> */}
-                </FormControl>
+                
               </Grid>
               <Grid item xs={4}>
                 <FormControl variant="outlined" className={classes.formControl} size='small'>
-                  <Autocomplete
+                  <Autocomplete size={"small"} 
                     id="combo-box-demo"
                     options={filteredUsers}
                     getOptionLabel={(option: User) => {
@@ -365,11 +364,11 @@ const SalesForm: React.FC<salesProps> = ({
                     variant="outlined"
                     required
                     fullWidth
-                    name="quantity"
+                    name="sizeQuantiy"
                     label="Quantity"
-                    id="quantity"
+                    id="sizeQuantiy"
                     onChange={ handleSizeChange}
-                    value={size.quantity} size='small'
+                    value={size.sizeQuantiy} size='small'
                   />
                 </FormControl>
               </Grid>
@@ -397,6 +396,12 @@ const SalesForm: React.FC<salesProps> = ({
       <Snackbar open={opene} autoHideDuration={6000} onClose={handleCloseError}>
         <Alert onClose={handleCloseError} severity="error">
           Someting is wrong please check your data
+        </Alert>
+      </Snackbar>
+
+      <Snackbar open={openError} autoHideDuration={6000} onClose={handleCloseOpenError}>
+        <Alert onClose={handleCloseOpenError} severity="error">
+          {errorMessage}
         </Alert>
       </Snackbar>
     </Container>

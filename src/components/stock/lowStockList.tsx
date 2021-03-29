@@ -158,7 +158,7 @@ const LowStock: React.FC<productProp> = ({
   var filteredByCategory = null;
   if (filteredByStock != null) {
     filteredByCategory = filteredByStock.filter((object: any) => {
-      return object.category.name.toLowerCase().indexOf(categ.toLowerCase()) !== -1;
+      return object.category.id.toLowerCase().indexOf(categ.toLowerCase()) !== -1;
     });
   }
 
@@ -172,7 +172,7 @@ const LowStock: React.FC<productProp> = ({
   var filteredElements = null;
   if (filteredByBrand != null) {
     filteredElements = filteredByBrand.filter((object: any) => {
-      return object.name.toLowerCase().indexOf(filterStr.toLowerCase()) !== -1;
+      return object.code.toLowerCase().indexOf(filterStr.toLowerCase()) !== -1;
     });
   }
 
@@ -324,13 +324,13 @@ const LowStock: React.FC<productProp> = ({
               <Table size="small">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Product Name</TableCell>
-                    <TableCell>Product Size</TableCell>
+                    <TableCell>Name</TableCell>
                     <TableCell>Brand</TableCell>
                     <TableCell>Code</TableCell>
                     <TableCell>Stock</TableCell>
                     <TableCell>Color</TableCell>
-                    <TableCell>Base Price</TableCell>
+                    <TableCell>Price</TableCell>
+                    <TableCell>Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -338,7 +338,6 @@ const LowStock: React.FC<productProp> = ({
                     ? filteredElements.map((row: any) => (
                         <TableRow key={row.id}>
                           <TableCell>{row.name}</TableCell>
-                          <TableCell>{row.size}</TableCell>
                           <TableCell>{row.brand}</TableCell>
                           <TableCell>{row.code}</TableCell>
                           <TableCell>{row.stock < 0 ? 0 : row.stock}</TableCell>

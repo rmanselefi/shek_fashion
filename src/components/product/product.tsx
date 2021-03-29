@@ -1,5 +1,6 @@
 // @ts-ignore
 import React, { useState } from "react";
+import _ from 'lodash';
 import { makeStyles, fade } from "@material-ui/core/styles";
 import {
   Grid,
@@ -141,9 +142,11 @@ const Product: React.FC<productProp> = ({
   // const currentMall =
   //   mall != null ? mall.slice(indexOfFirstPost, indexOfLastPost) : null;
 
+  var productss=_.sortBy(product,[function(o) { return o.name; }]);
+
   var filteredBybranch = null;
-  if (product != null) {
-    filteredBybranch = product.filter((object: any) => {
+  if (productss != null) {
+    filteredBybranch = productss.filter((object: any) => {
       return object.branch.toLowerCase().indexOf(branche.toLowerCase()) !== -1;
     });
   }

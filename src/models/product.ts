@@ -5,7 +5,6 @@ export class Product {
   brand: string;
   code: string;
   color: string;
-  stock: string;
   size?:string;
   sizeQuantity?:number;
   baseprice: number;
@@ -22,7 +21,6 @@ export class Product {
     brand: string,
     code: string,
     color: string,
-    stock: string,    
     baseprice: number,
     branch: string,
     category: string,
@@ -38,7 +36,6 @@ export class Product {
     this.code = code;
     this.brand = brand;
     this.color = color;
-    this.stock = stock;
     this.baseprice = baseprice;
     this.branch = branch;
     this.category = category;

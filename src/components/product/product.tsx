@@ -1,6 +1,6 @@
 // @ts-ignore
 import React, { useState } from "react";
-import _ from 'lodash';
+import _ from "lodash";
 import { makeStyles, fade } from "@material-ui/core/styles";
 import {
   Grid,
@@ -15,6 +15,7 @@ import {
   FormControl,
   InputLabel,
   Select,
+  TextField,
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import SearchIcon from "@material-ui/icons/Search";
@@ -26,6 +27,7 @@ import { compose } from "redux";
 import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
 import { deleteProduct } from "../../store/actions/productActions";
+import { Autocomplete } from "@material-ui/lab";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: fade(theme.palette.common.black, 0.25),
     },
     marginLeft: 0,
-    marginTop:10,
+    marginTop: 10,
     width: "100%",
     [theme.breakpoints.up("sm")]: {
       marginLeft: theme.spacing(1),
@@ -142,7 +144,11 @@ const Product: React.FC<productProp> = ({
   // const currentMall =
   //   mall != null ? mall.slice(indexOfFirstPost, indexOfLastPost) : null;
 
-  var productss=_.sortBy(product,[function(o) { return o.name; }]);
+  var productss = _.sortBy(product, [
+    function (o) {
+      return o.name;
+    },
+  ]);
 
   var filteredBybranch = null;
   if (productss != null) {
@@ -197,11 +203,14 @@ const Product: React.FC<productProp> = ({
     setBranch(name);
   };
 
-  const handleBrandSelectChange = (
-    event: React.ChangeEvent<{ name?: string; value: unknown }>
-  ) => {
-    const name = event.target.value as string;
-    setBrand(name);
+  const onSoldByChange = (event: any, values: any, reason: any) => {
+    if (reason === "clear") {
+      setBrand("");
+    }
+    if (values != null) {
+      setBrand(values.name);
+      // console.log('values',values);
+    }
   };
 
   return (
@@ -218,7 +227,6 @@ const Product: React.FC<productProp> = ({
             >
               <Grid container spacing={1}>
                 <Grid item xs={3} md={3} lg={3}>
-                  
                   <div className={classes.search}>
                     <div className={classes.searchIcon}>
                       <SearchIcon />
@@ -239,7 +247,8 @@ const Product: React.FC<productProp> = ({
                 <Grid item xs={3}>
                   <FormControl
                     variant="outlined"
-                    className={classes.formControl} size="small"
+                    className={classes.formControl}
+                    size="small"
                   >
                     <InputLabel htmlFor="outlined-age-native-simple">
                       Branch
@@ -267,7 +276,8 @@ const Product: React.FC<productProp> = ({
                 <Grid item xs={3}>
                   <FormControl
                     variant="outlined"
-                    className={classes.formControl} size="small"
+                    className={classes.formControl}
+                    size="small"
                   >
                     <InputLabel htmlFor="outlined-age-native-simple">
                       Category
@@ -279,11 +289,11 @@ const Product: React.FC<productProp> = ({
                       label="Category"
                       name="category"
                       value={categ}
-                      inputProps={{ 
+                      inputProps={{
                         name: "category",
                         id: "outlined-age-native-simple",
                       }}
-                    > 
+                    >
                       <option aria-label="None" value="" />
                       {category != null
                         ? category.map((cat: any, index: any) => {
@@ -297,46 +307,40 @@ const Product: React.FC<productProp> = ({
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={2}>
                   <FormControl
                     variant="outlined"
-                    className={classes.formControl} size="small"
+                    className={classes.formControl}
+                    size="small"
                   >
-                    <InputLabel htmlFor="outlined-age-native-simple">
-                      Brand
-                    </InputLabel>
-                    <Select
-                      native
-                      id="brand"
-                      onChange={handleBrandSelectChange}
-                      label="Brand"
-                      name="brand"
-                      value={brand}
-                      inputProps={{
-                        name: "brand",
-                        id: "outlined-age-native-simple",
+                    <Autocomplete
+                      size={"small"}
+                      id="combo-box-demo"
+                      options={brands}
+                      getOptionLabel={(option: any) => {
+                        return option.name;
                       }}
-                    >
-                      <option aria-label="None" value="" />
-                      {brands != null
-                        ? brands.map((cat: any, index: any) => {
-                            return (
-                              <option key={index} value={cat.name}>
-                                {cat.name}
-                              </option>
-                            );
-                          })
-                        : null}
-                    </Select>
+                      onChange={onSoldByChange}
+                      style={{ width: "250px" }}
+                      renderInput={(params: any) => (
+                        <TextField
+                          {...params}
+                          label="Brand"
+                          variant="outlined"
+                        />
+                      )}
+                    />
                   </FormControl>
                 </Grid>
               </Grid>
               <Title>Products</Title>
               <Table size="small">
-                <TableHead style={{
-                    fontWeight:"bolder"
-                  }}>
-                  <TableRow >
+                <TableHead
+                  style={{
+                    fontWeight: "bolder",
+                  }}
+                >
+                  <TableRow>
                     <TableCell>Name</TableCell>
                     <TableCell>Brand</TableCell>
                     <TableCell>Code</TableCell>
@@ -351,7 +355,7 @@ const Product: React.FC<productProp> = ({
                   {filteredElements != null
                     ? filteredElements.map((row: any) => (
                         <TableRow key={row.id}>
-                          <TableCell>{row.name}</TableCell>                          
+                          <TableCell>{row.name}</TableCell>
                           <TableCell>{row.brand}</TableCell>
                           <TableCell>{row.code}</TableCell>
                           <TableCell>{row.stock < 0 ? 0 : row.stock}</TableCell>
@@ -422,7 +426,7 @@ const Product: React.FC<productProp> = ({
                                     Sale
                                   </Link>
                                 </Button>
-                              </> 
+                              </>
                             ) : null}
                           </TableCell>
                         </TableRow>

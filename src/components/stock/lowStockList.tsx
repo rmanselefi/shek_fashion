@@ -13,6 +13,7 @@ import {
   FormControl,
   InputLabel,
   Select,
+  TextField,
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 
@@ -22,6 +23,7 @@ import { Title } from "../layout/title";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
+import { Autocomplete } from "@material-ui/lab";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: fade(theme.palette.common.black, 0.25),
     },
     marginLeft: 0,
-    marginTop:10,
+    marginTop: 10,
     width: "100%",
     [theme.breakpoints.up("sm")]: {
       marginLeft: theme.spacing(1),
@@ -100,7 +102,7 @@ const useStyles = makeStyles((theme) => ({
 
 interface productProp extends RouteComponentProps {
   product: any;
-  category: any;  
+  category: any;
   history: any;
   location: any;
   role: any;
@@ -115,7 +117,7 @@ const LowStock: React.FC<productProp> = ({
   location,
   product,
   category,
-  role  ,
+  role,
   brands,
   branch,
   name,
@@ -158,7 +160,9 @@ const LowStock: React.FC<productProp> = ({
   var filteredByCategory = null;
   if (filteredByStock != null) {
     filteredByCategory = filteredByStock.filter((object: any) => {
-      return object.category.id.toLowerCase().indexOf(categ.toLowerCase()) !== -1;
+      return (
+        object.category.id.toLowerCase().indexOf(categ.toLowerCase()) !== -1
+      );
     });
   }
 
@@ -176,7 +180,6 @@ const LowStock: React.FC<productProp> = ({
     });
   }
 
-  
   const handleSelectChange = (
     event: React.ChangeEvent<{ name?: string; value: unknown }>
   ) => {
@@ -189,6 +192,16 @@ const LowStock: React.FC<productProp> = ({
   ) => {
     const name = event.target.value as string;
     setBrand(name);
+  };
+
+  const onSoldByChange = (event: any, values: any, reason: any) => {
+    if (reason === "clear") {
+      setBrand("");
+    }
+    if (values != null) {
+      setBrand(values.name);
+      // console.log('values',values);
+    }
   };
 
   return (
@@ -205,7 +218,6 @@ const LowStock: React.FC<productProp> = ({
             >
               <Grid container spacing={3}>
                 <Grid item xs={3} md={3} lg={3}>
-                  
                   <div className={classes.search}>
                     <div className={classes.searchIcon}>
                       <SearchIcon />
@@ -225,8 +237,9 @@ const LowStock: React.FC<productProp> = ({
 
                 <Grid item xs={3}>
                   <FormControl
-                    variant="outlined" 
-                    className={classes.formControl} size="small"
+                    variant="outlined"
+                    className={classes.formControl}
+                    size="small"
                   >
                     <InputLabel htmlFor="outlined-age-native-simple">
                       Branch
@@ -254,7 +267,8 @@ const LowStock: React.FC<productProp> = ({
                 <Grid item xs={3}>
                   <FormControl
                     variant="outlined"
-                    className={classes.formControl} size="small"
+                    className={classes.formControl}
+                    size="small"
                   >
                     <InputLabel htmlFor="outlined-age-native-simple">
                       Category
@@ -266,7 +280,6 @@ const LowStock: React.FC<productProp> = ({
                       label="Category"
                       name="category"
                       value={categ}
-                      
                       inputProps={{
                         name: "category",
                         id: "outlined-age-native-simple",
@@ -289,9 +302,10 @@ const LowStock: React.FC<productProp> = ({
                 <Grid item xs={3}>
                   <FormControl
                     variant="outlined"
-                    className={classes.formControl} size="small"
+                    className={classes.formControl}
+                    size="small"
                   >
-                    <InputLabel htmlFor="outlined-age-native-simple">
+                    {/* <InputLabel htmlFor="outlined-age-native-simple">
                       Brand
                     </InputLabel>
                     <Select
@@ -316,7 +330,25 @@ const LowStock: React.FC<productProp> = ({
                             );
                           })
                         : null}
-                    </Select>
+                    </Select> */}
+
+                    <Autocomplete
+                      size={"small"}
+                      id="combo-box-demo"
+                      options={brands}
+                      getOptionLabel={(option: any) => {
+                        return option.name;
+                      }}
+                      onChange={onSoldByChange}
+                      style={{ width: "250px" }}
+                      renderInput={(params: any) => (
+                        <TextField
+                          {...params}
+                          label="Brand"
+                          variant="outlined"
+                        />
+                      )}
+                    />
                   </FormControl>
                 </Grid>
               </Grid>
@@ -343,7 +375,6 @@ const LowStock: React.FC<productProp> = ({
                           <TableCell>{row.stock < 0 ? 0 : row.stock}</TableCell>
                           <TableCell>{row.color}</TableCell>
                           <TableCell>{row.price}</TableCell>
-                          
                         </TableRow>
                       ))
                     : null}
@@ -370,7 +401,7 @@ const mapStateToProps = (state: any) => {
   };
 };
 export default compose(
-  connect(mapStateToProps, {  }),
+  connect(mapStateToProps, {}),
   firestoreConnect([
     {
       collection: "product",

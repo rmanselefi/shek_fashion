@@ -7,10 +7,9 @@ import { RouteComponentProps } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import Divider from '@material-ui/core/Divider';
-import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-
+import Divider from "@material-ui/core/Divider";
+import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 
 import { connect } from "react-redux";
 
@@ -29,6 +28,7 @@ import { Product } from "../../models/product";
 import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
 import { Size } from "../../models/size";
+import { Autocomplete } from "@material-ui/lab";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -69,7 +69,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(2),
   },
 }));
-
 
 interface productProps extends RouteComponentProps {
   registerProduct: (penalty: Product, sizes: Size[]) => void;
@@ -123,7 +122,6 @@ const ProductForm: React.FC<productProps> = ({
     if (saved) {
       setOpen(true);
       setOpenError(false);
-      
     }
     if (!saved) {
       setOpen(false);
@@ -191,6 +189,15 @@ const ProductForm: React.FC<productProps> = ({
     setUser({ ...product, [name]: event.target.value });
   };
 
+  const onSoldByChange = (event: any, values: any) => {
+    // This will output an array of objects
+    // given by Autocompelte options property.
+    if (values != null) {
+      setUser({ ...product, brand: values.name });
+      // console.log('values',values);
+    }
+  };
+
   const handleImageChange = (e: any) => {
     if (e.target.files[0]) {
       const image = e.target.files[0];
@@ -234,7 +241,6 @@ const ProductForm: React.FC<productProps> = ({
     console.log(sizes);
   };
 
-  
   const classes = useStyles();
 
   return (
@@ -242,7 +248,7 @@ const ProductForm: React.FC<productProps> = ({
       <CssBaseline />
       <div className={classes.paper}>
         <form onSubmit={handleSubmit} noValidate>
-          <br/>
+          <br />
           <Paper
             style={{
               marginTop: "20",
@@ -274,10 +280,8 @@ const ProductForm: React.FC<productProps> = ({
               <Grid item xs={4}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   {" "}
-                  <InputLabel htmlFor="outlined-age-native-simple">
-                    Brand
-                  </InputLabel>
-                  <Select
+                  
+                  {/* <Select
                     native
                     id="brand"
                     onChange={handleSelectChange}
@@ -299,9 +303,26 @@ const ProductForm: React.FC<productProps> = ({
                           );
                         })
                       : null}
-                  </Select>
+                  </Select> */}
+                  <Autocomplete
+                    size={"small"}
+                    id="combo-box-demo"
+                    options={brand}
+                    getOptionLabel={(option: any) => {
+                      return option.name;
+                    }}
+                    onChange={onSoldByChange}
+                    style={{ width: 300 }}
+                    renderInput={(params: any) => (
+                      <TextField
+                        {...params}
+                        label="Brand"
+                        variant="outlined"
+                      />
+                    )}
+                  />
                 </FormControl>
-              </Grid>             
+              </Grid>
               <Grid item xs={4}>
                 <FormControl variant="outlined" className={classes.formControl}>
                   {" "}
@@ -427,7 +448,7 @@ const ProductForm: React.FC<productProps> = ({
               </Grid>
             </Grid>
           </Paper>
-          <br/>
+          <br />
           <Divider />
           <Paper
             style={{
@@ -438,7 +459,13 @@ const ProductForm: React.FC<productProps> = ({
               Add Sizes
             </Typography>
             <br />
-            <Button color="primary" startIcon={<AddCircleIcon />} onClick={addSizes}>Add Size</Button>
+            <Button
+              color="primary"
+              startIcon={<AddCircleIcon />}
+              onClick={addSizes}
+            >
+              Add Size
+            </Button>
             <Grid container>
               {sizes != null
                 ? sizes.map((filter, index) => (
@@ -480,7 +507,11 @@ const ProductForm: React.FC<productProps> = ({
                         </FormControl>
                       </Grid>
                       <Grid item xs={4}>
-                        <Button color="secondary" startIcon={<HighlightOffIcon />} onClick={handleDelete(index)}>
+                        <Button
+                          color="secondary"
+                          startIcon={<HighlightOffIcon />}
+                          onClick={handleDelete(index)}
+                        >
                           Remove Size
                         </Button>
                       </Grid>
